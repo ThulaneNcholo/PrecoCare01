@@ -1,0 +1,337 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+
+<style>
+
+    :root {
+        --main-color: darkblue;
+    }
+
+    .insurance-hero{
+        background-color: var(--main-color);
+        height: 25vh;
+        width: 100%;
+        border-bottom-right-radius: 0.30rem!important;
+        border-bottom-left-radius: 0.30rem!important;
+        padding-top: 44px;
+    }
+
+    .location-hero-text{
+        padding-top: 40px;
+        color: white;
+        width: 70%;
+        font-weight: 500;
+    }
+
+
+    .Page-headings{
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .main-headings{
+        color: grey;
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 15px !important;
+    }
+
+    .appointment-icon-pending{
+        font-size: 25px;
+        color: red;
+    }
+
+    .appointment-icon-confirmed{
+        font-size: 25px;
+        color: green;
+    }
+
+
+    .offcanvas-bottom {
+    right: 0;
+    left: 0;
+    height: 80vh;
+    max-height: 100%;
+    border-top: 1px solid rgba(0,0,0,.2);
+    transform: translateY(100%);
+    }
+
+
+    .pending-status-icon{
+        font-size: 50px;
+        color: red;
+    }
+
+
+    .appointment-application{
+        color: black;
+    }
+
+</style>
+
+
+
+<div class="insurance-hero">
+    <div class="container">
+        <div class="row pt-3">
+            <div class="col">
+                <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+                    <i class="bi bi-arrow-left-circle-fill" style="color: white; font-size: 25px;"></i>
+                </button>
+            </div>
+            <div class="col-8 d-flex align-items-center" style="color: white;">
+                <p class="Page-headings mb-0">Appointments</p>
+            </div>
+        </div>
+        <!-- <p class="location-hero-text">Hello <strong>{{request.user}}</p> -->
+    </div>
+</div>
+
+<section class="container mt-5">
+    <div class="alert alert-success" role="alert">
+        Appointment Booked Please wait for confirmation.Thank you
+      </div>
+    <div class="alert alert-primary" role="alert">
+        Please note when appointment is set please wait for confirmation.
+      </div>
+</section>
+
+<section class="appointments mt-5 container">
+    <p class="main-headings m-0">Appointments</p>
+
+
+
+    <!-- Pending card start  -->
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="status-icons">
+                <center>
+                    <i class="bi bi-arrow-repeat pending-status-icon"></i>
+                    <p class="text-danger" style="font-size: 18px;">Pending</p>
+                </center>
+            </div>
+
+            <section class="mt-5">
+                <div class="row m-0">
+                    <div class="col text-secondary">
+                        Patient :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        Thulane Ncholo
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Service :
+                    </div>
+                    <div class="col-8 appointment-application">Dentist</div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Date :
+                    </div>
+                    <div class="col-8 appointment-application">12 August 2022</div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Time :
+                    </div>
+                    <div class="col-8 text-danger">
+                        Pending
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Fee :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        R355
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Clinic :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        Tshepang Medical Centre
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Address :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        6558 Ndabezitha Street
+                        Tsakane
+                        1550
+                    </div>
+                </div>
+
+                <section class="mt-5">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-danger py-3" style="width: 100%;">Cancel</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light border py-3" style="width: 100%;">Reschedule</button>
+                        </div>
+                    </div>
+                </section>
+                <div style="height: 60px; width: 100%;"></div>
+            </section>
+        </div>
+    </div>
+    <!-- Pending card end -->
+
+
+      <!-- Confirmed card start -->
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="confirmedstatus" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="status-icons">
+                <center>
+                    <i class="bi bi-check-circle-fill pending-status-icon text-success"></i>
+                    <p class="text-success" style="font-size: 18px;">Confirmed</p>
+                </center>
+            </div>
+
+            <section class="mt-5">
+                <div class="row m-0">
+                    <div class="col text-secondary">
+                        Patient :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        Thulane Ncholo
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Service :
+                    </div>
+                    <div class="col-8 appointment-application">Dentist</div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Date :
+                    </div>
+                    <div class="col-8 appointment-application">14 August 2022</div>
+                </div>
+
+                <div class="alert alert-primary mt-3" role="alert">
+                    Please note date has been changed from <strong>12 August</strong>  to <strong>14 August 2022</strong> 
+                  </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Time :
+                    </div>
+                    <div class="col-8" style="color: darkblue;">
+                        10:30 am
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Fee :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        R355
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Clinic :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        Tshepang Medical Centre
+                    </div>
+                </div>
+
+                <div class="row m-0 mt-3">
+                    <div class="col text-secondary">
+                        Address :
+                    </div>
+                    <div class="col-8 appointment-application">
+                        6558 Ndabezitha Street
+                        Tsakane
+                        1550
+                    </div>
+                </div>
+
+                <section class="mt-5">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-danger py-3" style="width: 100%;">Cancel</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light border py-3" style="width: 100%;">Reschedule</button>
+                        </div>
+                    </div>
+                </section>
+
+                <div style="height: 60px; width: 100%;"></div>
+            </section>
+          
+        </div>
+    </div>
+      <!-- Confirmed card end -->
+
+
+      <!-- new card testing start  -->
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+
+        <!-- pending start  -->
+        <div class="col d-flex align-items-start bg-light border rounded py-3 mx-1">
+            <a href="#offcanvasExample" data-bs-toggle="offcanvas"  role="button" aria-controls="offcanvasExample" style="text-decoration: none;">
+                <i class="bi bi-arrow-repeat text-danger  appointment-icon-pending me-4"></i>
+                <div>
+                    <p class="fw-bold mb-0 text-secondary" style="font-size: 17px;">Dentist</p>
+                    <p class="mb-1 text-danger">Pending</p>
+                    <p class="mb-0" style="color: darkblue;">View <span class="px-3"><i class="bi bi-arrow-right"></i></span></p>
+                </div>
+            </a>
+        </div>
+        <!-- pending end -->
+        
+
+        <!-- confirmed start -->
+        <div class="col d-flex align-items-start rounded py-3 mx-1" style="background-color: darkblue;">
+            <a href="#confirmedstatus" data-bs-toggle="offcanvas"  role="button" aria-controls="confirmedstatus" style="text-decoration: none;">
+                <i class="bi bi-check-circle-fill   appointment-icon-confirmed me-4"></i>
+                <div>
+                    <p class="fw-bold mb-0 text-white" style="font-size: 17px;">Dentist <span style="padding-left: 30px;"><i class="bi bi-bell-fill text-danger" style="font-size: 20px;"></i></span></p>
+                    <p class="mb-1 text-success">Confirmed</p>
+                    <p class="mb-0" style="color: white;">View <span class="px-3"><i class="bi bi-arrow-right"></i></span></p>
+                </div>
+            </a>
+        </div>
+        <!-- confirmed end  -->
+
+      </div>
+      <!-- new card testing end  -->
+
+
+</section>
+
+{% endblock %}

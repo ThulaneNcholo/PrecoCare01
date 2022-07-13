@@ -1,0 +1,52 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+
+<style>
+    
+</style>
+
+<section class="container mt-4">
+ <h2 class="text-secondary">Dashboard</h2>
+</section>
+
+
+<section class="mt-1 container">
+    <div class="row align-items-md-stretch">
+        <div class="col-md-6 mt-4">
+          <div class="h-100 py-4 px-3 bg-light border rounded-3">
+            <div class="row">
+                <div class="col-3 d-flex align-items-center">
+                    <i class="bi bi-alarm py-3 px-4 rounded text-white" style="font-size: 20px; background-color: darkblue;"></i>
+                </div>
+                <div class="col">
+                    <h4 class="mb-1">Pending</h4>
+                    <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">12</span> Appointments</p>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="h-100 py-4 px-3 bg-light border rounded-3">
+              <div class="row">
+                  <div class="col-3 d-flex align-items-center">
+                      <i class="bi bi-alarm py-3 px-4 rounded text-white" style="font-size: 20px; background-color: green;"></i>
+                  </div>
+                  <div class="col">
+                      <h4 class="mb-1">Confirmed</h4>
+                      <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">12</span> Appointments</p>
+                  </div>
+              </div>
+            </div>
+          </div>
+      </div>
+</section>
+
+
+<section class="mt-5">
+    
+</section>
+
+{% endblock %}

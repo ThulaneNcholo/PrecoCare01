@@ -1,0 +1,222 @@
+{% extends 'precocare/base.html' %}
+
+
+
+{% block content %}
+
+
+<style>
+    :root {
+            --main-color: darkblue;
+     }
+
+     .page-background{
+        background-color: #E1E3E7;
+     }
+
+    .doctor{
+        color: pink;
+    }
+
+    .doctor-hero-component{
+        background-color: var(--main-color);
+        height: 25vh;
+        width: 100%;
+        border-bottom-right-radius: 0.30rem!important;
+        border-bottom-left-radius: 0.30rem!important;
+    }
+
+    .doctor-card-position{
+        padding-top: 25px;
+    }
+
+
+
+    .main-headings{
+        color: var(--main-color);
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 15px !important;
+    }
+
+    .clinic-image{
+        height: 170px; 
+        width: 100%;
+    }
+
+    .cards-shadow{
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+
+    .Page-headings{
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+    }
+</style>
+
+
+<section>
+    <div class="doctor-hero-component">
+
+        <div class="container">
+            <div class="row pt-3" style="padding-top: 44px !important;">
+                <div class="col">
+                    <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+                        <i class="bi bi-arrow-left-circle-fill" style="color: white; font-size: 25px;"></i>
+                    </button>
+                </div>
+                <div class="col-8 d-flex align-items-center" style="color: white;">
+                    <p class="Page-headings mb-0">Doctor Details</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="doctor-card-position">
+                <div class="cards-shadow">
+                    {% include 'partials/doctors_card.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="quicklinks container" style="margin-top: 100px;">
+        <div id="list-example" class="list-group">
+            <div class="row">
+                <div class="col">
+                    <a class="list-group-item list-group-item-action rounded p-3 bg-light cards-shadow" href="#list-item-1">
+                        <center>
+                            <p class="m-0 mb-2" style="font-weight: 500; font-size: 18px; color: grey;">Upvotes</p>
+                            <p class="m-0" style="color: darkblue; font-weight: 500; font-size: 17px;">11</p>
+                        </center>
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="list-group-item list-group-item-action rounded p-3 cards-shadow" href="#list-item-2" style="background-color: darkblue; border: darkblue;">
+                        <center>
+                            <p class="m-0 mb-2" style="font-weight: 500; font-size: 18px; color: lightgray;">Reviews</p>
+                            <p class="m-0" style="color: lightgrey; font-weight: 500; font-size: 17px;">22</p>
+                        </center>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-doctor container mt-5">
+        <p class="main-headings m-0">About Doctor</p>
+        <p class="text-secondary">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias possimus veniam, fuga aliquid dicta officia maxime nulla blanditiis dolorem, dolore voluptates, exercitationem maiores quisquam minima. Laudantium ullam laboriosam tenetur totam.</p>
+    </section>
+
+    <section class="consultation-fee mt-5 container">
+        <p class="main-headings m-0">Consulation Fee</p>
+        <div class="row m-0">
+            <div class="col">
+                <p class="m-0" style="color: darkblue;">Fee</p>
+            </div>
+            <div class="col text-secondary m-0" style="font-weight: 500;">R350</div>
+        </div>
+        <hr>
+
+        <div class="alert alert-primary mt-2" role="alert">
+            Please note there may be additianal charges depending on your consultation.
+          </div>
+    </section>
+
+    <section class="doctor-clinics mt-5 container">
+        <p class="main-headings m-0">Doctors Clinics</p>
+        <div class="row">
+            {% include 'partials/clinic_card.html' %}
+            {% include 'partials/clinic_card.html' %}
+        </div>
+    </section>
+
+    <section class="reviews container mt-5">
+        <p class="main-headings m-0 mb-5">Reviews</p>
+        <center>
+            <div class="row mt-5">
+                <div class="col">
+                    <button class="btn btn-light border py-3" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;">Add Upvote</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-light border py-3"  data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">Add Review</button>
+                </div>
+            </div>
+        </center>
+
+
+        <div class="accordion-item"  style="border: none;">
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="form-floating mb-3 mt-3">
+                    <input type="text" class="form-control text-secondary" id="floatingInput" placeholder="Full Name">
+                    <label class="text-secondary" for="floatingInput">Full Name</label>
+                </div>
+                <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" value="On" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Upvote Doctor
+                    </label>
+                </div>
+                <button type="button" class="btn mt-3 text-white" style="background-color: darkblue;">Submit</button>
+            </div>
+              </div>
+            </div>
+
+            
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item" style="border: none;">
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control text-secondary" id="floatingInput" placeholder="Full Name">
+                        <label class="text-secondary" for="floatingInput">Full Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control text-secondary" placeholder="Leave you review here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label class="text-secondary" for="floatingTextarea2">Add Review here...</label>
+                    </div>
+                    <button type="button" class="btn mt-3 text-white" style="background-color: darkblue;">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+        <section class="mt-5 upvotes" id="list-item-1">
+            <div class="alert alert-primary" role="alert">
+                <span style="font-weight: 500; padding-right: 10px;">
+                    11 Upvotes
+                </span>  <i class="bi bi-caret-up-fill" style="font-size: 23px;"></i>
+                
+              </div>
+        </section>
+
+        <section class="mt-5" id="list-item-2">
+            <div class="rounded p-2 border p-4 bg-light">
+                <div class="row m-0 ">
+                    <div class="col-3 d-flex align-items-center p-0">
+                        <i class="bi bi-chat-left-text-fill bg-light px-4 py-2 rounded" style="font-size: 25px; color: darkblue;"></i>
+                    </div>
+                    <div class="col">
+                        <P class="m-0" style="color: darkblue;">Thulane Ncholo</P>
+                        <p class="m-0 text-secondary" style="font-size: 14px;">12 August 2022</p>
+                    </div>
+                </div>
+                <p class="text-secondary pt-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perferendis, exercitationem. Iusto, asperiores pariatur. Modi est mollitia voluptas reprehenderit fuga molestias at, vero ut voluptatum. Vitae sint quisquam atque minima magnam.</p>
+            </div>
+            
+        </section>
+      </div>
+    </section>
+
+</section>
+
+<div class="my-5"></div>
+
+{% endblock %}
+

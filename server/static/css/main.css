@@ -1,0 +1,7 @@
+:root {
+    --main-bg-color: pink;
+  }
+
+.main-color{
+    background-color: red !important;
+}

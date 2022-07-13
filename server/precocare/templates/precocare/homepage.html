@@ -1,0 +1,503 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+<style>
+
+    :root {
+        --main-color: darkblue;
+    }
+
+
+.cards-shadow{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.hero-section{
+    height: 35vh;
+    width: 100%;
+    background-color: var(--main-color);
+    border-bottom-right-radius: 0.30rem!important;
+    border-bottom-left-radius: 0.30rem!important;
+}
+
+.hero-padding{
+    padding-top: 10vh;
+}
+
+.hero-heading{
+    color: white;
+    font-size: 45px;
+}
+
+.hero-p-tags{
+    color: lightgrey;
+}
+
+.main-search-layout{
+    padding: 10px;
+    padding-top: 15px;
+    margin-top: 6vh;
+    background-color: white;
+}
+
+
+
+
+.bottom-spacing{
+    width: 100%;
+    height: 150px;
+}
+
+
+.dropdown_style{
+    padding: 1rem 0.01rem;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+}
+
+.search-icon{
+    padding: 1rem 0.80rem;
+    background-color: var(--main-color);
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    color: white;
+    font-weight: bold;
+}
+
+
+.location-icon{
+    font-size: 30px;
+    color: var(--main-color);
+}
+
+.location-style{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+
+.clinic-image{
+    height: 170px; 
+    width: 100%;
+}
+
+.main-headings{
+    color: var(--main-color);
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 15px !important;
+}
+
+.sub-headings{
+    padding-right: 10px;
+    font-size: 14px;
+    color: grey;
+}
+
+
+.insurance-icon{
+    font-size: 40px;
+    color: lightgrey;
+}
+
+
+.offcanvas-start {
+top: 0;
+left: 0;
+width: 600px;
+border-right: 1px solid rgba(0,0,0,.2);
+transform: translateX(-100%);
+}
+
+
+/* .container{
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+} */
+
+</style>
+
+<section>
+    <!-- <div class="p-3 main-color">jamal</div> -->
+    <div class="hero-section">
+        <div class="container hero-padding">
+            <p class="m-0 hero-p-tags">Welcome to</p>
+            <h1 class="hero-heading">PrecoCare.</h1>
+            <p class="hero-p-tags mt-4">Find the best doctors and clinics.</p>
+
+            <section class="main-search-layout rounded border">
+
+
+                <!-- <div class="mb-3">
+                    <center>
+                        <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
+                            <option>Select Location</option>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                          </select>
+                    </center>
+                    
+                </div>
+
+                <div class="mb-3">
+                    <center>
+                        <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
+                            <option>Select Service</option>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                          </select>
+                    </center>
+                    
+                </div>
+
+                <div>
+                    <center>
+                        <button class="btn search-icon rounded" style="width: 50%;">
+                            <i class="bi bi-search px-3"></i> Submit
+                        </button>
+                    </center>
+                </div> -->
+
+                <div class="row m-0 p-0">
+                    <div class="col-5 p-0">
+                            <select class="dropdown_style rounded" name="cars" id="cars" style="width: 95%;">
+                              <option>Location</option>
+                              <option value="volvo">Volvo</option>
+                              <option value="saab">Saab</option>
+                              <option value="opel">Opel</option>
+                              <option value="audi">Audi</option>
+                            </select>
+                    </div>
+                    <div class="col-5 p-0">
+                            <select class="dropdown_style rounded" name="cars" id="cars" style="width: 95%;">
+                              <option>Service</option>
+                              <option value="volvo">Volvo</option>
+                              <option value="saab">Saab</option>
+                              <option value="opel">Opel</option>
+                              <option value="audi">Audi</option>
+                            </select>
+                    </div>
+                    <div class="col-2 p-0">
+                        <div class="search-icon rounded">
+                            <center>
+                            <i class="bi bi-search"></i>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- clinic type section start  -->
+<div class="top-spacing" style="height: 50px;"></div>
+<section class="mt-5 container">
+    <p class="main-headings m-0">Clinic Type</p>
+    <div class="row">
+        <div class="col">
+            <button data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample" type="button" class="btn border" style="width: 100%; background-color: darkblue; color: lightgray;">All</button>
+       
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasExampleLabel">All Clinics</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="container">
+                        <form>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="clinic_search" placeholder="clinic name">
+                                        <label for="clinic_search">Search for clinic</label>
+                                    </div>
+                                </div>
+                                <div class="col-2 p-0">
+                                    <div class="search-icon rounded">
+                                        <center>
+                                        <i class="bi bi-search"></i>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <section class="mt-5">
+                        <div class="row">
+                            {% include 'partials/clinic_card.html' %}
+                            {% include 'partials/clinic_card.html' %}
+                        </div>
+                    </section>
+                </div>
+              </div>
+
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-light border" style="width: 100%;">Private</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-light border"  style="width: 100%;">Public</button>
+        </div>
+    </div>
+</section>
+<!-- clinic type section end  -->
+
+<!-- location section start  -->
+<section class="mt-5">
+    <div class="container overflow-hidden">
+        <div class="row">
+            <div class="col">
+                <p class="main-headings m-0">Clinic Locations</p>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#viewalllocations" role="button" aria-controls="viewalllocations" style="text-decoration: none; background-color: transparent; border: none;">
+                    <p class="sub-headings m-0">View All</p>
+                  </a>
+
+                  <div class="offcanvas offcanvas-start" tabindex="-1" id="viewalllocations" aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Locations</h5>
+                      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+
+                        <div class="mb-3">
+                            <form>
+                                <div class="row m-0 p-0">
+                                    <div class="col ">
+                                        <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
+                                            <option>Select Location</option>
+                                            <option value="volvo">Volvo</option>
+                                            <option value="saab">Saab</option>
+                                            <option value="opel">Opel</option>
+                                            <option value="audi">Audi</option>
+                                          </select>
+                                    </div>
+                                    <div class="col-2 p-0">
+                                        <div class="search-icon rounded bg-light">
+                                            <center>
+                                            <i class="bi bi-search" style="color: darkblue;"></i>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        
+
+
+                      <section class="mt-5">
+                        <a href="{% url 'locations' %}" style="text-decoration: none;">
+                            <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
+                                <div class="col-2">
+                                    <i class="bi bi-geo-alt-fill text-light" style="font-size: 20px;"></i>
+                                </div>
+                                <div class="col text-light location-style">Tsakane</div>
+                                <div class="col-2">
+                                    <i class="bi bi-chevron-right text-light" style="font-size: 20px;"></i>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
+                            <div class="col-2">
+                                <i class="bi bi-geo-alt-fill text-light" style="font-size: 20px;"></i>
+                            </div>
+                            <div class="col text-light location-style">Brakpan</div>
+                            <div class="col-2">
+                                <i class="bi bi-chevron-right text-light" style="font-size: 20px;"></i>
+                            </div>
+                        </div>
+                        <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
+                            <div class="col-2">
+                                <i class="bi bi-geo-alt-fill text-light" style="font-size: 20px;"></i>
+                            </div>
+                            <div class="col text-light location-style">Brakpan</div>
+                            <div class="col-2">
+                                <i class="bi bi-chevron-right text-light" style="font-size: 20px;"></i>
+                            </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div class="row gy-4">
+          <div class="col-6">
+            <div class="p-3 border bg-light rounded">
+                <i class="bi bi-geo-alt-fill location-icon"></i>
+                <p class="mt-2 text-secondary">Dalpark</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 border bg-light rounded">
+                <i class="bi bi-geo-alt-fill location-icon"></i>
+                <p class="mt-2 text-secondary">Dalpark</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 border bg-light rounded">
+                <i class="bi bi-geo-alt-fill location-icon"></i>
+                <p class="mt-2 text-secondary">Dalpark</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 border bg-light rounded">
+                <i class="bi bi-geo-alt-fill location-icon"></i>
+                <p class="mt-2 text-secondary">Dalpark</p>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+<!-- location section end -->
+
+
+<!-- doctors section start  -->
+<section class="container mt-5">
+    <div class="row ">
+        <div class="col">
+            <p class="main-headings m-0">Doctors</p>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#seealldoctors" role="button" aria-controls="seealldoctors" style="text-decoration: none; background-color: transparent; border: none;">
+                <p class="sub-headings m-0">View All</p>
+              </a>
+
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="seealldoctors" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasExampleLabel">All Doctors</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                  <section class="mt-5">
+                    {% include 'partials/doctors_card.html' %}
+                    {% include 'partials/doctors_card.html' %}
+                    {% include 'partials/doctors_card.html' %}
+                    {% include 'partials/doctors_card.html' %}
+                  </section>
+                </div>
+              </div>
+        </div>
+    </div>
+    {% include 'partials/doctors_card.html' %}
+    {% include 'partials/doctors_card.html' %}
+    {% include 'partials/doctors_card.html' %}
+    {% include 'partials/doctors_card.html' %}
+</section>
+<!-- doctors section end  -->
+
+
+<!-- all clinics section start  -->
+<section class="mt-5">
+    <div class="container overflow-hidden">
+        <div class="row">
+            <div class="col">
+                <p class="main-headings m-0">Clinics</p>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <p class="sub-headings m-0">View All</p>
+            </div>
+        </div>
+        <div class="row gy-4">
+            {% include 'partials/clinic_card.html' %}
+            {% include 'partials/clinic_card.html' %}
+            {% include 'partials/clinic_card.html' %}
+            {% include 'partials/clinic_card.html' %}
+        </div>
+      </div>
+</section>
+<!-- all clinics section end  -->
+
+
+<section class="mt-5 container pb-5">
+    <p class="main-headings m-0 container p-0">Medical Aid</p>
+    <div>
+        <center>
+            <i class="bi bi-geo-alt-fill insurance-icon"></i>
+            <p class="m-0 mb-2 mt-3" style="font-weight: 500; color: darkblue;">Medical Aid  &  Insurance Schemes</p>
+            <p class="text-secondary">With <strong>PrecoCare</strong> you can book appointments or search for clinics that cover your Medical Aid,Insurance Scheme.</p>
+            
+            <a href="{% url 'insurance' %}">
+                <button class="btn text-white px-4" style="background-color: darkblue;">Start Now</button>
+            </a>
+        </center>
+    </div>
+</section>
+
+
+
+
+
+<!-- share with us start  -->
+<div class="container mt-5 ">
+    
+    <section class="bg-light border p-3 rounded">
+        <p class="main-headings m-0">Share with us</p>
+        <div>
+            <p style="color: darkblue;">PrecoCare Application</p>
+            <p class="text-secondary">Share with us your experience with our app,We would like to get your feedback to better improve PrecoCare for better experience for our end users.Thank you.</p>
+            <button class="btn text-white" style="background-color: darkblue;" data-bs-toggle="modal" data-bs-target="#sharewithus">Share Now</button>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="sharewithus" tabindex="-1" aria-labelledby="sharewithusform" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Share with us</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form autocomplete="off">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Full Name">
+                                <label for="floatingInput">Full Name</label>
+                            </div>
+    
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                <label for="floatingTextarea2">leave your comment here</label>
+                            </div>
+
+                            <center>
+                                <button type="submit" class="btn  py-3 mt-3 mb-3 text-white px-4" style="width: 70%; background-color: darkblue;">Submit</button>
+                            </center>
+                        </form>
+                        
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- Modal -->
+
+        </div>
+    </section>
+    
+</div>
+
+<!-- share with us end  -->
+
+
+
+
+<div class="bottom-spacing"></div>
+
+{% endblock %}

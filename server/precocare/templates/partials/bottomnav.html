@@ -1,0 +1,36 @@
+<section class="fixed-bottom hide-components">
+  <div class="navbar bg-white style-bottom-nav">
+      <div class="container pt-2">
+          <a href="{% url 'homepage' %}">
+              <i class="bi bi-house-door-fill navbar-icons"></i>
+          </a>
+          <a href="{% url 'insurance' %}">
+            <i class="bi bi-bag-plus navbar-icons"></i>
+          </a>
+          <a href="{% url 'appointments' %}">
+            <button class="position-relative m-0 p-0" style="border: none; background-color: transparent;">
+            <i class="bi bi-alarm navbar-icons" ></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded bg-danger" style="margin-left: 16px;" >
+                2+
+              </span>
+            </button>
+          </a>
+
+          {% if user.groups.all.0.name == "admin" %}
+          <a href="{% url 'dashboard' %}">
+            <i class="bi bi-hospital navbar-icons"></i>
+          </a>
+          {% endif %}
+         
+          <!-- {% if user.groups.all.0.name == "admin" %}
+          <p>jamal</p>
+          {% else %}
+          <p>not</p>
+          {% endif %} -->
+
+          <a href="{% url 'settings' %}">
+            <i class="bi bi-gear navbar-icons"></i>
+          </a>   
+      </div>
+  </div>
+</section>

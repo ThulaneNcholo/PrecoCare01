@@ -1,0 +1,505 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    :root {
+        --main-color: darkblue;
+    }
+
+    .clinic-hero{
+        height: 35vh;
+        background-color: var(--main-color);
+        width: 100%;
+        border-bottom-right-radius: 0.30rem!important;
+        border-bottom-left-radius: 0.30rem!important;
+    }
+
+    .clinic-name{
+        font-weight: 500;
+        font-size: 22px;
+        color: white;
+        padding-top: 90px;
+    }
+
+
+    .img-container{
+        height: 100px;
+        width: 100%;
+        background-color: lightgrey;
+    }
+
+    .clinic-icons{
+        font-size: 25px;
+        color: var(--main-color);
+    }
+
+
+    .main-headings{
+        color: grey;
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 15px !important;
+    }
+
+
+    .accordion-bottom-spacing{
+        width: 100%;
+        height: 40px;
+    }
+
+
+    .dropdown_style{
+        padding: 1rem 0.01rem;
+        background-color: #F8FAFC;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+        width: 100%;
+    }
+
+
+    .form-control {
+        background-color: #F8FAFC !important;
+    }
+
+</style>
+
+    <section>
+        <div class="clinic-hero">
+            <div class="container pt-5">
+                <div class="row">
+                    <div class="col">
+                        <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+                            <i class="bi bi-arrow-left-circle-fill" style="color: white; font-size: 25px;"></i>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button style="color: darkblue; width: 100%;" class="btn btn-light" data-bs-toggle="offcanvas" data-bs-target="#applicationform" aria-controls="applicationform">Book Appointment</button>
+                    </div>
+                </div>
+                <p class="clinic-name">Tshepang Medical Centre</p>
+            </div>
+        </div>
+
+        <section class="clinic-images mt-5 container">
+            <div class="row" >
+                <div class="col">
+                    <div class="img-container rounded"></div>
+                </div>
+                <div class="col">
+                    <div class="img-container rounded"></div>
+                </div>
+                <div class="col">
+                    <div class="img-container rounded"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-5">
+            <div class="container">
+                <div class="row gx-4">
+                  <div class="col">
+                   <div class="p-2 border bg-light rounded">
+                    <center>
+                        <i class="bi bi-telephone-fill clinic-icons"></i>
+                    </center>
+                   </div>
+                  </div>
+                  <div class="col">
+                    <div class="p-2 border bg-light rounded">
+                        <center>
+                        <i class="bi bi-envelope-fill clinic-icons"></i>
+                        </center>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="p-2 border bg-light rounded">
+                        <center>
+                        <i class="bi bi-geo-alt-fill clinic-icons"></i>
+                        </center>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="working-hours mt-5 container">
+            <p class="main-headings m-0">Working Hours</p>
+            <p class="p-2 rounded text-white" style="background-color: darkblue;">Monday - Friday <strong style="padding-left: 10px;;">08:00 am - 17:00 pm</strong></p>
+            <p class="p-2 rounded bg-light" style="color: darkblue;">Saturday <strong style="padding-left: 10px;;">08:00 am - 14:30 pm</strong></p>
+            <p class="p-2 rounded bg-light" style="color: darkblue;">Sunday <strong style="padding-left: 10px;;">Closed</strong></p>
+            <p class="p-2 rounded bg-light" style="color: darkblue;">Holidays <strong style="padding-left: 10px;;">Closed</strong></p>
+        </section>
+        
+        <section class="about-clinic mt-5 container">
+            <p class="main-headings m-0">About Us</p>
+            <p class="text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos assumenda quia id aspernatur? Vitae modi iste ipsa, ut quo laudantium dolorum neque atque, placeat, architecto cupiditate iusto repellat beatae dignissimos?</p>
+        </section>
+
+
+        <section class="clinic-services container mt-5">
+            <p class="main-headings m-0">Services we offer</p>
+
+            <div class="alert alert-primary" role="alert">
+                Prices may change depending on your consultation!
+            </div>
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0"> General Practitioner</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R350
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">Dentist</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">Optometrist</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">X-rays and Sonar</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">Physiotherapy</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">Podiatrist</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">Orthotist</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+
+                <div class="row m-0 p-2 border bg-light rounded mb-3" style="color: darkblue;">
+                    <div class="col p-0">
+                        <p class="m-0">Prosthetist</p>
+                    </div>
+                    <div class="col-3 text-secondary">
+                        R450
+                    </div>
+                </div>
+        </section>
+
+        <section class="clinic-location mt-5 container">
+            <p class="main-headings m-0">Location</p>
+            <p class="m-0" style="color: darkblue;"> <strong>6558 Ndabezitha Street</strong></p>
+            <p class="m-0" style="color: darkblue;"><strong>Tsakane</strong></p>
+            <p style="color: darkblue;"><strong>1550</strong></p>
+        </section>
+        
+        <section class="clinic-doctors mt-5 container">
+            <p class="main-headings m-0">Practice Doctors</p>
+            {% include 'partials/doctors_card.html' %}
+            {% include 'partials/doctors_card.html' %}
+            {% include 'partials/doctors_card.html' %}
+            {% include 'partials/doctors_card.html' %}
+        </section>
+
+        <section class="insurance mt-5 container">
+            <p class="main-headings m-0">Medical Aid Coverage</p>
+            <p class="text-secondary">This clinic covers the listed medical aid and insurance listed below.</p>
+            {% include 'partials/insurance_card.html' %}
+            {% include 'partials/insurance_card.html' %}
+            {% include 'partials/insurance_card.html' %}
+            {% include 'partials/insurance_card.html' %}
+        </section>
+
+        <section class="mt-5">
+            <center>
+                <button class="btn bg-light border py-3" style="width: 70%; color: darkblue; font-size: 18px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#applicationform" aria-controls="applicationform">Book Appointment</button>
+            </center>
+        </section>
+
+          <div class="offcanvas offcanvas-start" tabindex="-1" id="applicationform" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasExampleLabel">Application Form</h5>
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+
+                <div class="alert alert-success" role="alert">
+                    <p class="mb-1"><strong>This Clinic only Accepts</strong></p> 
+                    <p class="mb-1">Online Appointments</p>
+                    <p  class="mb-1">Walk In's</p>
+                    <p  class="mb-1">Pre-Fill Application</p>
+                  </div>
+
+                  <div class="alert alert-primary mt-3" role="alert">
+                    <strong>Pre-Fill</strong>  application form helps with waiting in line to fill out your forms,
+                    pre-fill application download PDF and have it ready to present to the clinic.
+                  </div>
+
+                <p class="text-secondary mt-5" style="font-size: 17px; font-weight: 500;">First time visit to this clinic ?</p>
+
+                  <div class="accordion accordion-flush" id="accordionFlushExample">
+
+                    {% if user.is_authenticated %}
+                    <!-- Yes Application start -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingOneYes">
+                          <button class="accordion-button collapsed px-1 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOneYes" aria-expanded="false" aria-controls="flush-collapseOneYes">
+                            Yes
+                          </button>
+                        </h2>
+                        <div id="flush-collapseOneYes" class="accordion-collapse collapse" aria-labelledby="flush-headingOneYes" data-bs-parent="#accordionFlushExample">
+                          <div class="accordion-body">
+                              <form autocomplete="false">
+  
+  
+                                  <section class="hidden-inputs">
+                                      <input type="text" name="visit_status" value="Yes" hidden="True">
+                                      <input type="text" name="clinic_name" hidden="True">
+                                      <input type="text" name="clinic_id" hidden="True">
+                                      <input type="text" name="status" value="Pending" hidden="True">
+                                      <input type="text" name="notify" value="off" hidden="True">
+                                  </section>
+  
+  
+                                  <section class="application-info">
+                                      <p style="color: darkblue; font-weight: 500;">Application</p>
+                                      <select class="dropdown_style rounded mb-3" name="application_for" id="Application_for">
+                                          <option>Application For ?</option>
+                                          <option value="Dentist">Myself</option>
+                                          <option value="General Practitioner">Someone Else</option>
+                                        </select>
+                                      <select class="dropdown_style rounded mb-3" name="service" id="service">
+                                          <option>Select Service</option>
+                                          <option value="Dentist">Dentist</option>
+                                          <option value="General Practitioner">General Practitioner</option>
+                                        </select>
+                                        <div class="form-floating mb-3">
+                                          <input type="date" class="form-control" id="floatingInput" placeholder="Appointment Date" name="appointment-date">
+                                          <label for="floatingInput">Appointment Date</label>
+                                      </div>
+                                      <div class="alert alert-secondary" role="alert">
+                                          <p style="font-size: 13px;">Please Note you will get the next available time from the date you picked,but date my change depending on available time-slots.</p>
+                                        </div>
+                                  </section>
+  
+  
+                                  <section class="Person-info mt-5">
+                                      <p style="color: darkblue; font-weight: 500;">Patient information</p>
+                                      <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Patient Name" name="patient_name">
+                                              <label for="floatingInput">Patient Name</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Patient Surname" name="patient-surname">
+                                              <label for="floatingInput">Patient Surname</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="date" class="form-control" id="floatingInput" placeholder="Patient Surname" name="Date_of_Birth">
+                                              <label for="floatingInput">Date of Birth</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Identification" name="identification">
+                                              <label for="floatingInput">Identification</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Contact Number 1" name="contact1">
+                                              <label for="floatingInput">Contact 1</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Contact 2" name="contact2">
+                                              <label for="floatingInput">Contact 2</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="email" class="form-control" id="floatingInput" placeholder="Email Address" name="email_address">
+                                              <label for="floatingInput">Email Address</label>
+                                          </div>
+                                  </section>
+  
+  
+                                  <section class="patient-address mt-5">
+                                      <p style="color: darkblue; font-weight: 500;">Address</p>
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Street Adress" name="street">
+                                          <label for="floatingInput">Street Address</label>
+                                      </div>
+  
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Town" name="town">
+                                          <label for="floatingInput">Town</label>
+                                      </div>
+  
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Postal Code" name="postal_code">
+                                          <label for="floatingInput">Postal Code</label>
+                                      </div>
+                                  </section>
+  
+  
+                                  <section class="extra-info mt-5">
+                                      <p class="mb-1" style="color: darkblue; font-weight: 500;">Extra information</p>
+                                      <p class="text-secondary mb-1">Allergies ( Optional )</p>
+                                      <p class="text-secondary">Extra information you would like to share ( Optional )</p>
+                                      <div class="form-floating  mb-3">
+                                          <textarea name="extra_info" class="form-control" placeholder="Leave a information here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                          <label for="floatingTextarea2">Extra Info....</label>
+                                      </div>
+  
+                                  </section>
+                                    
+  
+                                  <center>
+                                      <input class="py-2 rounded text-white" style="background-color: darkblue; width: 60%; border: none;" type="submit" value="Submit">
+                                  </center>
+                              </form>
+  
+                              <div class="accordion-bottom-spacing"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Yes Application end -->
+  
+                      <!-- No Application start -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingTwoNo">
+                          <button class="accordion-button collapsed px-1 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwoNo" aria-expanded="false" aria-controls="flush-collapseTwoNo">
+                            No
+                          </button>
+                        </h2>
+                        <div id="flush-collapseTwoNo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwoNo" data-bs-parent="#accordionFlushExample">
+                          <div class="accordion-body">
+                              <form>
+  
+                                  
+  
+                                  <section class="hidden-inputs">
+                                      <input type="text" name="visit_status" value="No" hidden="True">
+                                      <input type="text" name="clinic_name" hidden="True">
+                                      <input type="text" name="clinic_id" hidden="True">
+                                      <input type="text" name="status" value="Pending" hidden="True">
+                                      <input type="text" name="notify" value="off" hidden="True">
+                                  </section>
+                                  
+  
+                                  <section class="application-info">
+                                      <p style="color: darkblue; font-weight: 500;">Application</p>
+                                      <select class="dropdown_style rounded mb-3" name="Application_for" id="Application_for">
+                                          <option>Application For ?</option>
+                                          <option value="Dentist">Myself</option>
+                                          <option value="General Practitioner">Someone Else</option>
+                                        </select>
+                                      <select class="dropdown_style rounded mb-3" name="service" id="service">
+                                          <option>Select Service</option>
+                                          <option value="Dentist">Dentist</option>
+                                          <option value="General Practitioner">General Practitioner</option>
+                                        </select>
+                                        <div class="form-floating mb-3">
+                                          <input type="date" class="form-control" id="floatingInput" placeholder="Appointment Date" name="appointment-date">
+                                          <label for="floatingInput">Appointment Date</label>
+                                      </div>
+                                      <div class="alert alert-secondary" role="alert">
+                                          <p style="font-size: 13px;">Please Note you will get the next available time from the date you picked,but date my change depending on available time-slots.</p>
+                                        </div>
+                                  </section>
+  
+                                  <section class="patient-info mt-5">
+                                      <p style="color: darkblue; font-weight: 500;">Patient information</p>
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Patient Name" name="file_number">
+                                          <label for="floatingInput">Patient Name</label>
+                                      </div>
+  
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Patient Surname" name="patient_surname">
+                                          <label for="floatingInput">Patient Surname</label>
+                                      </div>
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Patient File Number" name="file_number">
+                                          <label for="floatingInput">Patient File Number</label>
+                                      </div>
+                                  </section>
+  
+                                  <center>
+                                      <input class="py-2 rounded text-white" style="background-color: darkblue; width: 60%; border: none;" type="submit" value="Submit">
+                                  </center>
+                                  
+                              </form>
+                              <div class="accordion-bottom-spacing"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- No Application end -->
+
+                    {% else %}
+                    <a href="{% url 'login'%}" style="text-decoration: none;">
+                        <button class="accordion-button collapsed px-1 rounded" type="button" style="color: darkblue;">
+                            login to book appointment <i class="bi bi-arrow-right-circle-fill px-2"></i>
+                        </button>
+                    </a>
+                    {% endif %}
+
+
+                    <!-- Pre-fill Application start -->
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="flush-headingThreePre">
+                        <button class="accordion-button collapsed px-1 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThreePre" aria-expanded="false" aria-controls="flush-collapseThreePre">
+                          Pre-fill Application
+                        </button>
+                      </h2>
+                      <div id="flush-collapseThreePre" class="accordion-collapse collapse" aria-labelledby="flush-headingThreePre" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      </div>
+                    </div>
+                    <!-- Pre-fill Application end -->
+
+
+                  </div>
+
+                  <div style="height: 70px; width: 100%;"></div>
+           </div>
+          </div>
+        
+
+    </section>
+    
+{% endblock %}
+

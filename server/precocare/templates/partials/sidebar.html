@@ -1,0 +1,44 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse hide-components-lg shadow">
+  <div class="position-sticky" style="padding-top: 90px;">
+    <ul class="nav flex-column">
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'homepage' %}" style="color: darkblue;">
+          <span> <i class="bi bi-house-door-fill navbar-icons-lg px-2"></i></span>
+          Home
+        </a>
+      </li>
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'insurance' %}" style="color: grey;">
+          <span> <i class="bi bi-bag-plus navbar-icons-lg px-2"></i></span>
+          Insurance
+        </a>
+      </li>
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'appointments' %}" style="color: grey;">
+          <span> <i class="bi bi-alarm navbar-icons-lg px-2"></i></span>
+          Appointments
+        </a>
+      </li>
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'settings' %}" style="color: grey;">
+          <span> <i class="bi bi-gear navbar-icons-lg px-2"></i></span>
+          Settings
+        </a>
+      </li>
+    </ul>
+
+    {% if user.groups.all.0.name == "admin" %}
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Admin Dashboard</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'dashboard' %}" style="color: darkblue;">
+          <span> <i class="bi bi-hospital navbar-icons-lg px-2"></i></span>
+          Admin
+        </a>
+      </li>
+    </ul>
+    {% endif %}
+  </div>
+</nav>

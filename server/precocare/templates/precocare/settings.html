@@ -1,0 +1,163 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+<style>
+    :root {
+        --main-color: darkblue;
+    }
+
+
+    .insurance-hero{
+        background-color: var(--main-color);
+        height: 25vh;
+        width: 100%;
+        border-bottom-right-radius: 0.30rem!important;
+        border-bottom-left-radius: 0.30rem!important;
+        padding-top: 44px;
+    }
+
+
+    .Page-headings{
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+
+    .location-hero-text{
+        padding-top: 20px;
+        color: white;
+        width: 70%;
+        font-weight: 500;
+    }
+
+
+    .settings-icons{
+        font-size: 20px;
+        color: var(--main-color);
+    }
+</style>
+
+<section>
+
+
+    <div class="insurance-hero">
+        <div class="container">
+            <div class="row pt-3">
+                <div class="col">
+                    <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+                        <i class="bi bi-arrow-left-circle-fill" style="color: white; font-size: 25px;"></i>
+                    </button>
+                </div>
+                <div class="col-8 d-flex align-items-center" style="color: white;">
+                    <p class="Page-headings mb-0">Settings</p>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <p class="location-hero-text">Hello <strong>{{request.user}}</p>
+            {% else %}
+            <p class="location-hero-text">Hello <a href="{% url 'login'%}" style="text-decoration: none; color: red;"> <strong> Login </strong></a>  to get the best exprience out of <strong>PrecoCare</strong>.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    
+
+    <section class="container mt-3">
+
+        {% if user.is_authenticated %}
+        <div class="row bg-light border m-0 p-3 rounded mt-3">
+            <div class="col-2">
+                <i class="bi bi-shield-lock settings-icons"></i>
+            </div>
+            <div class="col d-flex align-items-center text-secondary">
+                Reset Password
+            </div>
+            <div class="col-2">
+                <i class="bi bi-chevron-right settings-icons"></i>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <a href="{% url 'appointments' %}" style="text-decoration: none;">
+            <div class="row bg-light border m-0 p-3 rounded mt-3">
+                <div class="col-2">
+                    <i class="bi bi-alarm settings-icons"></i>
+                </div>
+                <div class="col d-flex align-items-center text-secondary">
+                    Appointments
+                </div>
+                <div class="col-2">
+                    <i class="bi bi-chevron-right settings-icons"></i>
+                </div>
+            </div>
+        </a>
+        
+
+        <div class="row bg-light border m-0 p-3 rounded mt-3">
+            <div class="col-2">
+                <i class="bi bi-app-indicator settings-icons"></i>
+            </div>
+            <div class="col d-flex align-items-center text-secondary">
+                About PrecoCare
+            </div>
+            <div class="col-2">
+                <i class="bi bi-chevron-right settings-icons"></i>
+            </div>
+        </div>
+
+
+        {% if user.groups.all.0.name == "admin" %}
+        <a href="{% url 'dashboard'%}" style="text-decoration: none;">
+            <div class="row bg-light border m-0 p-3 rounded mt-3">
+                <div class="col-2">
+                    <i class="bi bi-clipboard-pulse settings-icons"></i>
+                </div>
+                <div class="col d-flex align-items-center text-secondary">
+                    Admin Dashboard
+                </div>
+                <div class="col-2">
+                    <i class="bi bi-chevron-right settings-icons"></i>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'logout'%}" style="text-decoration: none;">
+            <div class="row border m-0 p-3 rounded mt-3" style="background-color: darkblue;">
+                <div class="col-2">
+                    <i class="bi bi-box-arrow-left settings-icons text-white"></i>
+                </div>
+                <div class="col d-flex align-items-center text-white">
+                    Logout
+                </div>
+                <div class="col-2">
+                    <i class="bi bi-chevron-right settings-icons text-white"></i>
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <a href="{% url 'login'%}" style="text-decoration: none;">
+            <div class="row border m-0 p-3 rounded mt-3" style="background-color: darkblue;">
+                <div class="col-2">
+                    <i class="bi bi-box-arrow-left settings-icons text-white"></i>
+                </div>
+                <div class="col d-flex align-items-center text-white">
+                    Login
+                </div>
+                <div class="col-2">
+                    <i class="bi bi-chevron-right settings-icons text-white"></i>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        
+    </section>
+    
+</section>
+
+{% endblock %}

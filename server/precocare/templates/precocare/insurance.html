@@ -1,0 +1,180 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    :root {
+        --main-color: darkblue;
+    }
+
+    .insurance-hero{
+        background-color: var(--main-color);
+        height: 25vh;
+        width: 100%;
+        border-bottom-right-radius: 0.30rem!important;
+        border-bottom-left-radius: 0.30rem!important;
+        padding-top: 44px;
+    }
+
+    .location-hero-text{
+        padding-top: 20px;
+        color: white;
+        font-weight: 500;
+    }
+
+
+    .dropdown_style{
+        padding: 1rem 0.50rem;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+
+    .search-icon{
+        padding: 1rem 0.80rem;
+        background-color: var(--main-color);
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+        color: white;
+        font-weight: bold;
+    }
+
+    .main-headings{
+        color: grey;
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 15px !important;
+    }
+
+
+    .clinic-image{
+        height: 170px; 
+        width: 100%;
+    }
+
+    .offcanvas-start {
+    top: 0;
+    left: 0;
+    width: 600px;
+    border-right: 1px solid rgba(0,0,0,.2);
+    transform: translateX(-100%);
+    }
+
+
+    .Page-headings{
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+</style>
+
+    <section>
+        <div class="insurance-hero">
+            <div class="container">
+                <div class="row pt-3">
+                    <div class="col">
+                        <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+                            <i class="bi bi-arrow-left-circle-fill" style="color: white; font-size: 25px;"></i>
+                        </button>
+                    </div>
+                    <div class="col-8 d-flex align-items-center" style="color: white;">
+                        <p class="Page-headings mb-0">Medical Aid</p>
+                    </div>
+                </div>
+                <p class="location-hero-text">Search for clinics that cover your medical aid provider.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="search-bar mt-5 container">
+        <form>
+            <div class="row m-0 p-0">
+                <div class="col ">
+                    <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
+                        <option>Select Insurance</option>
+                        <option value="volvo">Discovery</option>
+                        <option value="volvo">Discovery</option>
+                        <option value="volvo">Discovery</option>
+                        <option value="volvo">Discovery</option>
+                      </select>
+                </div>
+                <div class="col-2 p-0">
+                    <div class="search-icon rounded bg-light">
+                        <center>
+                        <i class="bi bi-search" style="color: darkblue;"></i>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+
+    <section class="search-results mt-5 container">
+        <p class="main-headings m-0">Locations</p>
+
+        <section>
+        <div class=" overflow-hidden">
+            <div class="row gy-3">
+              <div class="col-sm-6">
+                <a href="#insurancelocations" style="text-decoration: none;"  data-bs-toggle="offcanvas" href="#insurancelocations" role="button" aria-controls="insurancelocations">
+                    <div class="p-3 border bg-light rounded">
+                        <p class="mb-2 badge bg-danger">12</p>
+                        <p class="mb-1" style="color: darkblue; font-weight: 500;">Tsakane</p>
+                    </div>
+                </a>
+
+
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="insurancelocations" aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tsakane</h5>
+                      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                      <section class="overflow-hidden">
+                        <div class="row gy-4">
+                            {% include 'partials/clinic_card.html' %}
+                            {% include 'partials/clinic_card.html' %}
+                            {% include 'partials/clinic_card.html' %}
+                            {% include 'partials/clinic_card.html' %}
+                        </div>
+                      </section>
+                      <div style="height: 50px; width: 100%;"></div>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border bg-light rounded">
+                    <p class="mb-2  badge bg-danger">12</p>
+                    <p class="mb-1" style="color: darkblue; font-weight: 500;">kwa-thema</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border bg-light rounded">
+                    <p class="mb-2  badge bg-danger">12</p>
+                    <p class="mb-1" style="color: darkblue; font-weight: 500;">Springs</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border bg-light rounded">
+                    <p class="mb-2  badge bg-danger">12</p>
+                    <p class="mb-1" style="color: darkblue; font-weight: 500;">Dalpark</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </section>
+    </section>
+
+
+    
+    
+{% endblock %}
+
