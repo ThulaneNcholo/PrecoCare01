@@ -5,7 +5,20 @@
 
 
 <style>
-    
+    .themed-grid-col {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    background-color: rgba(86, 61, 124, .15);
+    border: 1px solid rgba(86, 61, 124, .2);
+    }
+
+    .themed-container {
+    padding: .75rem;
+    margin-bottom: 1.5rem;
+    background-color: rgba(0, 123, 255, .15);
+    border: 1px solid rgba(0, 123, 255, .2);
+    }
+
 </style>
 
 <section class="container mt-4">
@@ -16,26 +29,26 @@
 <section class="mt-1 container">
     <div class="row align-items-md-stretch">
         <div class="col-md-6 mt-4">
-          <div class="h-100 py-4 px-3 bg-light border rounded-3">
+          <div class="h-100 py-3 px-3 bg-light border rounded-3">
             <div class="row">
-                <div class="col-3 d-flex align-items-center">
+                <div class="col-3 col-md-12 col-lg-3 col-xs-12 col-sm-12 d-flex align-items-center mb-2">
                     <i class="bi bi-alarm py-3 px-4 rounded text-white" style="font-size: 20px; background-color: darkblue;"></i>
                 </div>
-                <div class="col">
-                    <h4 class="mb-1">Pending</h4>
+                <div class="col col-md-12 col-lg-9 col-xs-12 col-sm-12">
+                    <p class="mb-1" style="font-size: 18px;">Pending</p>
                     <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">12</span> Appointments</p>
                 </div>
             </div>
           </div>
         </div>
         <div class="col-md-6 mt-4">
-            <div class="h-100 py-4 px-3 bg-light border rounded-3">
+            <div class="h-100 py-3 px-3 bg-light border rounded-3">
               <div class="row">
-                  <div class="col-3 d-flex align-items-center">
+                  <div class="col-3 col-md-12 col-lg-3 col-xs-12 col-sm-12 d-flex align-items-center mb-2">
                       <i class="bi bi-alarm py-3 px-4 rounded text-white" style="font-size: 20px; background-color: green;"></i>
                   </div>
-                  <div class="col">
-                      <h4 class="mb-1">Confirmed</h4>
+                  <div class="col-9 col-md-12 col-lg-9 col-xs-12 col-sm-12">
+                      <p class="mb-2" style="font-size: 18px;">Confirmed</p>
                       <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">12</span> Appointments</p>
                   </div>
               </div>
@@ -45,8 +58,58 @@
 </section>
 
 
-<section class="mt-5">
-    
+
+
+<!-- <section>
+    <i class="bi bi-bookmarks"></i>
+    <i class="bi bi-building"></i>
+    <i class="bi bi-clipboard-data"></i>
+    <i class="bi bi-globe2"></i>
+</section> -->
+
+
+<section class="mt-5 container">
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+
+
+        <div class="feature col mb-2">
+          <div class="feature-icon mb-2">
+            <i class="bi bi-clipboard-data" style="font-size: 25px; color: grey;"></i>
+          </div>
+          <p class="mb-1" style="font-size: 18px; color: darkblue;">Dentist Job</p>
+          <p class="mb-1 text-secondary">Description</p>
+          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+          <a href="#" class="icon-link" style="text-decoration: none; color: darkblue;">
+            View Job
+          </a>
+        </div>
+
+
+        <div class="feature col mb-2">
+            <div class="feature-icon mb-2">
+              <i class="bi bi-clipboard-data" style="font-size: 25px; color: grey;"></i>
+            </div>
+            <p class="mb-1" style="font-size: 18px; color: darkblue;">Dentist Job</p>
+            <p class="mb-1 text-secondary">Description</p>
+            <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+            <a href="#" class="icon-link" style="text-decoration: none; color: darkblue;">
+              View Job
+            </a>
+          </div>
+
+          <div class="feature col mb-2">
+            <div class="feature-icon mb-2">
+              <i class="bi bi-clipboard-data" style="font-size: 25px; color: grey;"></i>
+            </div>
+            <p class="mb-1" style="font-size: 18px; color: darkblue;">Dentist Job</p>
+            <p class="mb-1 text-secondary">Description</p>
+            <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+            <a href="#" class="icon-link" style="text-decoration: none; color: darkblue;">
+              View Job
+            </a>
+          </div>
+      </div>
 </section>
+
 
 {% endblock %}
