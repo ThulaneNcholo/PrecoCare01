@@ -6,6 +6,8 @@ from django.http import HttpResponse
 
 from django.contrib.auth.forms import UserCreationForm
 
+from .models import AdministratorModel, DoctorModel
+
 from .forms import CreateUserForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
@@ -36,6 +38,43 @@ def RegisterPage(request):
         'form' : form
     }
     return render(request, "Authentication/register.html", context)
+
+
+@unauthenticated_user
+def AdminRegisterView(request):
+    form = CreateUserForm()
+    if request.method == 'POST' and 'create-doctor' in request.POST:
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name= 'doctors')
+            user.groups.add(group)
+            DoctorModel.objects.create(
+                user=user,
+                first_name=username
+            )
+            messages.success(request,'Account was created for ' + username)
+            return redirect("login")
+
+    if request.method == 'POST' and 'create-admin' in request.POST:
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name= 'admin')
+            user.groups.add(group)
+            AdministratorModel.objects.create(
+                user=user,
+                first_name=username
+            )
+            messages.success(request,'Account was created for ' + username)
+            return redirect("login")
+
+    context = {
+        'form' : form
+    }
+    return render(request, "Authentication/adminregister.html", context)
 
 
 @unauthenticated_user
@@ -105,6 +144,25 @@ def SettingsPage(request):
 
 # Admin Dashboard start 
 
+
+def LocumView(request):
+    return render(request, "Admin/locum.html")
+
+def AdminClinicsView(request):
+    return render(request, "Admin/admin-clinics.html")
+
+def AdminDoctors(request):
+    return render(request, "Admin/admin-doctors.html")
+
+def AllApplicatoinsView(request):
+    return render(request, "Admin/allapplications.html")
+
+def ClinicSettingsView(request):
+    return render(request, "Admin/clinic-settings.html")
+
+def EditClinicView(request):
+    return render(request, "Admin/edit-clinic.html")
+
 @login_required(login_url='login')
 @admin_only
 def AdminPage(request):
@@ -115,6 +173,26 @@ def AdminPage(request):
 def DashboardPage(request):
     return render(request, "Admin/dashboard.html")
 # Admin Dashboard end 
+
+
+
+# Doctor Dashboards start 
+
+
+@allowed_user(allowed_roles=['doctors'])
+def DoctorDashboardView(request):
+    return render(request, "doctor/doctordashboard.html")
+
+
+@allowed_user(allowed_roles=['doctors'])
+def DoctorsClinics(request):
+    return render(request, "doctor/doctor_clinics.html")
+
+@allowed_user(allowed_roles=['doctors'])
+def DoctorsApplications(request):
+    return render(request, "doctor/doctors_applications.html")
+
+# Doctor Dashboard End
 
 
 

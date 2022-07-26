@@ -1,0 +1,210 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+
+<style>
+    .date-style {
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    -moz-padding-start: calc(0.75rem - 3px);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    }
+
+    @media (min-width: 767.98px) {
+
+            .hide-components{
+                display: none;
+            }
+        }
+
+    @media (max-width: 767.98px) {
+
+            .hide-components-lg{
+                display: none;
+            }
+        }
+
+        @media (max-width: 821px) {
+
+            .hide-components-ipad{
+                display: none;
+            }
+        }
+</style>
+
+<section class="mt-4 container">
+    <button onclick="history.back()" style="border: none; background-color: transparent;">
+      <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+    </button>
+  </section>
+  
+  
+  <section class="container mt-4">
+   <h2 class="text-secondary">All Applications</h2>
+  </section>
+
+  <section class="container mt-5">
+    <p class="text-secondary mb-2" style="font-size: 20px;">Filters</p>
+    <div class="row py-3 bg-light rounded">
+        <div class="col">
+            <input class="form-control me-2" type="search" placeholder="File Number" aria-label="Search">
+        </div>
+        <div class="col">
+            <input class="date-style" type="date" placeholder="Select Date">
+        </div>
+        <div class="col">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Payment</option>
+                <option value="1">Paid</option>
+                <option value="2">Outstanding</option>
+              </select>
+        </div>
+        <div class="col">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Application</option>
+                <option value="1">Complete</option>
+                <option value="2">Pending</option>
+                <option value="3">Canceled</option>
+              </select>
+        </div>
+        <div class="col">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Insurance</option>
+                <option value="1">Discovery</option>
+                <option value="2">Bonitas</option>
+                <option value="3">Discovery</option>
+              </select>
+        </div>
+        <div class="col">
+            <button class="btn btn-success px-5">Search</button>
+        </div>
+    </div>
+</section>
+
+  <section class="mt-5 container">
+    <div class="row m-0  border text-white p-3 rounded" style="background-color: darkblue;">
+        <div class="col">
+            Full Name
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            thulane@gmail.com
+        </div> -->
+        <div class="col hide-components-ipad">
+            Contact
+        </div>
+        <div class="col hide-components-ipad">
+            Service
+        </div>
+        <div class="col hide-components-ipad">
+            Doctor
+        </div>
+        <div class="col hide-components-ipad">
+            Date
+        </div>
+        <div class="col hide-components-ipad">
+            Payment
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            Complete
+        </div> -->
+        <div class="col"></div>
+    </div>
+    <div class="row m-0 bg-light border p-3 rounded">
+        <div class="col">
+            Thulane Ncholo
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            thulane@gmail.com
+        </div> -->
+        <div class="col hide-components-ipad">
+            098 736 7383
+        </div>
+        <div class="col hide-components-ipad">
+            General Practioner
+        </div>
+        <div class="col hide-components-ipad">
+            Dr Kgotso Ncholo
+        </div>
+        <div class="col hide-components-ipad">
+            12 August 2022
+        </div>
+        <div class="col hide-components-ipad">
+            <span class="text-success">Paid</span>
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            Complete
+        </div> -->
+        <div class="col fw-bold" style="color: darkblue;">View</div>
+    </div>
+    <div class="row m-0 bg-light border p-3 rounded">
+        <div class="col">
+            Thulane Ncholo
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            thulane@gmail.com
+        </div> -->
+        <div class="col hide-components-ipad">
+            098 736 7383
+        </div>
+        <div class="col hide-components-ipad">
+            General Practioner
+        </div>
+        <div class="col hide-components-ipad">
+            Dr Kgotso Ncholo
+        </div>
+        <div class="col hide-components-ipad">
+            12 August 2022
+        </div>
+        <div class="col hide-components-ipad">
+            <span class="text-danger">Outstanding</span>
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            Complete
+        </div> -->
+        <div class="col fw-bold" style="color: darkblue;">View</div>
+    </div>
+    <div class="row m-0 bg-light border p-3 rounded">
+        <div class="col">
+            Thulane Ncholo
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            thulane@gmail.com
+        </div> -->
+        <div class="col hide-components-ipad">
+            098 736 7383
+        </div>
+        <div class="col hide-components-ipad">
+            General Practioner
+        </div>
+        <div class="col hide-components-ipad">
+            Dr Kgotso Ncholo
+        </div>
+        <div class="col hide-components-ipad">
+            12 August 2022
+        </div>
+        <div class="col hide-components-ipad">
+            <span class="text-success">Paid</span>
+        </div>
+        <!-- <div class="col hide-components-ipad">
+            Complete
+        </div> -->
+        <div class="col fw-bold" style="color: darkblue;">View</div>
+    </div>
+  </section>
+
+{% endblock %}

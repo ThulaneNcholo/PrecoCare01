@@ -1,0 +1,393 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+<style>
+    
+
+    @media (min-width: 991px) {
+
+        .form-margin-large{
+        padding-left: 200px;
+        padding-right: 200px;
+        }
+
+    }
+
+</style>
+
+<section class="mt-4 container ">
+    <div class="row">
+        <div class="col">
+            <button onclick="history.back()" style="border: none; background-color: transparent;">
+                <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+              </button>
+        </div>
+    </div>
+  </section>
+
+  <section class="mt-5 container">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicdetails" aria-expanded="false" aria-controls="clinicdetails">
+                    Clinic Details
+                    </button>
+                </h2>
+                <div id="clinicdetails" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <section class="mt-5">
+                            <form action="">
+                                <div class="mb-4">
+                                    <label for="clinicnameinput" class="form-label">Clinic Name</label>
+                                    <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="emailHelp">
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="">
+                                            <label for="contact1" class="form-label">Contact 1</label>
+                                            <input type="text" class="form-control py-3 bg-light" id="contact1" aria-describedby="emailHelp">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="">
+                                            <label for="contact2" class="form-label">Contact 2</label>
+                                            <input type="text" class="form-control py-3 bg-light" id="contact2" aria-describedby="emailHelp">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                    <input type="email" class="form-control py-3 bg-light" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="exampleFormControlTextarea1" class="form-label">About Clinic</label>
+                                    <textarea class="form-control py-3 bg-light" id="exampleFormControlTextarea1" rows="3" placeholder="small description about clinic ?"></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="clinicaddress" class="form-label">Address</label>
+                                    <input type="text" class="form-control py-3 bg-light" id="clinicaddress" aria-describedby="addresshelp" placeholder="12 main street">
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-6 col-md-6 col-lg-5 mt-3">
+                                        <label for="clinicnameinput" class="form-label">Provice</label>
+                                        <select class="form-select py-3 bg-light" aria-label="Default select example">
+                                            <option selected>Select Provice</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                    </div>
+                                    <div class="col-6 col-md-6 col-lg-5 mt-3">
+                                        <label for="clinicnameinput" class="form-label">Suburb</label>
+                                        <select class="form-select py-3 bg-light" aria-label="Default select example">
+                                            <option selected>Select Suburb</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-2 mt-3">
+                                        <div class="">
+                                            <label for="clinicnameinput" class="form-label">Zip Code</label>
+                                            <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="emailHelp">
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="clinicnameinput" class="form-label mt-4 mb-4">Clinic Type ?</label>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="clinictype" id="privateclinic">
+                                            <label class="form-check-label" for="privateclinic">
+                                              Private
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="clinictype" id="publicclinic">
+                                            <label class="form-check-label" for="publicclinic">
+                                              Public
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <center>
+                                    <button type="button" class="btn btn-warning my-5 py-3" style="width: 50%;">Submit</button>
+                                </center>
+                            </form>
+                        </section>
+                        <div style="height: 70px; width: 100%;"></div>
+                    </div>
+                </div>
+                </div>
+            <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adddoctors" aria-expanded="false" aria-controls="adddoctors">
+                Clinic Doctors
+                </button>
+            </h2>
+            <div id="adddoctors" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <section class="mt-3 mb-5">
+                        <label for="searchfordoctor" class="form-label">Search for new doctors.</label>
+                        <form class="d-flex">
+                            <input class="form-control me-2 py-3 bg-light" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success py-3" type="submit">Search</button>
+                          </form>
+                    </section>
+                    <section>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Dr Kgotso Ncholo
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Dr Kgotso Ncholo
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Dr Kgotso Ncholo
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Dr Kgotso Ncholo
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                          </ul>
+                    </section>
+                    <div style="height: 70px; width: 100%;"></div>
+                </div>
+            </div>
+            </div>
+            <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addadmins" aria-expanded="false" aria-controls="addadmins">
+                Clinic Administrators
+                </button>
+            </h2>
+            <div id="addadmins" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <section class="mt-3 mb-5">
+                        <label for="searchfordoctor" class="form-label">Search Admins</label>
+                        <form class="d-flex">
+                            <input class="form-control me-2 py-3 bg-light" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success py-3" type="submit">Search</button>
+                          </form>
+                    </section>
+                    <section>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Mede Chappie
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Amy Shorts
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item py-3">
+                                <div class="row">
+                                    <div class="col d-flex align-items-center">
+                                        Oliva Mann
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </li>
+                          </ul>
+                    </section>
+                    <div style="height: 70px; width: 100%;"></div>
+                </div>
+            </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addservices" aria-expanded="false" aria-controls="addservices">
+                      Services Offered
+                    </button>
+                </h2>
+                <div id="addservices" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <section class="mt-3 mb-4">
+                            <div class="alert alert-primary mb-3" role="alert">
+                                Please Note if your service is not listed please contact us. 
+                                <p class="my-2">Whatsapp - 094 477 4744</p>
+                                <p class="mb-1">Email - admin@precocare.co.za</p>
+                              </div>
+                            <label for="clinicnameinput" class="form-label mt-4">Services</label>
+                            <select class="form-select py-3 bg-light" aria-label="Default select example">
+                                <option selected>Select Service</option>
+                                <option>Dentist</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                            <div id="servicehelp" class="form-text">Select a service and add a fee to your service or it will stay as <strong>POA</strong></div>
+                            <div class="mb-4 mt-4">
+                                <label for="clinicnameinput" class="form-label">Service Fee</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R</span>
+                                    <input type="text" class="form-control py-3" id="username" placeholder="500">
+                                  </div>
+                            </div>
+
+                            <center>
+                                <button class="btn btn-warning px-5 py-2 mt-3 mb-5">Submit Service</button>
+                            </center>
+
+                        </section>
+
+                        <section>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item py-3">
+                                    <div class="row">
+                                        <div class="col d-flex align-items-center">
+                                            Dentist
+                                        </div>
+                                        <div class="col-2">
+                                            R355
+                                        </div>
+                                        <div class="col-2">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                    <div class="row">
+                                        <div class="col d-flex align-items-center">
+                                            Dentist
+                                        </div>
+                                        <div class="col-2">
+                                            R355
+                                        </div>
+                                        <div class="col-2">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                    <div class="row">
+                                        <div class="col d-flex align-items-center">
+                                            Dentist
+                                        </div>
+                                        <div class="col-2">
+                                            R355
+                                        </div>
+                                        <div class="col-2">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                              </ul>
+                        </section>
+                        <div style="height: 70px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addinsurances" aria-expanded="false" aria-controls="addinsurances">
+                    Medical Schemes
+                    </button>
+                </h2>
+                <div id="addinsurances" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <section class="mt-3">
+                            <div class="alert alert-primary mb-3" role="alert">
+                                Contact us if your medical Scheme is not listed. 
+                                <p class="my-2">Whatsapp - 094 477 4744</p>
+                                <p class="mb-1">Email - admin@precocare.co.za</p>
+                              </div>
+                            <label for="clinicnameinput" class="form-label mt-4">Medical Schemes</label>
+                            <select class="form-select py-3 bg-light" aria-label="Default select example">
+                                <option selected>Select Insurance</option>
+                                <option>Discovery</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+
+                            <center>
+                                <button class="btn btn-warning px-5 py-2 mt-3 mb-5">Submit Medical Scheme</button>
+                            </center>
+                        </section>
+
+                        <section class="mt-4">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item py-3">
+                                    <div class="row">
+                                        <div class="col d-flex align-items-center">
+                                            Discovery
+                                        </div>
+                                        <div class="col-2">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                    <div class="row">
+                                        <div class="col d-flex align-items-center">
+                                            Discovery
+                                        </div>
+                                        <div class="col-2">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                    <div class="row">
+                                        <div class="col d-flex align-items-center">
+                                            Discovery
+                                        </div>
+                                        <div class="col-2">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                              </ul>
+                        </section>
+                        <div style="height: 70px; width: 100%;"></div>
+                    </div>
+                </div>
+                </div>
+        </div>
+  </section>
+
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends 'doctor/doctor-base.html' %}
+
+
+{% block content %}
+
+
+<style>
+/* 
+    .card-1 {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    } */
+
+    @media (min-width: 767.98px) {
+
+    .hide-components{
+        display: none;
+    }
+
+    }
+
+    @media (max-width: 767.98px) {
+
+        .hide-components-lg{
+        display: none;
+        }
+    }
+
+    @media (max-width: 821px) {
+
+        .hide-components-ipad{
+            display: none;
+        }
+    }
+
+
+</style>
+
+<section class="mt-4 container">
+    <button onclick="history.back()" style="border: none; background-color: transparent;">
+      <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+    </button>
+  </section>
+
+<section class="container mt-4">
+    <h2 class="text-secondary">Applicantions</h2>
+</section>
+
+<section class="mt-4 container">
+    <div class="row p-0 m-0">
+        <div class="col-sm-6">
+          <div class="card border-0">
+            <div class="card-body">
+                <a href="{% url 'doctor-applications'%}" style="text-decoration: none;">
+                    <button type="button" class="btn text-white py-3" style="background-color: darkblue; width: 100%;">All Applications</button>
+                </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card border-0">
+            <div class="card-body ">
+                <button type="button" class="btn text-white py-3"  style="background-color: darkblue; width: 100%;">Clinic Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
+<section class="mt-5 container">
+    <p class="text-secondary mb-4" style="font-size: 20px;">Today's Confirmed Applicantions</p>
+    <div class="row text-white py-4 rounded card-1 mb-4" style="background-color: darkblue;">
+        <div class="col col-lg-1">Time</div>
+        <div class="col">Patient</div>
+        <div class="col hide-components-lg hide-components-ipad">Gender</div>
+        <div class="col hide-components-lg hide-components-ipad">Service</div>
+        <div class="col hide-components-lg hide-components-ipad">File #</div>
+        <div class="col hide-components-lg hide-components-ipad">Visit Status</div>
+        <div class="col hide-components-lg hide-components-ipad">Complete</div>
+        <div class="col">View</div>
+    </div>
+    <div class="row py-4 rounded  card-1 mb-4 bg-light border">
+        <div class="col col-lg-1">10:00 am</div>
+        <div class="col">Thulane Ncholo</div>
+        <div class="col hide-components-lg hide-components-ipad">Male</div>
+        <div class="col hide-components-lg hide-components-ipad">General Practionior</div>
+        <div class="col hide-components-lg hide-components-ipad">---</div>
+        <div class="col hide-components-lg hide-components-ipad">First-Time</div>
+        <div class="col hide-components-lg hide-components-ipad text-secondary">Incomplete</div>
+        <div class="col">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn text-white" style="background-color: darkblue;" data-bs-toggle="modal" data-bs-target="#doctorviewpatient">
+                View
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="doctorviewpatient" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Patient Applicantion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Time-slot</div>
+                                    <div class="col">10:00 am</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Patient</div>
+                                    <div class="col">Thulane Ncholo</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Gender</div>
+                                    <div class="col">Male</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Date Of Birth</div>
+                                    <div class="col">6 August 1992</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Identification</div>
+                                    <div class="col">927363736376364</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Contact 1</div>
+                                    <div class="col">093 737 7373</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Contact 2</div>
+                                    <div class="col">--</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Email</div>
+                                    <div class="col">thulane@gmail.com</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Address</div>
+                                    <div class="col">6558 Ndabezitha street, Tsakane, 1550</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Service</div>
+                                    <div class="col">General Practionior</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Visit Status</div>
+                                    <div class="col">First Time</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Medical Scheme</div>
+                                    <div class="col">Discovery</div>
+                                </div>
+                            </li>
+                          </ul>
+
+                          <hr>
+
+                          <section class="mt-5">
+
+                            <div class="alert alert-success" role="alert">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Mark as Complete
+                                    </label>
+                                  </div>
+                              </div>
+                            
+                              <center>
+                                <button class="btn btn-success px-5 my-4">Submit</button>
+                              </center>
+                          </section>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row py-4 rounded bg-light card-1 mb-4 border">
+        <div class="col col-lg-1">10:00 am</div>
+        <div class="col">Mark Smith</div>
+        <div class="col hide-components-lg hide-components-ipad">Male</div>
+        <div class="col hide-components-lg hide-components-ipad">General Practionior</div>
+        <div class="col hide-components-lg hide-components-ipad">73635376365</div>
+        <div class="col hide-components-lg hide-components-ipad">Returning</div>
+        <div class="col hide-components-lg hide-components-ipad text-secondary">Incomplete</div>
+        <div class="col">View</div>
+    </div>
+    <div class="row py-4 rounded bg-light card-1 mb-4 border">
+        <div class="col col-lg-1">10:00 am</div>
+        <div class="col">Mark Smith</div>
+        <div class="col hide-components-lg hide-components-ipad">Male</div>
+        <div class="col hide-components-lg hide-components-ipad">General Practionior</div>
+        <div class="col hide-components-lg hide-components-ipad">73635376365</div>
+        <div class="col hide-components-lg hide-components-ipad">Returning</div>
+        <div class="col hide-components-lg hide-components-ipad text-secondary">Incomplete</div>
+        <div class="col">View</div>
+    </div>
+    <div class="row py-4 rounded bg-light card-1 mb-4 border">
+        <div class="col col-lg-1">10:00 am</div>
+        <div class="col">Mark Smith</div>
+        <div class="col hide-components-lg hide-components-ipad">Male</div>
+        <div class="col hide-components-lg hide-components-ipad">General Practionior</div>
+        <div class="col hide-components-lg hide-components-ipad">73635376365</div>
+        <div class="col hide-components-lg hide-components-ipad">Returning</div>
+        <div class="col hide-components-lg hide-components-ipad text-secondary">Incomplete</div>
+        <div class="col">View</div>
+    </div>
+</section>
+
+
+
+{% endblock %}

@@ -18,10 +18,16 @@
 
           {% if user.groups.all.0.name == "admin" %}
           <a href="{% url 'dashboard' %}">
-            <i class="bi bi-hospital navbar-icons"></i>
+            <i class="bi bi-microsoft navbar-icons"></i>
           </a>
           {% endif %}
          
+          {% if user.groups.all.0.name == "doctors" %}
+          <a href="{% url 'doctor-dashboard' %}">
+            <i class="bi bi-app-indicator navbar-icons"></i>
+          </a>
+          {% endif %}
+
           <!-- {% if user.groups.all.0.name == "admin" %}
           <p>jamal</p>
           {% else %}

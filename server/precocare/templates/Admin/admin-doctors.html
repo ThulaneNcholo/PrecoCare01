@@ -1,0 +1,118 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+
+<style>
+    @media (min-width: 767.98px) {
+
+            .hide-components{
+                display: none;
+            }
+        }
+
+    @media (max-width: 767.98px) {
+
+            .hide-components-lg{
+                display: none;
+            }
+        }
+
+        @media (max-width: 821px) {
+
+            .hide-components-ipad{
+                display: none;
+            }
+        }
+</style>
+
+<section class="mt-4 container">
+    <button onclick="history.back()" style="border: none; background-color: transparent;">
+      <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+    </button>
+  </section>
+  
+  
+  <section class="container mt-4">
+    <h2 class="text-secondary">Clinic Doctors</h2>
+  </section>
+
+  <section class="container mt-4">
+    <p>Add New Doctor</p>
+    <form class="d-flex">
+        <input class="form-control me-2 py-2" type="search" placeholder="Search for doctor" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+  </section>
+
+  <section class="mt-5 container">
+    <div class="row m-0  border text-white  p-3 rounded" style="background-color: darkblue;">
+        <div class="col">
+            Full Name
+        </div>
+        <div class="col hide-components-ipad">
+            Email
+        </div>
+        <div class="col hide-components-ipad">
+            Contact
+        </div>
+        <div class="col hide-components-ipad">
+            Service
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row m-0 bg-light border p-3 rounded">
+        <div class="col">
+            Dr Kgotso Ncholo
+        </div>
+        <div class="col hide-components-ipad">
+            kgotso@gmail.com
+        </div>
+        <div class="col hide-components-ipad">
+            098 736 7383
+        </div>
+        <div class="col hide-components-ipad">
+            <p class="m-0 p-0">
+                - General Practioner
+            </p>
+            <p class="m-0 p-0">
+                - service 2
+            </p>
+        </div>
+        <div class="col fw-bold" style="color: darkblue;">View</div>
+    </div>
+    <div class="row m-0 bg-light border p-3 rounded">
+        <div class="col">
+            Dr Kgotso Ncholo
+        </div>
+        <div class="col hide-components-ipad">
+            kgotso@gmail.com
+        </div>
+        <div class="col hide-components-ipad">
+            098 736 7383
+        </div>
+        <div class="col hide-components-ipad">
+            - General Practioner
+        </div>
+        <div class="col fw-bold" style="color: darkblue;">View</div>
+    </div>
+    <div class="row m-0 bg-light border p-3 rounded">
+        <div class="col">
+            Dr Kgotso Ncholo
+        </div>
+        <div class="col hide-components-ipad">
+            kgotso@gmail.com
+        </div>
+        <div class="col hide-components-ipad">
+            098 736 7383
+        </div>
+        <div class="col hide-components-ipad">
+            - General Practioner
+        </div>
+        <div class="col fw-bold" style="color: darkblue;">View</div>
+    </div>
+  </section>
+  
+
+{% endblock %}

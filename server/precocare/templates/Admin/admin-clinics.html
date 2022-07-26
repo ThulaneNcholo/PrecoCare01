@@ -1,0 +1,157 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+<section class="container mt-4">
+    <h2 class="text-secondary">Administrator Clinics</h2>
+</section>
+
+<section class="mt-4 container">
+  <div class="alert alert-success" role="alert">
+    Tshepang Medical Centre Clinic created
+    <p class="my-2">Step 1 go to your clinic settings and add doctors,services and medical schemes</p>
+  </div>
+  <section class="my-4">
+
+  <button class="btn btn-success px-5 my-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Create Clinic</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add New Clinic</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <section class="mt-5">
+              <form action="">
+                  <div class="mb-4">
+                      <label for="clinicnameinput" class="form-label">Clinic Name</label>
+                      <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="emailHelp">
+                  </div>
+                  <div class="row mb-4">
+                      <div class="col">
+                          <div class="">
+                              <label for="contact1" class="form-label">Contact 1</label>
+                              <input type="text" class="form-control py-3 bg-light" id="contact1" aria-describedby="emailHelp">
+                          </div>
+                      </div>
+                      <div class="col">
+                          <div class="">
+                              <label for="contact2" class="form-label">Contact 2</label>
+                              <input type="text" class="form-control py-3 bg-light" id="contact2" aria-describedby="emailHelp">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mb-4">
+                      <label for="exampleInputEmail1" class="form-label">Email address</label>
+                      <input type="email" class="form-control py-3 bg-light" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  </div>
+                  <div class="mb-4">
+                      <label for="exampleFormControlTextarea1" class="form-label">About Clinic</label>
+                      <textarea class="form-control py-3 bg-light" id="exampleFormControlTextarea1" rows="3" placeholder="small description about clinic ?"></textarea>
+                  </div>
+                  <div class="mb-4">
+                      <label for="clinicaddress" class="form-label">Address</label>
+                      <input type="text" class="form-control py-3 bg-light" id="clinicaddress" aria-describedby="addresshelp" placeholder="12 main street">
+                  </div>
+
+                  <div class="alert alert-primary mb-3" role="alert">
+                    If your provice or suburb is not listed please contact us.
+                    <p class="my-2">whatsapp - 098 877 8899</p>
+                    <p class="mb-0">email - admin@preoccare.co.za</p>
+                  </div>
+                  <div class="row mb-4">
+                      <div class="col-6 col-md-6 col-lg-5 mt-3">
+                          <label for="clinicnameinput" class="form-label">Provice</label>
+                          <select class="form-select py-3 bg-light" aria-label="Default select example">
+                              <option selected>Select Provice</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                            </select>
+                      </div>
+                      <div class="col-6 col-md-6 col-lg-5 mt-3">
+                          <label for="clinicnameinput" class="form-label">Suburb</label>
+                          <select class="form-select py-3 bg-light" aria-label="Default select example">
+                              <option selected>Select Suburb</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                            </select>
+                      </div>
+                      <div class="col-12 col-md-12 col-lg-2 mt-3">
+                          <div class="">
+                              <label for="clinicnameinput" class="form-label">Zip Code</label>
+                              <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="emailHelp">
+                          </div>
+                      </div>
+                  </div>
+                  <label for="clinicnameinput" class="form-label mt-4 mb-4">Clinic Type ?</label>
+                  <div class="row">
+                      <div class="col-3">
+                          <div class="form-check">
+                              <input class="form-check-input" type="radio" name="clinictype" id="privateclinic">
+                              <label class="form-check-label" for="privateclinic">
+                                Private
+                              </label>
+                          </div>
+                      </div>
+                      <div class="col-3">
+                          <div class="form-check">
+                              <input class="form-check-input" type="radio" name="clinictype" id="publicclinic">
+                              <label class="form-check-label" for="publicclinic">
+                                Public
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  <center>
+                      <button type="button" class="btn btn-warning my-5 py-3" style="width: 50%;">Submit</button>
+                  </center>
+              </form>
+          </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <div class="alert alert-primary" role="alert">
+      Please contact us if your clinic is <span class="text-danger">Disabled</span> or having troubles with your application.
+      <p class="my-2">whatsapp : 084 847 474</p>
+      <p  class="my-2">Email : admin@precocare.com</p>
+      <p  class="my-2" >Call : 094 748 8484</p>
+  </div>
+    <div class="alert alert-primary mt-3" role="alert">
+      Your Clinic Won't be <span class="text-success">active</span>  till we verify your clinic.
+    </div>
+      
+</section>
+
+<section class="mt-3 container">
+    <div class="row">
+        <div class="col-sm-6">
+          <div class="card p-4 bg-light mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Tshepang Medical Centre</h5>
+              <p class="card-text">Clinic Status : <span class="text-success">Active</span> </p>
+              <a href="{% url 'dashboard' %}" class="btn text-white" style="background-color: darkblue;">View Dashboard</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card p-4 bg-light mt-3">
+              <div class="card-body">
+                <h5 class="card-title">Tshepang Medical Centre</h5>
+                <p class="card-text">Clinic Status : <span class="text-danger">Disabled</span> </p>
+                <a href="{% url 'dashboard' %}" class="btn text-white" style="background-color: darkblue;">View Dashboard</a>
+              </div>
+            </div>
+          </div>
+      </div>
+</section>
+
+{% endblock %}

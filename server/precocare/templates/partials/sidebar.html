@@ -1,3 +1,4 @@
+
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse hide-components-lg shadow">
   <div class="position-sticky" style="padding-top: 90px;">
     <ul class="nav flex-column">
@@ -33,12 +34,28 @@
     </h6>
     <ul class="nav flex-column mb-2">
       <li class="nav-item my-1">
-        <a class="nav-link" aria-current="page" href="{% url 'dashboard' %}" style="color: darkblue;">
+        <a class="nav-link" aria-current="page" href="{% url 'admin-clinics' %}" style="color: darkblue;">
           <span> <i class="bi bi-hospital navbar-icons-lg px-2"></i></span>
-          Admin
+          Admin Dashboard
         </a>
       </li>
     </ul>
     {% endif %}
+
+    {% if user.groups.all.0.name == "doctors" %}
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Doctor Dashboard</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'doctor-clinics' %}" style="color: darkblue;">
+          <span> <i class="bi bi-hospital navbar-icons-lg px-2"></i></span>
+          Doctor Dashboard
+        </a>
+      </li>
+    </ul>
+    {% endif %}
+
+
   </div>
 </nav>

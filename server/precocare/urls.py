@@ -6,6 +6,7 @@ urlpatterns = [
 
     # Authentication urls
     path('register/', views.RegisterPage,name="register"),
+    path('admin-register/', views.AdminRegisterView,name="admin-register"),
     path('login/', views.LoginPage,name="login"),
     path('logout/', views.LogoutUser,name="logout"),
 
@@ -30,6 +31,17 @@ urlpatterns = [
     # admin urls
     path('clinic-admin/', views.AdminPage, name="clinic-admin"),
     path('dashboard/', views.DashboardPage, name="dashboard"),
+    path('locum/', views.LocumView, name="locum"),
+    path('admin-clinics/', views.AdminClinicsView, name="admin-clinics"),
+    path('admin-doctors/', views.AdminDoctors, name="admin-doctors"),
+    path('all-applications/', views.AllApplicatoinsView, name="all-applications"),
+    path('clinic-settings/', views.ClinicSettingsView, name="clinic-settings"),
+    path('edit-clinic/', views.EditClinicView, name="edit-clinic"),
+
+    # Doctor Urls
+    path('doctor-dashboard/',views.DoctorDashboardView, name="doctor-dashboard"),
+    path('doctors-clinics/',views.DoctorsClinics, name="doctor-clinics"),
+    path('doctors-applications/',views.DoctorsApplications, name="doctor-applications"),
 
 
 ]
