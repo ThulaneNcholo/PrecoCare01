@@ -27,24 +27,37 @@
         }
 </style>
 
+
+
+
+{% for practice in clinic %}
+
 <section class="mt-4 container">
     <button onclick="history.back()" style="border: none; background-color: transparent;">
       <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
     </button>
   </section>
+
+{% if administrators.user.id == request.user.id %}
+  {% if administrators.profile_set == "Incomplete" %}
+    <div class="alert alert-primary my-5 py-5 container" role="alert">
+      Hello <strong>{{request.user}}</strong> Please Complete your Profile <strong class="px-3"><a href="{% url 'admin_profile' %}">Click Here</a></strong>
+    </div>
+  {% endif %}
+{% endif %}
   
   
   <section class="container mt-4">
     <h2 class="text-secondary">Clinic Doctors</h2>
   </section>
 
-  <section class="container mt-4">
+  <!-- <section class="container mt-4">
     <p>Add New Doctor</p>
     <form class="d-flex">
         <input class="form-control me-2 py-2" type="search" placeholder="Search for doctor" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
-  </section>
+  </section> -->
 
   <section class="mt-5 container">
     <div class="row m-0  border text-white  p-3 rounded" style="background-color: darkblue;">
@@ -62,57 +75,135 @@
         </div>
         <div class="col"></div>
     </div>
-    <div class="row m-0 bg-light border p-3 rounded">
-        <div class="col">
-            Dr Kgotso Ncholo
+
+    
+        {% for data in practice.clinic_doctors.all %}
+        <div class="row m-0 bg-light border p-3 rounded my-3">
+            <div class="col">
+                Dr {{data.first_name}} {{data.last_name}}
+            </div>
+            <div class="col hide-components-ipad">
+                {{data.email}}
+            </div>
+            <div class="col hide-components-ipad">
+                {{data.mobile_number}}
+            </div>
+            <div class="col hide-components-ipad">
+
+                {% for service in services %}
+                    {% if service.doctor_id.user.id == data.user.id %}
+                    <p class="m-0 p-0">
+                        - {{service.service_name}}
+                    </p>
+                    {% else %}
+                        <p class="m-0 p-0 text-danger">
+                            No Services
+                        </p>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+            <div class="col" >
+                <!-- Button trigger modal -->
+                <button type="button" class="btn fw-bold m-0 p-0" data-bs-toggle="modal" data-bs-target="#doctorview{{data.id}}" style="color: darkblue;">
+                    View
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="doctorview{{data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" style="color: darkblue;">Doctor Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <section>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">Full Name</div>
+                                        <div class="col-8">
+                                            Dr {{data.first_name}} {{data.last_name}}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">Phone Number</div>
+                                        <div class="col-8">
+                                            {{data.mobile_number}}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">Email Address</div>
+                                        <div class="col-8">
+                                            {{data.email}}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">Verification Status</div>
+
+                                        {% if data.verified == "Verified"%}
+                                            <div class="col-8 text-success">
+                                                {{data.verified}}
+                                            </div>
+                                        {% else %}
+                                            <div class="col-8 text-danger">
+                                                {{data.verified}}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">About Doctor</div>
+                                        <div class="col-8">
+                                            {{data.about_doctor}}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">Doctor License Number</div>
+                                        <div class="col-8">
+                                            {{data.doctor_license}}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col text-secondary">Services</div>
+                                        <div class="col-8">
+
+                                                {% for service in services %}
+                                                    {% if service.doctor_id.user.id == data.user.id %}
+                                                        {{service.service_name}}  <strong class="mx-2">R {{service.service_fee}}</strong> 
+                                                    {% else %}
+                                                        <p class="text-secondary">No Services Created</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </section>
+                        </div>
+                        <div style="height: 50px; width: 100%;"></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col hide-components-ipad">
-            kgotso@gmail.com
-        </div>
-        <div class="col hide-components-ipad">
-            098 736 7383
-        </div>
-        <div class="col hide-components-ipad">
-            <p class="m-0 p-0">
-                - General Practioner
-            </p>
-            <p class="m-0 p-0">
-                - service 2
-            </p>
-        </div>
-        <div class="col fw-bold" style="color: darkblue;">View</div>
-    </div>
-    <div class="row m-0 bg-light border p-3 rounded">
-        <div class="col">
-            Dr Kgotso Ncholo
-        </div>
-        <div class="col hide-components-ipad">
-            kgotso@gmail.com
-        </div>
-        <div class="col hide-components-ipad">
-            098 736 7383
-        </div>
-        <div class="col hide-components-ipad">
-            - General Practioner
-        </div>
-        <div class="col fw-bold" style="color: darkblue;">View</div>
-    </div>
-    <div class="row m-0 bg-light border p-3 rounded">
-        <div class="col">
-            Dr Kgotso Ncholo
-        </div>
-        <div class="col hide-components-ipad">
-            kgotso@gmail.com
-        </div>
-        <div class="col hide-components-ipad">
-            098 736 7383
-        </div>
-        <div class="col hide-components-ipad">
-            - General Practioner
-        </div>
-        <div class="col fw-bold" style="color: darkblue;">View</div>
-    </div>
+        {% endfor %}
   </section>
+
+  {% endfor %}
   
 
 {% endblock %}

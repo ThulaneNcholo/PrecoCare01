@@ -1,0 +1,349 @@
+{% extends 'doctor/doctor-base.html' %}
+
+
+{% block content %}
+
+
+{% for data in doctor_profile %}
+
+
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-warning py-5" role="alert">
+        <p style="font-size: 20px;">{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+
+<!--Doctor Profile Modal -->
+<div class="modal fade" id="doctorprofile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{data.first_name}} {{data.last_name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form action="" method="POST" >
+            {% csrf_token %}
+            <div class="modal-body">
+                <section>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                    First Name
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2">
+                                    <input type="text" class="form-control py-3" id="first_name" aria-describedby="first_name" name="first_name" value="{{data.first_name}}">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                    Last Name
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2">
+                                    <input type="text" class="form-control py-3" id="last_name" aria-describedby="last_name" name="last_name" value="{{data.last_name}}">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                    Phone Number
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2">
+                                    <input type="text" class="form-control py-3" id="phone" aria-describedby="phone" name="phone" value="{{data.mobile_number}}">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                    Email Address
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2">
+                                    <input type="email" class="form-control py-3" id="email" aria-describedby="email" name="emailaddress" value="{{data.email}}">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                    About Doctor
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2">
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" name="about">{{data.about_doctor}}</textarea>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                    Doctor License
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2">
+                                    <input type="text" class="form-control py-3" id="license" aria-describedby="license" name="license" value="{{data.doctor_license}}">
+                                </div>
+                            </div>
+                        </li>
+                        <input hidden="True" type="text" name="profile_status" value="Complete">
+                    </ul>
+                </section>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button name="submit-doctor" type="submit" class="btn text-white" style="background-color: darkblue;">Submit Profile</button>
+                </div>
+        </form>
+    </div>
+    </div>
+</div>
+
+
+<section class="mt-5 container">
+    <ul class="list-group">
+        <li class="list-group-item py-4" style="background-color: darkblue;">
+            <div class="row text-white">
+                <div class="col">
+                    Doctors Profile
+                </div>
+                <div class="col">
+                    <a type="button" data-bs-toggle="modal" data-bs-target="#doctorprofile">
+                        Edit Profile <span><i class="bi bi-arrow-right-circle-fill px-1"></i></span>
+                    </a>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item py-4">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary d-flex align-items-center">
+                    Profile Picture  <span class="px-3"><!-- Button trigger modal -->
+                        <button type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#profilepicture{{data.id}}">
+                          Upload Image
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="profilepicture{{data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Profile Picture</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                {% if data.profile_pic %}
+                                    <img src="{{data.profile_pic.url}}" class="img-thumbnail" alt="...">
+                                    {% else %}
+                                    <i class="bi bi-person-square"></i>
+                                    {% endif %}
+                                    <section class="mt-4">
+                                        <form action="" method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            {% if data.profile_pic %}
+                                            <input type="file" id="img" name="profile_picture" accept="image/*" value="{{data.profile_pic.url}}">
+                                            {% else %}
+                                            <input type="file" id="img" name="profile_picture" accept="image/*" value="">
+                                            {% endif %}
+                                        </section>
+                                        <center>
+                                            <button class="btn text-white px-5 mt-4" style="background-color: darkblue;" name="submit-picture">Submit Picture</button>
+                                        </center>
+                                    </form>
+                                    <div style="height: 100px; width: 100%;"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div></span>
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {% if data.profile_pic %}
+                        <img src="{{data.profile_pic.url}}" class="img-thumbnail" alt="...">
+                    {% else %}
+                        <i class="bi bi-person-square" style="font-size: 100px;"></i>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    Full Name
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.first_name}} {{data.last_name}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    Phone Number
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.mobile_number}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    Email Address
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.email}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    About Doctor
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.about_doctor}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    Verification Status
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.verified}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    Doctor License
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.doctor_license}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-lg-6 mt-2 text-secondary">
+                    Profile Created Date
+                </div>
+                <div class="col-12 col-lg-6 mt-2">
+                    {{data.date_created}}
+                </div>
+            </div>
+        </li>
+      </ul>
+</section>
+
+
+<section class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item text-white py-4" style="background-color: darkblue;">
+            <div class="row">
+                <div class="col">
+                    Doctor Services
+                </div>
+                <div class="col">
+                        <a type="button" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#AddNewService" >
+                            Add Service <span><i class="bi bi-arrow-right-circle-fill px-1"></i></span>
+                        </a>
+
+                        <!-- Add New Service -->
+                            <div class="modal fade" id="AddNewService" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add New Service</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+
+                                            <div class="mb-4">
+                                                <select class="form-select py-3" aria-label="Default select example" name="service_name">
+                                                    <option selected>Select A Service</option>
+                                                    {% for list in service_list %}
+                                                    <option value="{{list.name}}">{{list.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="basic-addon1">R</span>
+                                                <input type="text" class="form-control py-3" placeholder="400" aria-label="servicefee" aria-describedby="basic-addon1" name="newservicefee">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="submit" class="btn text-white" style="background-color: darkblue;" name="add_service">Submit Service</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </li>
+        {% for doctor_service in doctor_service %}
+            {% if doctor_service.doctor_id.id == data.id %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-12 col-lg-4 mt-2">
+                        {{doctor_service.service_name}} {{doctor_service.id}}
+                    </div>
+                    <div class="col-12 col-lg-4 mt-2">
+                        R {{doctor_service.service_fee}}
+                    </div>
+                    <div class="col-12 col-lg-4 mt-2 text-secondary">
+                        <a type="button" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#serviceeditmodal{{doctor_service.id}}">
+                            <span style="color: darkblue;">Edit Service</span>
+                        </a>
+
+                          <!--Edit Service Modal -->
+                            <div class="modal fade" id="serviceeditmodal{{doctor_service.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">{{doctor_service.service_name}}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="servicefee" class="form-label">Service Fee</label>
+                                                <input type="text" class="form-control" id="servicefee" aria-describedby="feehelp" value="{{doctor_service.service_fee}}" name="service_fee">
+                                                <div id="feehelp" class="form-text mt-3">You can only edit your service fee, if you want to change the service name you have to create a new service.</div>
+                                            </div>
+                                            <input hidden="True" type="text" value="{{doctor_service.id}}" name="service_id">
+                                            <input hidden="True" type="text" name="service_names" value="{{doctor_service.service_name}}">
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger" name="delete_service">Delete Service</button>
+                                        <button type="submit" class="btn text-white" style="background-color: darkblue;" name="edit_service_fee">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </li>
+
+            {% endif %}
+        {% endfor %}
+        
+      </ul>
+</section>
+
+{% endfor %}
+
+
+
+{% endblock %}

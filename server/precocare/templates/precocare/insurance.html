@@ -13,8 +13,6 @@
         background-color: var(--main-color);
         height: 25vh;
         width: 100%;
-        border-bottom-right-radius: 0.30rem!important;
-        border-bottom-left-radius: 0.30rem!important;
         padding-top: 44px;
     }
 
@@ -93,88 +91,65 @@
         </div>
     </section>
 
-    <section class="search-bar mt-5 container">
-        <form>
-            <div class="row m-0 p-0">
-                <div class="col ">
-                    <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
-                        <option>Select Insurance</option>
-                        <option value="volvo">Discovery</option>
-                        <option value="volvo">Discovery</option>
-                        <option value="volvo">Discovery</option>
-                        <option value="volvo">Discovery</option>
+    <section class="mt-5 container">
+        <p class="text-secondary">Select Medical Aid and a location and search.</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6 col-xl">
+                    <select class="dropdown_style rounded mb-4" name="selected_insurance"  style="width: 100%;">
+                        <option>Select Medical Aid</option>
+                        {% for data in insurance_list %}
+                        <option value="{{data.id}}">{{data.name}}</option>
+                        {% endfor %}
                       </select>
                 </div>
-                <div class="col-2 p-0">
-                    <div class="search-icon rounded bg-light">
-                        <center>
-                        <i class="bi bi-search" style="color: darkblue;"></i>
-                        </center>
-                    </div>
+                <div class="col-6 col-xl">
+                    <select class="dropdown_style rounded mb-4" name="selected_suburb"  style="width: 100%;">
+                        <option>Select Town</option>
+                        {% for data in locations_list %}
+                        <option value="{{data.name}}">{{data.name}}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="col-12 col-xl">
+                    <button class="btn m-0 p-0" type="submit" name="insurance_search" style="width: 100%;">
+                        <div class="search-icon rounded" style="background-color: darkblue;">
+                            <center>
+                            <i class="bi bi-search" style="color: white;"></i>
+                            </center>
+                        </div>
+                    </button>
                 </div>
             </div>
         </form>
     </section>
 
+    <section class="mt-5 container">
+        <p class="text-secondary">Showing results that support <strong>{{insurance_name}}</strong> Medical Aid in <strong>{{selected_suburb}}.</strong></p>
+    </section>
 
-    <section class="search-results mt-5 container">
-        <p class="main-headings m-0">Locations</p>
-
-        <section>
-        <div class=" overflow-hidden">
-            <div class="row gy-3">
-              <div class="col-sm-6">
-                <a href="#insurancelocations" style="text-decoration: none;"  data-bs-toggle="offcanvas" href="#insurancelocations" role="button" aria-controls="insurancelocations">
-                    <div class="p-3 border bg-light rounded">
-                        <p class="mb-2 badge bg-danger">12</p>
-                        <p class="mb-1" style="color: darkblue; font-weight: 500;">Tsakane</p>
+    <section class="mt-5 container">
+        <div class="row">
+            {% if clinic_location_list %}
+            {% for clinic in  clinic_location_list %}
+                <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title">{{clinic.clinic_id.clinic_name}}</h5>
+                    <p class="card-text text-secondary">{{clinic.street}}, {{clinic.suburb}}</p>
+                    <a href="{% url 'clinic' clinic.clinic_id.id %}" class="btn text-white" style="background-color: darkblue;">View Clinic</a>
                     </div>
-                </a>
-
-
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="insurancelocations" aria-labelledby="offcanvasExampleLabel">
-                    <div class="offcanvas-header">
-                      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tsakane</h5>
-                      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                      <section class="overflow-hidden">
-                        <div class="row gy-4">
-                            {% include 'partials/clinic_card.html' %}
-                            {% include 'partials/clinic_card.html' %}
-                            {% include 'partials/clinic_card.html' %}
-                            {% include 'partials/clinic_card.html' %}
-                        </div>
-                      </section>
-                      <div style="height: 50px; width: 100%;"></div>
-                    </div>
-                  </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="p-3 border bg-light rounded">
-                    <p class="mb-2  badge bg-danger">12</p>
-                    <p class="mb-1" style="color: darkblue; font-weight: 500;">kwa-thema</p>
                 </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="p-3 border bg-light rounded">
-                    <p class="mb-2  badge bg-danger">12</p>
-                    <p class="mb-1" style="color: darkblue; font-weight: 500;">Springs</p>
                 </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="p-3 border bg-light rounded">
-                    <p class="mb-2  badge bg-danger">12</p>
-                    <p class="mb-1" style="color: darkblue; font-weight: 500;">Dalpark</p>
-                </div>
-              </div>
-            </div>
+            {% endfor %}
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    if results are blank,means there are no clinics that meet your search requirements.
+                 </div>
+            {% endif %}
           </div>
     </section>
-    </section>
-
-
-    
     
 {% endblock %}
 

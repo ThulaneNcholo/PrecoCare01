@@ -1,0 +1,20 @@
+
+
+{% if clinics %}
+    {% for data in clinics %}
+        <div class="col-sm-6">
+            <div class="card p-4 bg-light mt-3">
+            <div class="card-body">
+                <h5 class="card-title">{{data.clinic_name}}</h5>
+                <p class="card-text">Clinic Status : <span class="text-danger">{{data.clinic_status }}</span> </p>
+                <a href="{% url 'doctor-dashboard' data.id %}" class="btn text-white" style="background-color: darkblue;">View Dashboard</a>
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% else %}
+
+<p>No Clinics created</p>
+{% endif %}
+

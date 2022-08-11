@@ -13,114 +13,1028 @@
         color: var(--main-color);
         font-size: 18px;
     }
+
+    .navbar-brand-new {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    }
+
+    .navbar-light .navbar-toggler {
+    color: white;
+    border-color: white;
+  }
     
 
     
 </style>
 
 
+
+
+{% for practice in clinic %}
+
+<section>
+    <nav class="navbar navbar-expand-lg navbar-light py-3" style="background-color: darkblue;">
+    <div class="container-fluid">
+        <a href="{% url 'dashboard' practice.id %}">
+            <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: white; padding-right: 20px;"></i>
+        </a>
+      <button style="background-color: white;"  class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-gear-fill " style="color: darkblue; font-size: 20px;"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="btn p-0 m-0 bg-light px-1 mx-1" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Clinic Profile Settings</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn p-0 m-0 bg-light px-1 mx-1" href="{% url 'timeslots' practice.id %}">Time-Slot Settings</a>
+            </li>
+          <!-- <li class="nav-item">
+            <a  class="nav-link active text-light" role="button" aria-pressed="true" aria-current="page" href="#exampleModal"  data-bs-toggle="modal">Clinic Profile Settings</a>
+          </li> -->
+        </ul>
+        <div class="d-flex">
+            <h6 class="text-white px-1">Administrator Dashboard</h6>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+  </section>
+
+{% if administrators.user.id == request.user.id %}
+  {% if administrators.profile_set == "Incomplete" %}
+    <div class="alert alert-primary my-5 py-5 container" role="alert">
+      Hello <strong>{{request.user}}</strong> Please Complete your Profile <strong class="px-3"><a href="{% url 'admin_profile' %}">Click Here</a></strong>
+    </div>
+  {% endif %}
+{% endif %}
+
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-warning py-5" role="alert">
+        <p style="font-size: 20px;">{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+
+<section class="mt-5 container">
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel" style="color: darkblue;">{{practice.clinic_name}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Clinic Details
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#cliniclocations" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Clinic Locations
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#ClinicDoctors" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Clinic Doctors
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#ClinicAdministrators" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Clinic admins
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#ServicesOffered" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Services 
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#MedicalSchemes" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Medical Aids
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                  </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel2">Clinic Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section class="mt-2">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="clinicnameinput" class="form-label">Clinic Name</label>
+                            <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="clinicnamehelp" name="clinic-name"  value="{{practice.clinic_name}}">
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="">
+                                    <label for="contact1" class="form-label">Contact 1</label>
+                                    <input type="text" class="form-control py-3 bg-light" id="contact1" aria-describedby="contact1help" name="contact-1" value="{{practice.contact1}}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="">
+                                    <label for="contact2" class="form-label">Contact 2</label>
+                                    <input type="text" class="form-control py-3 bg-light" id="contact2" aria-describedby="contact2help" name="contact-2" value="{{practice.contact2}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="email" class="form-control py-3 bg-light" id="exampleInputEmail1" aria-describedby="emailHelp" name="email-address" value="{{practice.emial}}">
+                        </div>
+                        <div class="mb-4">
+                            <label for="exampleFormControlTextarea1" class="form-label">About Clinic</label>
+                            <textarea class="form-control py-3 bg-light" id="exampleFormControlTextarea1" rows="12" placeholder="small description about clinic ?" name="about-clinic">{{practice.about_clinic}}</textarea>
+                        </div>
+
+                        <section class="mt-5">
+                            <p style="color: darkblue;">Clinic Working hours</p>
+                            <div class="mb-4">
+                                <label for="mon-fri" class="form-label">Monday - Friday</label>
+                                <input type="text" class="form-control py-3 bg-light" id="mon-fri" aria-describedby="clinic-working-hours" name="mon-fri" value="{{practice.mon_fri_hours}}" placeholder="10:00 am - 18:30 pm">
+                            </div>
+                            <div class="mb-4">
+                                <label for="saturday" class="form-label">Saturday</label>
+                                <input type="text" class="form-control py-3 bg-light" id="saturday" aria-describedby="clinic-working-hours" name="saturday" value="{{practice.saturday}}"  placeholder="10:00 am - 18:30 pm">
+                            </div>
+                            <div class="mb-4">
+                                <label for="sunday" class="form-label">Sunday</label>
+                                <input type="text" class="form-control py-3 bg-light" id="sunday" aria-describedby="clinic-working-hours" name="sunday" value="{{practice.sunday}}"  placeholder="10:00 am - 18:30 pm / closed">
+                            </div>
+                            <div class="mb-4">
+                                <label for="holiday" class="form-label">Holidays</label>
+                                <input type="text" class="form-control py-3 bg-light" id="holiday" aria-describedby="clinic-working-hours" name="holidays" value="{{practice.holidays}}"  placeholder="10:00 am - 18:30 pm / closed">
+                            </div>
+
+                        </section>
+                        
+                        <label for="clinicnameinput" class="form-label mt-4 mb-4">Clinic Type ?</label>
+                        <section class="">
+                            <div class="row">
+                                {% if practice.clinic_type == "Private"%}
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input checked class="form-check-input" type="radio" name="clinictype" id="privateclinic" value="Private">
+                                            <label class="form-check-label" for="privateclinic">
+                                            Private
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="clinictype" id="privateclinic" value="Private">
+                                        <label class="form-check-label" for="privateclinic">
+                                        Private
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+
+                                {% if practice.clinic_type == "Public"%}
+                                    <div class="col-3">
+                                        <div class="form-check">
+                                            <input checked class="form-check-input" type="radio" name="clinictype" id="publicclinic" value="Public">
+                                            <label class="form-check-label" for="publicclinic">
+                                              Public
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input  class="form-check-input" type="radio" name="clinictype" id="publicclinic" value="Public">
+                                        <label class="form-check-label" for="publicclinic">
+                                          Public
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </section>
+                        <center>
+                            <button name="clinic_details" type="submit" class="btn btn-warning mt-5 py-3" style="width: 50%;">Submit</button>
+                        </center>
+                    </form>
+                </section>
+                <div style="height: 10px; width: 100%;"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="cliniclocations" aria-hidden="true" aria-labelledby="cliniclocationsToggleLabel3" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cliniclocationsToggleLabel3">Clinic Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="clinicaddress" class="form-label">Address</label>
+                            <input type="text" class="form-control py-3 bg-light" id="clinicaddress" aria-describedby="addresshelp" placeholder="12 main street" name="street">
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-6 col-md-6 col-lg-5 mt-3">
+                                <label for="clinicnameinput" class="form-label">Provice</label>
+                                <select class="form-select py-3 bg-light" aria-label="provice select" name="province_selected">
+                                    <option selected>Select Provice</option>
+
+                                    {% for data in province %}
+                                    <option value="{{data.name}}">{{data.name}}</option>
+                                    {% endfor %}
+                                    
+                                </select>
+                            </div>
+                            <div class="col-6 col-md-6 col-lg-5 mt-3">
+                                <label for="clinicnameinput" class="form-label">Town</label>
+                                <select class="form-select py-3 bg-light" aria-label="suburb select" name="suburb">
+                                    <option selected>Select Town</option>
+
+                                    {% for data in towns %}
+                                    <option value="{{data.name}}">{{data.name}}</option>
+                                    {% endfor %}
+                                    
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-2 mt-3">
+                                <div class="">
+                                    <label for="clinicnameinput" class="form-label">Zip Code</label>
+                                    <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="zipcodeHelp" name="zipcode">
+                                </div>
+                            </div>
+                        </div>
+                        <center>
+                            <button name="clinic_locatoins" type="submit" class="btn btn-warning mt-5 py-3" style="width: 50%;">Submit</button>
+                        </center>
+                    </form>
+                </section>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="ClinicDoctors" aria-hidden="true" aria-labelledby="ClinicDoctorsToggleLabel3" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="ClinicDoctorsToggleLabel3">Clinic Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section class="mt-2">
+                    <label for="searchfordoctor" class="form-label">Search for Doctor.</label>
+                    <form class="d-flex"  action="{% url 'doctor-search' practice.id %}" method="POST">
+                      {% csrf_token %}
+                        <input class="form-control me-2 py-3 bg-light" type="search" placeholder="Search with License #" aria-label="Search" name="searched_doctor_id">
+                        <button  name="doctor_search" class="btn btn-success py-3" type="submit">Search</button>
+                      </form>
+                      <div id="searchadminhelp" class="form-text mt-4 my-3">You can only search for Doctors with they Doctors Lincense Number</div>
+                      <div id="searchadminhelp" class="form-text my-3">We use Doctors License number to make the search results more accorate.</div>
+                </section>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="ClinicAdministrators" aria-hidden="true" aria-labelledby="ClinicAdministratorsToggleLabel3" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="ClinicAdministratorsToggleLabel3">Clinic Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section class="mt-2">
+                    <label for="searchfordoctor" class="form-label">Search Admin.</label>
+                    <form class="d-flex" action="{% url 'admin-search' practice.id %}" method="POST">
+                      {% csrf_token %}
+                        <input class="form-control me-2 py-3 bg-light" type="search" placeholder="Search with Identification #" aria-label="Search" name="searched_id">
+                        <button name="admin_search" class="btn btn-success py-3" type="submit">Search</button>
+                      </form>
+                      <div id="searchadminhelp" class="form-text mt-4 my-3">You can only search for Administrators with they Identification number.</div>
+                      <div id="searchadminhelp" class="form-text my-3">We use Identification number to make the search results more accorate.</div>
+                </section>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="ServicesOffered" aria-hidden="true" aria-labelledby="ServicesOfferedToggleLabel3" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="ServicesOfferedToggleLabel3">Clinic Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section class="mt-2">
+                    <div class="alert alert-primary mb-3" role="alert">
+                        Please Note if your service is not listed please contact us. 
+                        <p class="my-2">Whatsapp - 094 477 4744</p>
+                        <p class="mb-1">Email - admin@precocare.co.za</p>
+                      </div>
+
+                      <form action="" method="POST">
+                        {% csrf_token %}
+                        <label for="clinicnameinput" class="form-label mt-4">Services</label>
+                        <select class="form-select py-3 bg-light" aria-label="Default select example" name="clinic_service">
+                            <option selected>Select Service</option>
+                            {% for data in services %}
+                            <option value="{{data.name}}">{{data.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <div id="servicehelp" class="form-text">Select a service and add a fee to your service or it will stay as <strong>POA</strong></div>
+                        <div class="mb-4 mt-4">
+                            <label for="clinicnameinput" class="form-label">Service Fee</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R</span>
+                                <input type="text" class="form-control py-3" id="username" placeholder="500" name="service_fee">
+                              </div>
+                        </div>
+
+                        <center>
+                            <button name="add_service" type="submit" class="btn btn-warning px-5 py-2 mt-3">Submit Service</button>
+                        </center>
+                      </form>
+                </section>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="MedicalSchemes" aria-hidden="true" aria-labelledby="MedicalSchemesToggleLabel3" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="MedicalSchemesToggleLabel3">Clinic Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <section class="mt-2">
+                        <div class="alert alert-primary mb-3" role="alert">
+                            Contact us if your medical Scheme is not listed. 
+                            <p class="my-2">Whatsapp - 094 477 4744</p>
+                            <p class="mb-1">Email - admin@precocare.co.za</p>
+                          </div>
+                        <label for="clinicnameinput" class="form-label mt-4">Medical Schemes</label>
+                        <section class="mt-3 mb-5">
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                      Select Medical Schemes
+                                    </button>
+                                  </h2>
+                                  <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                    <div class="accordion-body bg-light">
+                                        {% for data in insurance %}
+                                        <div class="my-2">
+                                            <div class="row">
+                                                <div class="col-1">
+                                                    <input type="checkbox" id="insurance" name="insurancebox" value="{{data.id}}">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="vehicle1"> {{data.name}}</label><br> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        </section>
+                        <center>
+                            <button name="add_insurance" type="submit" class="btn btn-warning px-5 py-2 mt-3 mb-4">Submit Medical Schemes</button>
+                        </center>
+                    </section>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
+
 <section class="mt-4 container">
     <div class="row">
         <div class="col d-flex align-items-center">
-            <button onclick="history.back()" style="border: none; background-color: transparent;">
+            <!-- <a href="{% url 'dashboard' practice.id %}">
                 <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
-              </button>
+            </a> -->
         </div>
         <div class="col">
-            <a href="{% url 'edit-clinic'%}" style="text-decoration: none;">
-                <button class="btn btn-warning px-5 text-dark">Edit</button>
-            </a>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" style="color: darkblue;" id="exampleModalLabel">{{practice.clinic_name}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-1">
+              <section class="mt-5">
+                  <div class="accordion" id="accordionExample">
+                      <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingTwo">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicdetails" aria-expanded="false" aria-controls="clinicdetails">
+                              Clinic Details
+                              </button>
+                          </h2>
+                          <div id="clinicdetails" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                              <div class="accordion-body ">
+                                  <section class="mt-5">
+                                      <form action="" method="POST">
+                                          {% csrf_token %}
+                                          <div class="mb-4">
+                                              <label for="clinicnameinput" class="form-label">Clinic Name</label>
+                                              <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="clinicnamehelp" name="clinic-name"  value="{{practice.clinic_name}}">
+                                          </div>
+                                          <div class="row mb-4">
+                                              <div class="col">
+                                                  <div class="">
+                                                      <label for="contact1" class="form-label">Contact 1</label>
+                                                      <input type="text" class="form-control py-3 bg-light" id="contact1" aria-describedby="contact1help" name="contact-1" value="{{practice.contact1}}">
+                                                  </div>
+                                              </div>
+                                              <div class="col">
+                                                  <div class="">
+                                                      <label for="contact2" class="form-label">Contact 2</label>
+                                                      <input type="text" class="form-control py-3 bg-light" id="contact2" aria-describedby="contact2help" name="contact-2" value="{{practice.contact2}}">
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="mb-4">
+                                              <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                              <input type="email" class="form-control py-3 bg-light" id="exampleInputEmail1" aria-describedby="emailHelp" name="email-address" value="{{practice.emial}}">
+                                          </div>
+                                          <div class="mb-4">
+                                              <label for="exampleFormControlTextarea1" class="form-label">About Clinic</label>
+                                              <textarea class="form-control py-3 bg-light" id="exampleFormControlTextarea1" rows="3" placeholder="small description about clinic ?" name="about-clinic">{{practice.about_clinic}}</textarea>
+                                          </div>
+  
+                                          <section class="mt-5">
+                                              <p style="color: darkblue;">Clinic Working hours</p>
+                                              <div class="mb-4">
+                                                  <label for="mon-fri" class="form-label">Monday - Friday</label>
+                                                  <input type="text" class="form-control py-3 bg-light" id="mon-fri" aria-describedby="clinic-working-hours" name="mon-fri" value="{{practice.mon_fri_hours}}" placeholder="10:00 am - 18:30 pm">
+                                              </div>
+                                              <div class="mb-4">
+                                                  <label for="saturday" class="form-label">Saturday</label>
+                                                  <input type="text" class="form-control py-3 bg-light" id="saturday" aria-describedby="clinic-working-hours" name="saturday" value="{{practice.saturday}}"  placeholder="10:00 am - 18:30 pm">
+                                              </div>
+                                              <div class="mb-4">
+                                                  <label for="sunday" class="form-label">Sunday</label>
+                                                  <input type="text" class="form-control py-3 bg-light" id="sunday" aria-describedby="clinic-working-hours" name="sunday" value="{{practice.sunday}}"  placeholder="10:00 am - 18:30 pm / closed">
+                                              </div>
+                                              <div class="mb-4">
+                                                  <label for="holiday" class="form-label">Holidays</label>
+                                                  <input type="text" class="form-control py-3 bg-light" id="holiday" aria-describedby="clinic-working-hours" name="holidays" value="{{practice.holidays}}"  placeholder="10:00 am - 18:30 pm / closed">
+                                              </div>
+  
+                                          </section>
+                                          
+                                          <label for="clinicnameinput" class="form-label mt-4 mb-4">Clinic Type ?</label>
+                                          <section class="">
+                                              <div class="row">
+                                                  {% if practice.clinic_type == "Private"%}
+                                                      <div class="col-6">
+                                                          <div class="form-check">
+                                                              <input checked class="form-check-input" type="radio" name="clinictype" id="privateclinic" value="Private">
+                                                              <label class="form-check-label" for="privateclinic">
+                                                              Private
+                                                              </label>
+                                                          </div>
+                                                      </div>
+                                                  {% else %}
+                                                  <div class="col-6">
+                                                      <div class="form-check">
+                                                          <input class="form-check-input" type="radio" name="clinictype" id="privateclinic" value="Private">
+                                                          <label class="form-check-label" for="privateclinic">
+                                                          Private
+                                                          </label>
+                                                      </div>
+                                                  </div>
+                                                  {% endif %}
+  
+  
+                                                  {% if practice.clinic_type == "Public"%}
+                                                      <div class="col-3">
+                                                          <div class="form-check">
+                                                              <input checked class="form-check-input" type="radio" name="clinictype" id="publicclinic" value="Public">
+                                                              <label class="form-check-label" for="publicclinic">
+                                                                Public
+                                                              </label>
+                                                          </div>
+                                                      </div>
+                                                  {% else %}
+                                                  <div class="col-3">
+                                                      <div class="form-check">
+                                                          <input  class="form-check-input" type="radio" name="clinictype" id="publicclinic" value="Public">
+                                                          <label class="form-check-label" for="publicclinic">
+                                                            Public
+                                                          </label>
+                                                      </div>
+                                                  </div>
+                                                  {% endif %}
+                                              </div>
+                                          </section>
+                                          <center>
+                                              <button name="clinic_details" type="submit" class="btn btn-warning my-5 py-3" style="width: 50%;">Submit</button>
+                                          </center>
+                                      </form>
+                                  </section>
+                                  <div style="height: 70px; width: 100%;"></div>
+                              </div>
+                          </div>
+                          </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicLocations" aria-expanded="false" aria-controls="clinicLocations">
+                                Clinic Locations
+                                </button>
+                            </h2>
+                            <div id="clinicLocations" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <section class="my-5">
+                                        <form action="" method="POST">
+                                            {% csrf_token %}
+                                            <div class="mb-4">
+                                                <label for="clinicaddress" class="form-label">Address</label>
+                                                <input type="text" class="form-control py-3 bg-light" id="clinicaddress" aria-describedby="addresshelp" placeholder="12 main street" name="street">
+                                            </div>
+                                            <div class="row mb-4">
+                                                <div class="col-6 col-md-6 col-lg-5 mt-3">
+                                                    <label for="clinicnameinput" class="form-label">Provice</label>
+                                                    <select class="form-select py-3 bg-light" aria-label="provice select" name="province_selected">
+                                                        <option selected>Select Provice</option>
+
+                                                        {% for data in province %}
+                                                        <option value="{{data.name}}">{{data.name}}</option>
+                                                        {% endfor %}
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="col-6 col-md-6 col-lg-5 mt-3">
+                                                    <label for="clinicnameinput" class="form-label">Town</label>
+                                                    <select class="form-select py-3 bg-light" aria-label="suburb select" name="suburb">
+                                                        <option selected>Select Town</option>
+
+                                                        {% for data in towns %}
+                                                        <option value="{{data.name}}">{{data.name}}</option>
+                                                        {% endfor %}
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-md-12 col-lg-2 mt-3">
+                                                    <div class="">
+                                                        <label for="clinicnameinput" class="form-label">Zip Code</label>
+                                                        <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="zipcodeHelp" name="zipcode">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <center>
+                                                <button name="clinic_locatoins" type="submit" class="btn btn-warning my-5 py-3" style="width: 50%;">Submit</button>
+                                            </center>
+                                        </form>
+                                    </section>
+                                    <div style="height: 70px; width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                      <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingTwo">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adddoctors" aria-expanded="false" aria-controls="adddoctors">
+                          Clinic Doctors
+                          </button>
+                      </h2>
+                      <div id="adddoctors" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                              <section class="mt-2">
+                                  <label for="searchfordoctor" class="form-label">Search for Doctor.</label>
+                                  <form class="d-flex"  action="{% url 'doctor-search' practice.id %}" method="POST">
+                                    {% csrf_token %}
+                                      <input class="form-control me-2 py-3 bg-light" type="search" placeholder="Search with License #" aria-label="Search" name="searched_doctor_id">
+                                      <button  name="doctor_search" class="btn btn-outline-success py-3" type="submit">Search</button>
+                                    </form>
+                                    <div id="searchadminhelp" class="form-text mt-4 my-2">- You can only search for Doctors with they Doctors Lincense Number</div>
+                                    <div id="searchadminhelp" class="form-text my-2">- We use Doctors License number to make the search results more accorate.</div>
+                              </section>
+                              <div style="height: 70px; width: 100%;"></div>
+                          </div>
+                      </div>
+                      </div>
+                      <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingThree">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addadmins" aria-expanded="false" aria-controls="addadmins">
+                          Clinic Administrators
+                          </button>
+                      </h2>
+                      <div id="addadmins" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                              <section class="mt-2">
+                                  <label for="searchfordoctor" class="form-label">Search Admin.</label>
+                                  <form class="d-flex" action="{% url 'admin-search' practice.id %}" method="POST">
+                                    {% csrf_token %}
+                                      <input class="form-control me-2 py-3 bg-light" type="search" placeholder="Search with Identification #" aria-label="Search" name="searched_id">
+                                      <button name="admin_search" class="btn btn-success py-3" type="submit">Search</button>
+                                    </form>
+                                    <div id="searchadminhelp" class="form-text mt-4">You can only search for Administrators with they Identification number.</div>
+                                    <div id="searchadminhelp" class="form-text">We use Identification number to make the search results more accorate.</div>
+                              </section>
+                              <div style="height: 70px; width: 100%;"></div>
+                          </div>
+                      </div>
+                      </div>
+                      <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingThree">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addservices" aria-expanded="false" aria-controls="addservices">
+                                Services Offered
+                              </button>
+                          </h2>
+                          <div id="addservices" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                              <div class="accordion-body">
+                                  <section class="mt-2">
+                                      <div class="alert alert-primary mb-3" role="alert">
+                                          Please Note if your service is not listed please contact us. 
+                                          <p class="my-2">Whatsapp - 094 477 4744</p>
+                                          <p class="mb-1">Email - admin@precocare.co.za</p>
+                                        </div>
+  
+                                        <form action="" method="POST">
+                                          {% csrf_token %}
+                                          <label for="clinicnameinput" class="form-label mt-4">Services</label>
+                                          <select class="form-select py-3 bg-light" aria-label="Default select example" name="clinic_service">
+                                              <option selected>Select Service</option>
+                                              {% for data in services %}
+                                              <option value="{{data.name}}">{{data.name}}</option>
+                                              {% endfor %}
+                                          </select>
+                                          <div id="servicehelp" class="form-text">Select a service and add a fee to your service or it will stay as <strong>POA</strong></div>
+                                          <div class="mb-4 mt-4">
+                                              <label for="clinicnameinput" class="form-label">Service Fee</label>
+                                              <div class="input-group">
+                                                  <span class="input-group-text">R</span>
+                                                  <input type="text" class="form-control py-3" id="username" placeholder="500" name="service_fee">
+                                                </div>
+                                          </div>
+              
+                                          <center>
+                                              <button name="add_service" type="submit" class="btn btn-warning px-5 py-2 mt-3">Submit Service</button>
+                                          </center>
+                                        </form>
+                                  </section>
+          
+                                  <div style="height: 70px; width: 100%;"></div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingThree">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addinsurances" aria-expanded="false" aria-controls="addinsurances">
+                              Medical Schemes
+                              </button>
+                          </h2>
+                          <div id="addinsurances" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                              <div class="accordion-body">
+  
+                                  <form action="" method="POST">
+                                      {% csrf_token %}
+                                      <section class="mt-2">
+                                          <div class="alert alert-primary mb-3" role="alert">
+                                              Contact us if your medical Scheme is not listed. 
+                                              <p class="my-2">Whatsapp - 094 477 4744</p>
+                                              <p class="mb-1">Email - admin@precocare.co.za</p>
+                                            </div>
+                                          <label for="clinicnameinput" class="form-label mt-4">Medical Schemes</label>
+                                          <section class="mt-3 mb-5">
+                                              <div class="accordion" id="accordionPanelsStayOpenExample">
+                                                  <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                                        Select Medical Schemes
+                                                      </button>
+                                                    </h2>
+                                                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                                      <div class="accordion-body bg-light">
+                                                          {% for data in insurance %}
+                                                          <div class="my-2">
+                                                              <div class="row">
+                                                                  <div class="col-1">
+                                                                      <input type="checkbox" id="insurance" name="insurancebox" value="{{data.id}}">
+                                                                  </div>
+                                                                  <div class="col">
+                                                                      <label for="vehicle1"> {{data.name}}</label><br> 
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                          {% endfor %}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                          </section>
+                                          <center>
+                                              <button name="add_insurance" type="submit" class="btn btn-warning px-5 py-2 mt-3">Submit Medical Schemes</button>
+                                          </center>
+                                      </section>
+                                  </form>
+                                  <div style="height: 70px; width: 100%;"></div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+            </section>
+            </div>
+  
+            <div style="height: 70px; width: 100%;"></div>
+          </div>
+        </div>
+      </div>
         </div>
     </div>
   </section>
+
   
   
   <section class="container mt-5">
-    <h2 class="text-secondary">Tshepang Medical Centre</h2>
+    <h2 class="text-secondary">{{practice.clinic_name}}</h2>
   </section>
 
   <section class="mt-5 container">
     <p class="clinic-headings">Clinic Status</p>
-    <p class="mb-1 text-success">Active</p>
+
+    {% if practice.clinic_status == "clinic_disabled" %}
+        <p class="mb-1 text-danger">{{practice.clinic_status}}</p>
+    {% else %}
+        <p class="mb-1 text-success">{{practice.clinic_status}}</p>
+    {% endif %}
   </section>
 
   <section class="mt-5 container">
     <p class="clinic-headings">Locations</p>
-    <p class="mb-1">6558 Ndabezitha Street</p>
-    <p class="mb-1">Tsakane</p>
-    <p class="mb-1">Guateng</p>
+
+    {% if  clinic_locations %}
+        {% for data in clinic_locations %}
+        <section class="mt-4">
+            <p class="mb-1 text-secondary">{{data.street}}</p>
+            <p class="mb-1">{{data.suburb}}</p>
+            <p class="mb-1">{{data.province}}</p>
+            <p class="mb-1">{{data.zipcode}}</p>
+            <section>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="location_id" value="{{data.id}}" hidden="True">
+                    <button type="submit" class="btn text-danger p-0 m-0" name="delete_location">Delete Location</button>
+                </form>
+            </section>
+            <hr>
+        </section>
+        {% endfor %}
+    {% else %}
+        <p class="text-danger">No Locations Created</p>
+    {% endif %}
   </section>
 
   <section class="mt-5 container">
-    <p class="clinic-headings">About Clinic</p>
-    <p class="mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, odio ea. Laborum eaque eum quaerat unde sint voluptates ad nisi quas velit nobis. Laudantium nulla, ab facilis dolore commodi perferendis!</p>
+    <p class="clinic-headings">About Clinic <span> <a class="btn btn-success text-white mx-1" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Edit Clinic Settings</a></span></p>
+    {% if practice.about_clinic %}
+        <p class="mb-1">{{practice.about_clinic}}</p>
+    {% else %}
+        <p class="text-danger">No about clinic</p>
+    {% endif %}
+  </section>
+
+  <section class="mt-5 container">
+    <p class="clinic-headings">Working Hours</p>
+
+    <P class="text-secondary mb-1">Monday - Friday </P>
+    {% if practice.mon_fri_hours %}
+    <p class="">{{practice.mon_fri_hours}}</p>
+    {% else %}
+    <p class="text-danger">Time not set</p>
+    {% endif %}
+
+    <P class="text-secondary mb-1">Saturday </P>
+    {% if practice.saturday %}
+    <p class="">{{practice.saturday}}</p>
+    {% else %}
+    <p class="text-danger">Time not set</p>
+    {% endif %}
+
+    <P class="text-secondary mb-1">Sunday </P>
+    {% if practice.sunday %}
+    <p class="">{{practice.sunday}}</p>
+    {% else %}
+    <p class="text-danger">Time not set</p>
+    {% endif %}
+
+    <P class="text-secondary mb-1">Holidays </P>
+    {% if practice.holidays %}
+    <p class="">{{practice.holidays}}</p>
+    {% else %}
+    <p class="text-danger">Time not set</p>
+    {% endif %}
+
+  </section>
+
+
+  <section class="mt-5 container">
+    <p class="clinic-headings">Contact Details</p>
+    {% if practice.contact1 %}
+        <p>{{practice.contact1}}</p>
+    {% else %}
+        <p class="text-danger">No Contact 1</p>
+    {% endif %}
+
+    {% if practice.contact2 %}
+        <p>{{practice.contact2}}</p>
+    {% else %}
+        <p class="text-danger">No Contact 2</p>
+    {% endif %}
   </section>
 
   <section class="mt-5 container">
     <p class="clinic-headings">Clinic type</p>
-    <p class="mb-1">Private</p>
+    <p class="mb-1">{{practice.clinic_type}}</p>
   </section>
 
   <section class="mt-5 container">
     <p class="clinic-headings">Services</p>
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    <p class="mb-1">General Practionor -<span class="text-secondary px-2">R500</span></p>
+
+        {% if clinic_services %}
+            {% for data in clinic_services %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
+                    <div class="row">
+                        <div class="col-7">
+                            <p class="mb-1">
+                                {{data.service_name}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p class="text-secondary">
+                                R {{data.service_fee}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn p-0 m-0" data-bs-toggle="modal" data-bs-target="#editservice{{data.id}}" >
+                                <i class="bi bi-pencil-square text-success" style="font-size: 20px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="editservice{{data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">{{data.service_name}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-4">
+                                        <label for="service-update" class="form-label">Service</label>
+                                        <input type="text" class="form-control py-3 bg-light" id="service-update" aria-describedby="edit-service" name="edit-service" value="{{data.service_name}}"  readonly>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="service-edit" class="form-label">Service Fee</label>
+                                        <input type="text" class="form-control py-3 bg-light" id="service-edit" aria-describedby="edit-service" name="fee_edit" value="{{data.service_fee}}">
+                                        <div id="servicefeehelp" class="form-text">You can only update service fee.</div>
+                                    </div>
+                                    <input type="text" value="{{data.id}}" name="service_id" hidden="True">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-secondary" name="delete-service">Delete</button>
+                                    <button type="submit" name="edit-service-fee" class="btn btn-success">Save changes</button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                        </div>
             </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    <p class="mb-1">General Practionor -<span class="text-secondary px-2">R500</span></p>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    <p class="mb-1">General Practionor -<span class="text-secondary px-2">R500</span></p>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    <p class="mb-1">General Practionor -<span class="text-secondary px-2">R500</span></p>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    <p class="mb-1">General Practionor -<span class="text-secondary px-2">R500</span></p>
-            </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-danger">No Services Created</p>
+        {% endif %}
     </div>
   </section>
-
 
   <section class="mt-5 container">
     <p class="clinic-headings">Medical Scheme Covers</p>
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    Discovery Insurance
+
+        {% if practice.insurance_cover.all %}
+            {% for data in practice.insurance_cover.all %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
+                    <div class="row">
+                        <div class="col d-flex align-items-center">
+                            {{data.name}}
+                        </div>
+                        <div class="col-2 ">
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input type="text" value="{{data.id}}" name="insurance-id" hidden="True">
+                                <button class="btn m-0 p-0" type="submit" name="delete-insurance">
+                                    <i class="bi bi-trash3-fill text-danger" style="font-size: 17px;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    Discovery Insurance
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    Discovery Insurance
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    Discovery Insurance
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="mx-1 py-2 rounded bg-light border px-2 mt-3">
-                    Discovery Insurance
-            </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-danger">No Medical Schemes Created</p>
+        {% endif %}
     </div>
   </section>
   
@@ -131,11 +1045,59 @@
             <div class="mx-2">
                 <p class="clinic-headings">Doctors</p>
                 <ul class="list-group">
-                    <li class="list-group-item">Dr Kgotso Ncholo</li>
-                    <li class="list-group-item">Dr Amy </li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
+
+                    {% if practice.clinic_admins %}
+                        {% for data in practice.clinic_doctors.all %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col">
+                                        {{data.first_name}} {{data.last_name}}
+                                    </div>
+                                    <div class="col-2">
+                                        {% if request.user.id == data.user.id %}
+                                    <i class="bi bi-person-circle text-success" style="font-size: 20px;"></i>
+                                     {% else %}
+
+
+                                     <!-- Button trigger modal -->
+                                     <button type="button" class="btn p-0 m-0" data-bs-toggle="modal" data-bs-target="#deleteadminconfirmation{{data.id}}">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                      </button>
+                                      
+                                      <!-- Modal -->
+                                      <div class="modal fade" id="deleteadminconfirmation{{data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Confirm ?</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-secondary">Are you sure you want to Delete ?</p>
+                                                <p>{{data.first_name}} {{data.last_name}}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                                <form action="" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="text" value="{{data.id}}" name="doctor_selected" hidden="True">
+                                                    <input type="text" value="{{data.first_name}} {{data.last_name}}" name="doctor_user" hidden="True">
+                                                    <button type="submit" class="btn btn-danger"  type="submit" name="remove_doctor">Yes, Im sure</button>
+                                                </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                     {% endif %}
+                                    </div>
+                                </div>
+                                
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item text-secondary">No Doctors Added</li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -143,49 +1105,66 @@
             <div class="mx-2">
                 <p class="clinic-headings">Administrators</p>
                 <ul class="list-group">
-                    <li class="list-group-item">Mede</li>
-                    <li class="list-group-item">Dr Amy </li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
+
+                    {% if practice.clinic_admins %}
+                        {% for data in practice.clinic_admins.all %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    {{data.first_name}} {{data.last_name}}
+                                </div>
+                                <div class="col-2">
+                                    {% if request.user.id == data.user.id %}
+                                    <i class="bi bi-person-circle text-success" style="font-size: 20px;"></i>
+                                     {% else %}
+
+
+                                     <!-- Button trigger modal -->
+                                     <button type="button" class="btn p-0 m-0" data-bs-toggle="modal" data-bs-target="#deleteadminconfirmation{{data.id}}">
+                                        <i class="bi bi-trash3-fill text-danger" style="font-size: 20px;"></i>
+                                      </button>
+                                      
+                                      <!-- Modal -->
+                                      <div class="modal fade" id="deleteadminconfirmation{{data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Confirm ?</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-secondary">Are you sure you want to Delete ?</p>
+                                                <p>{{data.first_name}} {{data.last_name}}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                                <form action="" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="text" value="{{data.id}}" name="admin_selected" hidden="True">
+                                                    <input type="text" value="{{data.first_name}} {{data.last_name}}" name="admin_user" hidden="True">
+                                                    <button type="submit" class="btn btn-danger"  type="submit" name="remove_admin">Yes, Im sure</button>
+                                                </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                     {% endif %}
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item text-secondary">No Administrators Added</li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </div>
   </section>
 
-  <!-- <section class="mt-5 container">
-    <div class="row">
-        <div class="col-sm-6">
-          <div class="card border-0">
-            <div class="card-body">
-                <p class="clinic-headings">Doctors</p>
-                <ul class="list-group">
-                    <li class="list-group-item">Dr Kgotso Ncholo</li>
-                    <li class="list-group-item">Dr Amy </li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
-                </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="card border-0">
-            <div class="card-body">
-                <p class="clinic-headings">Administrators</p>
-                <ul class="list-group">
-                    <li class="list-group-item">Mede</li>
-                    <li class="list-group-item">Dr Amy </li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
-                </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-  </section> -->
 
+  {% endfor %}
 
-{% endblock %}
+  {% endblock %}
+

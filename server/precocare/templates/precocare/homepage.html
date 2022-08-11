@@ -117,10 +117,28 @@ transform: translateX(-100%);
 }
 
 
+.avatar {
+        vertical-align: middle;
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+
 /* .container{
     padding-left: 20px !important;
     padding-right: 20px !important;
 } */
+
+    @media (min-width: 992px) {
+
+    .image-height{
+        height: 350px !important;
+        width: 100% !important;
+        object-fit: cover;
+    }
+    }
 
 </style>
 
@@ -134,73 +152,40 @@ transform: translateX(-100%);
 
             <section class="main-search-layout rounded border">
 
-
-                <!-- <div class="mb-3">
-                    <center>
-                        <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
-                            <option>Select Location</option>
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="opel">Opel</option>
-                            <option value="audi">Audi</option>
-                          </select>
-                    </center>
-                    
-                </div>
-
-                <div class="mb-3">
-                    <center>
-                        <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
-                            <option>Select Service</option>
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="opel">Opel</option>
-                            <option value="audi">Audi</option>
-                          </select>
-                    </center>
-                    
-                </div>
-
-                <div>
-                    <center>
-                        <button class="btn search-icon rounded" style="width: 50%;">
-                            <i class="bi bi-search px-3"></i> Submit
-                        </button>
-                    </center>
-                </div> -->
-
-                <div class="row m-0 p-0">
-                    <div class="col-5 p-0">
-                            <select class="dropdown_style rounded" name="cars" id="cars" style="width: 95%;">
-                              <option>Location</option>
-                              <option value="volvo">Volvo</option>
-                              <option value="saab">Saab</option>
-                              <option value="opel">Opel</option>
-                              <option value="audi">Audi</option>
-                            </select>
-                    </div>
-                    <div class="col-5 p-0">
-                            <select class="dropdown_style rounded" name="cars" id="cars" style="width: 95%;">
-                              <option>Service</option>
-                              <option value="volvo">Volvo</option>
-                              <option value="saab">Saab</option>
-                              <option value="opel">Opel</option>
-                              <option value="audi">Audi</option>
-                            </select>
-                    </div>
-                    <div class="col-2 p-0">
-                        <div class="search-icon rounded">
-                            <center>
-                            <i class="bi bi-search"></i>
-                            </center>
+                <form action="{% url 'main_seacrh' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row m-0 p-0">
+                        <div class="col-5 p-0">
+                                <select required class="dropdown_style rounded" name="location" style="width: 95%;">
+                                  <option>Location</option>
+                                  {% for location in locations_list %}
+                                  <option value="{{location.name}}">{{location.name}}</option>
+                                  {% endfor %}
+                                </select>
+                        </div>
+                        <div class="col-5 p-0">
+                                <select required class="dropdown_style rounded" name="service" style="width: 95%;">
+                                  <option>Service</option>
+                                  {% for service in services_list %}
+                                  <option value="{{service.name}}">{{service.name}}</option>
+                                  {% endfor %}
+                                </select>
+                        </div>
+                        <div class="col-2 p-0">
+                            <button class="btn p-0 m-0" type="submit" name="main_search" style="width: 100%;">
+                                <div class="search-icon rounded">
+                                    <center>
+                                            <i class="bi bi-search"></i>
+                                    </center>
+                                </div>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </section>
         </div>
     </div>
 </section>
-
 
 
 <!-- clinic type section start  -->
@@ -209,9 +194,9 @@ transform: translateX(-100%);
     <p class="main-headings m-0">Clinic Type</p>
     <div class="row">
         <div class="col">
-            <button data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample" type="button" class="btn border" style="width: 100%; background-color: darkblue; color: lightgray;">All</button>
+            <button data-bs-toggle="offcanvas" data-bs-target="#allclinics" aria-controls="allclinics" type="button" class="btn border" style="width: 100%; background-color: darkblue; color: lightgray;">All</button>
        
-              <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="allclinics" aria-labelledby="offcanvasExampleLabel">
                 <div class="offcanvas-header">
                   <h5 class="offcanvas-title" id="offcanvasExampleLabel">All Clinics</h5>
                   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -239,8 +224,21 @@ transform: translateX(-100%);
 
                     <section class="mt-5">
                         <div class="row">
-                            {% include 'partials/clinic_card.html' %}
-                            {% include 'partials/clinic_card.html' %}
+                            {% for clinic in all_clinics %}
+                            <div class="col-6">
+                                <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                    <div class="rounded">
+                                        {% if clinic.hero_image %}
+                                        <img src="{{clinic.hero_image.url}}" class="img-thumbnail" alt="...">
+                                        {% else %}
+                                        <div class="clinic-image bg-light rounded border"></div>
+                                        {% endif %}
+                                        <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
+                                        <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
                         </div>
                     </section>
                 </div>
@@ -248,10 +246,67 @@ transform: translateX(-100%);
 
         </div>
         <div class="col">
-            <button type="button" class="btn btn-light border" style="width: 100%;">Private</button>
+            <button type="button" class="btn btn-light border" style="width: 100%;"  data-bs-toggle="offcanvas" data-bs-target="#privateclinics" aria-controls="privateclinics">Private</button>
+
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="privateclinics" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasExampleLabel">Private Clinics</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="row">
+                        {% for clinic in all_clinics %}
+                            {% if clinic.clinic_type == "Private" %}
+                                <div class="col-6">
+                                    <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                        <div class="rounded">
+                                            {% if clinic.hero_image %}
+                                            <img src="{{clinic.hero_image.url}}" class="img-thumbnail" alt="...">
+                                            {% else %}
+                                            <div class="clinic-image bg-light rounded border"></div>
+                                            {% endif %}
+                                            <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
+                                            <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+              </div>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-light border"  style="width: 100%;">Public</button>
+            <button type="button" class="btn btn-light border"  style="width: 100%;"  data-bs-toggle="offcanvas" data-bs-target="#publicclinics" aria-controls="publicclinics">Public</button>
+
+              
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="publicclinics" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasExampleLabel">Public Clinics</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="row">
+                        {% for clinic in all_clinics %}
+                            {% if clinic.clinic_type == "Public" %}
+                                <div class="col-6">
+                                    <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                        <div class="rounded">
+                                            {% if clinic.hero_image %}
+                                            <img src="{{clinic.hero_image.url}}" class="img-thumbnail" alt="...">
+                                            {% else %}
+                                            <div class="clinic-image bg-light rounded border"></div>
+                                            {% endif %}
+                                            <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
+                                            <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+              </div>
         </div>
     </div>
 </section>
@@ -299,70 +354,37 @@ transform: translateX(-100%);
                             </form>
                         </div>
 
-                        
-
-
                       <section class="mt-5">
-                        <a href="{% url 'locations' %}" style="text-decoration: none;">
+                        {% for location in locations_list%}
+                        <a href="{% url 'locations' location.id %}" style="text-decoration: none;">
                             <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
                                 <div class="col-2">
                                     <i class="bi bi-geo-alt-fill text-light" style="font-size: 20px;"></i>
                                 </div>
-                                <div class="col text-light location-style">Tsakane</div>
+                                <div class="col text-light location-style">{{location.name}}</div>
                                 <div class="col-2">
                                     <i class="bi bi-chevron-right text-light" style="font-size: 20px;"></i>
                                 </div>
                             </div>
                         </a>
-                        
-                        <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
-                            <div class="col-2">
-                                <i class="bi bi-geo-alt-fill text-light" style="font-size: 20px;"></i>
-                            </div>
-                            <div class="col text-light location-style">Brakpan</div>
-                            <div class="col-2">
-                                <i class="bi bi-chevron-right text-light" style="font-size: 20px;"></i>
-                            </div>
-                        </div>
-                        <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
-                            <div class="col-2">
-                                <i class="bi bi-geo-alt-fill text-light" style="font-size: 20px;"></i>
-                            </div>
-                            <div class="col text-light location-style">Brakpan</div>
-                            <div class="col-2">
-                                <i class="bi bi-chevron-right text-light" style="font-size: 20px;"></i>
-                            </div>
-                        </div>
+                        {% endfor %}
                       </section>
                     </div>
                   </div>
             </div>
         </div>
         <div class="row gy-4">
+        {% for data in main_locations %}
           <div class="col-6">
-            <div class="p-3 border bg-light rounded">
-                <i class="bi bi-geo-alt-fill location-icon"></i>
-                <p class="mt-2 text-secondary">Dalpark</p>
-            </div>
+            <a href="{% url 'locations' data.id %}" style="text-decoration: none;">
+                <div class="p-3 border bg-light rounded">
+                    <i class="bi bi-geo-alt-fill location-icon"></i>
+                    <p class="mt-2 text-secondary">{{data.name}}</p>
+                </div>
+            </a>
           </div>
-          <div class="col-6">
-            <div class="p-3 border bg-light rounded">
-                <i class="bi bi-geo-alt-fill location-icon"></i>
-                <p class="mt-2 text-secondary">Dalpark</p>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="p-3 border bg-light rounded">
-                <i class="bi bi-geo-alt-fill location-icon"></i>
-                <p class="mt-2 text-secondary">Dalpark</p>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="p-3 border bg-light rounded">
-                <i class="bi bi-geo-alt-fill location-icon"></i>
-                <p class="mt-2 text-secondary">Dalpark</p>
-            </div>
-          </div>
+          {% endfor %}
+
         </div>
       </div>
 </section>
@@ -387,19 +409,47 @@ transform: translateX(-100%);
                 </div>
                 <div class="offcanvas-body">
                   <section class="mt-5">
-                    {% include 'partials/doctors_card.html' %}
-                    {% include 'partials/doctors_card.html' %}
-                    {% include 'partials/doctors_card.html' %}
-                    {% include 'partials/doctors_card.html' %}
+
+                    {% for doctor in list_doctors %}
+                    <a href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
+                        <div class="row border m-0 bg-light rounded px-2 py-3 mt-4">
+                            <div class="col-3 d-flex align-items-center">
+                                {% if doctor.profile_pic %}
+                                    <img src="{{doctor.profile_pic.url}}" alt="Avatar" class="avatar">
+                                {% else %}
+                                    <i class="bi bi-person-fill" style="font-size: 40px;"></i>
+                                {% endif %}
+                            </div>
+                            <div class="col ">
+                                <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}}</p>
+                                <p class="m-0 text-secondary">general practitioner</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    
                   </section>
                 </div>
               </div>
         </div>
     </div>
-    {% include 'partials/doctors_card.html' %}
-    {% include 'partials/doctors_card.html' %}
-    {% include 'partials/doctors_card.html' %}
-    {% include 'partials/doctors_card.html' %}
+    {% for doctor in list_doctors %}
+    <a href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
+        <div class="row border m-0 bg-light rounded px-2 py-3 mt-4">
+            <div class="col-3 d-flex align-items-center" style="padding-right: 100px;">
+                {% if doctor.profile_pic %}
+                <img src="{{doctor.profile_pic.url}}" alt="Avatar" class="avatar">
+                {% else %}
+                    <i class="bi bi-person-fill" style="font-size: 40px;"></i>
+                {% endif %}
+            </div>
+            <div class="col ">
+                <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}}</p>
+                <p class="m-0 text-secondary">general practitioner</p>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
 </section>
 <!-- doctors section end  -->
 
@@ -412,14 +462,27 @@ transform: translateX(-100%);
                 <p class="main-headings m-0">Clinics</p>
             </div>
             <div class="col d-flex justify-content-end">
-                <p class="sub-headings m-0">View All</p>
+                <a data-bs-toggle="offcanvas" data-bs-target="#allclinics" aria-controls="allclinics" type="button">
+                    <p class="sub-headings m-0">View All</p>
+                </a>
             </div>
         </div>
         <div class="row gy-4">
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
+            {% for clinic in limited_clinics %}
+            <div class="col-sm-12 col-lg-6">
+                <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                    <div class="rounded">
+                        {% if clinic.hero_image %}
+                        <img src="{{clinic.hero_image.url}}" class="img-thumbnail image-height" alt="...">
+                        {% else %}
+                        <div class="clinic-image bg-light rounded border"></div>
+                        {% endif %}
+                        <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
+                        <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                    </div>
+                </a>
+            </div>
+            {% endfor  %}
         </div>
       </div>
 </section>

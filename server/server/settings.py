@@ -119,6 +119,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_ROOT = ''
+MEDIA_URL = ''
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
     '/var/www/static/',

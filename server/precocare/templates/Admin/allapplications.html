@@ -52,6 +52,15 @@
       <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
     </button>
   </section>
+
+
+{% if administrators.user.id == request.user.id %}
+  {% if administrators.profile_set == "Incomplete" %}
+    <div class="alert alert-primary my-5 py-5 container" role="alert">
+      Hello <strong>{{request.user}}</strong> Please Complete your Profile <strong class="px-3"><a href="{% url 'admin_profile' %}">Click Here</a></strong>
+    </div>
+  {% endif %}
+{% endif %}
   
   
   <section class="container mt-4">
@@ -124,87 +133,269 @@
         </div> -->
         <div class="col"></div>
     </div>
-    <div class="row m-0 bg-light border p-3 rounded">
+
+    {% for appointment in appointments_list %}
+    <div class="row m-0 bg-light border p-3 rounded my-3">
         <div class="col">
-            Thulane Ncholo
+            {{appointment.patient_name}} {{appointment.patient_surname}}
         </div>
         <!-- <div class="col hide-components-ipad">
             thulane@gmail.com
         </div> -->
         <div class="col hide-components-ipad">
-            098 736 7383
+            {% if appointment.contact == None %}
+            <span class="text-secondary">Returning Patient</span>
+            {% else %}
+            {{appointment.contact}}
+            {% endif %}
         </div>
         <div class="col hide-components-ipad">
-            General Practioner
+            {{appointment.service.service_name}}
         </div>
         <div class="col hide-components-ipad">
-            Dr Kgotso Ncholo
+            Dr {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}
         </div>
         <div class="col hide-components-ipad">
-            12 August 2022
+            {{appointment.date_appointment}}
         </div>
         <div class="col hide-components-ipad">
-            <span class="text-success">Paid</span>
+            {% if appointment.paid_status == "Outstanding"%}
+            <span class="text-danger">{{appointment.paid_status}}</span>
+            {% else %}
+            <span class="text-success">{{appointment.paid_status}}</span>
+            {% endif %}
         </div>
         <!-- <div class="col hide-components-ipad">
             Complete
         </div> -->
-        <div class="col fw-bold" style="color: darkblue;">View</div>
-    </div>
-    <div class="row m-0 bg-light border p-3 rounded">
         <div class="col">
-            Thulane Ncholo
+            <!-- Button trigger modal -->
+            <button type="button" style="color: darkblue;" class="btn border bg-light" data-bs-toggle="modal" data-bs-target="#exampleModal{{appointment.id}}">
+                View
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal{{appointment.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Patient Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-white py-3" style="background-color: darkblue;">Patient Information</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Patient File Number
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {% if appointment.patient_file_number == None %}
+                                        New Patient
+                                        {% else %}
+                                        {{appointment.patient_file_number}}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Patient
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.patient_name}} {{appointment.patient_surname}}
+                                    </div>
+                                </div>
+                            </li>
+                            {% if appointment.visit_status ==  "First-Time"%}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Gender
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.gender}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        DOB
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.date_of_birth}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Identification
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.identification}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Contact
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.contact}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Email
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.email}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Address
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        <p class="mb-1">{{appointment.street}}</p>
+                                        <p class="mb-1">{{appointment.town}}</p>
+                                        <p class="mb-1">{{appointment.postal_code}}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endif %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Medical Aid
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.medical_aid}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Reason For visit
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.reason_visit}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Allergies
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.allergies}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item text-white py-3" style="background-color: darkblue;">Appointment Information</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Visit Status
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.visit_status}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Service
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.service.service_name}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Service Fee
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        R {{appointment.service.service_fee}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Payment Status
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {% if appointment.paid_status == "Outstanding"%}
+                                        <span class="text-danger">{{appointment.paid_status}}</span> 
+                                        {% else %}
+                                        <span class="text-success">{{appointment.paid_status}}</span> 
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Date
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.date_appointment}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Time Slot
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.time_slot_id.clinic_timeslot_id.timeslot}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Assigned Doctor
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        Dr {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2  text-secondary">
+                                        Appointment Status
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 ">
+                                        {{appointment.application_status}}
+                                    </div>
+                                </div>
+                            </li>
+                          </ul>
+                          <div style="height: 100px; width: 100%;"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
         </div>
-        <!-- <div class="col hide-components-ipad">
-            thulane@gmail.com
-        </div> -->
-        <div class="col hide-components-ipad">
-            098 736 7383
-        </div>
-        <div class="col hide-components-ipad">
-            General Practioner
-        </div>
-        <div class="col hide-components-ipad">
-            Dr Kgotso Ncholo
-        </div>
-        <div class="col hide-components-ipad">
-            12 August 2022
-        </div>
-        <div class="col hide-components-ipad">
-            <span class="text-danger">Outstanding</span>
-        </div>
-        <!-- <div class="col hide-components-ipad">
-            Complete
-        </div> -->
-        <div class="col fw-bold" style="color: darkblue;">View</div>
     </div>
-    <div class="row m-0 bg-light border p-3 rounded">
-        <div class="col">
-            Thulane Ncholo
-        </div>
-        <!-- <div class="col hide-components-ipad">
-            thulane@gmail.com
-        </div> -->
-        <div class="col hide-components-ipad">
-            098 736 7383
-        </div>
-        <div class="col hide-components-ipad">
-            General Practioner
-        </div>
-        <div class="col hide-components-ipad">
-            Dr Kgotso Ncholo
-        </div>
-        <div class="col hide-components-ipad">
-            12 August 2022
-        </div>
-        <div class="col hide-components-ipad">
-            <span class="text-success">Paid</span>
-        </div>
-        <!-- <div class="col hide-components-ipad">
-            Complete
-        </div> -->
-        <div class="col fw-bold" style="color: darkblue;">View</div>
-    </div>
+    {% endfor %}
   </section>
 
 {% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+<section class="container mt-5">
+    <a href="{% url 'clinic-settings' admin_clinic.id %}">
+        <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+    </a>
+</section>
+
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-warning py-5" role="alert">
+        <p style="font-size: 20px;">{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+    <section class="mt-5 container">
+        <h5 class="my-4" style="color: darkblue;">{{admin_clinic.clinic_name}}</h5>
+        {% if searched %}
+            <h5>Showing search results for ....  <span class="text-secondary">{{searched}}</span></h1>
+        {% else %}
+            <h5>No Results</h5>
+        {% endif %}
+    </section>
+
+    <section class="mt-5 container">
+        {% if admin_result %}
+            {% for admin in admin_result %}
+            <div class="bg-light rounded border p-3">
+                <p><span class="text-secondary">Name : </span> {{admin.first_name}} {{admin.last_name}}</p>
+                <p><span class="text-secondary">Identification : </span>  {{admin.user_identification}}</p>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" value="{{admin.id}}" name="add_adminid" hidden="True">
+                    <input type="text" value="{{admin.first_name}} {{admin.last_name}}" name="admin_name" hidden="True">
+                    <button type="submit" name="add_to_clinic" class="btn btn-success my-2 px-3">Add to Clinic</button>
+                </form>
+            </div>
+                
+            {% endfor %}
+        {% else %}
+            <p>No Results</p>
+        {% endif %}
+    </section>
+{% endblock %}

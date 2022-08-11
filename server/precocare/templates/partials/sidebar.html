@@ -10,22 +10,25 @@
       </li>
       <li class="nav-item my-1">
         <a class="nav-link" aria-current="page" href="{% url 'insurance' %}" style="color: grey;">
-          <span> <i class="bi bi-bag-plus navbar-icons-lg px-2"></i></span>
-          Insurance
+          <span> <i class="bi bi-search navbar-icons-lg px-2"></i></span>
+          Medical Aid
         </a>
       </li>
+      {% if user.is_authenticated %}
       <li class="nav-item my-1">
         <a class="nav-link" aria-current="page" href="{% url 'appointments' %}" style="color: grey;">
           <span> <i class="bi bi-alarm navbar-icons-lg px-2"></i></span>
           Appointments
         </a>
       </li>
+      {% endif %}
       <li class="nav-item my-1">
         <a class="nav-link" aria-current="page" href="{% url 'settings' %}" style="color: grey;">
           <span> <i class="bi bi-gear navbar-icons-lg px-2"></i></span>
           Settings
         </a>
       </li>
+     
     </ul>
 
     {% if user.groups.all.0.name == "admin" %}
@@ -37,6 +40,12 @@
         <a class="nav-link" aria-current="page" href="{% url 'admin-clinics' %}" style="color: darkblue;">
           <span> <i class="bi bi-hospital navbar-icons-lg px-2"></i></span>
           Admin Dashboard
+        </a>
+      </li>
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'admin_profile' %}" style="color: darkblue;">
+          <span> <i class="bi bi-person-circle navbar-icons-lg px-2"></i></span>
+          Admin Profile
         </a>
       </li>
     </ul>
@@ -51,6 +60,12 @@
         <a class="nav-link" aria-current="page" href="{% url 'doctor-clinics' %}" style="color: darkblue;">
           <span> <i class="bi bi-hospital navbar-icons-lg px-2"></i></span>
           Doctor Dashboard
+        </a>
+      </li>
+      <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'doctor-profile' %}" style="color: darkblue;">
+          <span> <i class="bi bi-person-circle navbar-icons-lg px-2"></i></span>
+          Doctor Profile
         </a>
       </li>
     </ul>

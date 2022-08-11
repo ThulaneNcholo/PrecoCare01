@@ -14,8 +14,6 @@
         background-color: var(--main-color);
         height: 25vh;
         width: 100%;
-        border-bottom-right-radius: 0.30rem!important;
-        border-bottom-left-radius: 0.30rem!important;
         padding-top: 44px;
     }
 
@@ -92,246 +90,535 @@
 </div>
 
 <section class="container mt-5">
+    {% for message in messages %}
     <div class="alert alert-success" role="alert">
-        Appointment Booked Please wait for confirmation.Thank you
+        {{message}}
       </div>
     <div class="alert alert-primary" role="alert">
-        Please note when appointment is set please wait for confirmation.
-      </div>
+        You will receive an email confirmation.
+    </div>
+    {% endfor %}
 </section>
 
-<section class="appointments mt-5 container">
-    <p class="main-headings m-0">Appointments</p>
+<p class="main-headings m-0 container">Appointments</p>
 
+<section class="mt-5">
+    <div class="row p-0 m-0">
+        {% for data in application %}
+        {% if data.application_status == "Pending" %}
+        <div class="col-sm-4 mt-3">
+          <div class="card">
+            <div class="card-body">
+            <i class="bi bi-arrow-repeat text-danger  appointment-icon-pending me-4"></i>
+            <p class="card-text mb-1" style="color: darkblue;">{{data.patient_name}} {{data.patient_surname}}</p>
+            <p class="card-text text-secondary mb-1">{{data.service.service_name}}</p>
+            <p class="card-text text-danger mb-2">{{data.application_status}}</p>
+              <div class="modal fade" id="viewapplication{{data.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalToggleLabel">{{data.application_status}}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-white py-2 rounded" style="background-color: darkblue;">Appointment Information</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Appointment Status :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2 text-danger">
+                                        {{data.application_status}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Medical Aid :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.medical_aid.name}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Service :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.service}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Service Fee :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        R {{data.service.service_fee}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Appointment Date :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.date_appointment}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Time Slot :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.time_slot_id.clinic_timeslot_id.timeslot}} 
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Clinic :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.clinic_id.clinic_name}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        location :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        <p class="mb-1">{{data.clinic_location.street}}</p>
+                                        <p class="mb-1">{{data.clinic_location.suburb}}</p>
+                                        <p class="mb-1">{{data.clinic_location.zipcode}}</p>
+                                        <p class="mb-0">{{data.clinic_location.province}}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            
 
+                            <li class="list-group-item text-white py-2 rounded" style="background-color: darkblue;">Personal Information</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Patient :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.patient_name}} {{data.patient_surname}}
+                                    </div>
+                                </div>
+                            </li>
+                            {% if data.visit_status ==  "First-Time"%}
 
-    <!-- Pending card start  -->
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="status-icons">
-                <center>
-                    <i class="bi bi-arrow-repeat pending-status-icon"></i>
-                    <p class="text-danger" style="font-size: 18px;">Pending</p>
-                </center>
-            </div>
-
-            <section class="mt-5">
-                <div class="row m-0">
-                    <div class="col text-secondary">
-                        Patient :
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Gender :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.gender}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        DOB :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.date_of_birth}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Identification :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.identification}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        contact :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.contact}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Email :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.email}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item text-white py-2 rounded" style="background-color: darkblue;">Adress</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Street Address :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.street}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Town :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.town}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                        Postal Code :
+                                    </div>
+                                    <div class="col-12 col-lg-6 mt-2">
+                                        {{data.postal_code}}
+                                    </div>
+                                </div>
+                            </li>
+                            {% endif %}
+                          </ul>
+                          <center>
+                            <div class="row my-3">
+                                <div class="col">
+                                    <button class="btn btn-danger py-3" data-bs-target="#cancelappointmentnew{{data.id}}" data-bs-toggle="modal">Cancel Appointment</button>
+                                </div>
+                                <div class="col">
+                                    <a href="{% url 'reschedule' data.id %}" style="text-decoration: none;">
+                                        <button class="btn text-white py-3" style="background-color: darkblue;">Reschedule Appointment</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </center>
+                        <div style="height: 100px; width: 100%;"></div>
                     </div>
-                    <div class="col-8 appointment-application">
-                        Thulane Ncholo
-                    </div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Service :
-                    </div>
-                    <div class="col-8 appointment-application">Dentist</div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Date :
-                    </div>
-                    <div class="col-8 appointment-application">12 August 2022</div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Time :
-                    </div>
-                    <div class="col-8 text-danger">
-                        Pending
-                    </div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Fee :
-                    </div>
-                    <div class="col-8 appointment-application">
-                        R355
-                    </div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Clinic :
-                    </div>
-                    <div class="col-8 appointment-application">
-                        Tshepang Medical Centre
-                    </div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Address :
-                    </div>
-                    <div class="col-8 appointment-application">
-                        6558 Ndabezitha Street
-                        Tsakane
-                        1550
-                    </div>
-                </div>
-
-                <section class="mt-5">
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-danger py-3" style="width: 100%;">Cancel</button>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-light border py-3" style="width: 100%;">Reschedule</button>
-                        </div>
-                    </div>
-                </section>
-                <div style="height: 60px; width: 100%;"></div>
-            </section>
-        </div>
-    </div>
-    <!-- Pending card end -->
-
-
-      <!-- Confirmed card start -->
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="confirmedstatus" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="status-icons">
-                <center>
-                    <i class="bi bi-check-circle-fill pending-status-icon text-success"></i>
-                    <p class="text-success" style="font-size: 18px;">Confirmed</p>
-                </center>
-            </div>
-
-            <section class="mt-5">
-                <div class="row m-0">
-                    <div class="col text-secondary">
-                        Patient :
-                    </div>
-                    <div class="col-8 appointment-application">
-                        Thulane Ncholo
-                    </div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Service :
-                    </div>
-                    <div class="col-8 appointment-application">Dentist</div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Date :
-                    </div>
-                    <div class="col-8 appointment-application">14 August 2022</div>
-                </div>
-
-                <div class="alert alert-primary mt-3" role="alert">
-                    Please note date has been changed from <strong>12 August</strong>  to <strong>14 August 2022</strong> 
                   </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Time :
-                    </div>
-                    <div class="col-8" style="color: darkblue;">
-                        10:30 am
-                    </div>
                 </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Fee :
+              </div>
+              <div class="modal fade" id="cancelappointmentnew{{data.id}}" aria-hidden="true" aria-labelledby="examplecancelappointmentnew" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="examplecancelappointmentnew">Cancel Appointment</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="col-8 appointment-application">
-                        R355
+                    <div class="modal-body">
+                        <center>
+                            <h6>Are you sure</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <button class="btn text-white px-5" style="background-color: darkblue;" data-bs-target="#viewapplication{{data.id}}" data-bs-toggle="modal">No</button>
+                                </div>
+                                <div class="col">
+                                    <form action="" method="POST">
+                                         {% csrf_token %}
+                                        <input type="text" name="appointment_id" value="{{data.id}}" hidden="True">
+                                        <input type="text" name="timeslot_id" value="{{data.time_slot_id.id}}" hidden="True">
+                                        <button type="submit" name="cancel_appointment" class="btn btn-danger px-5">Yes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </center>
+                        <div style="height: 100px; width: 100%;"></div>
                     </div>
+                  </div>
                 </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Clinic :
-                    </div>
-                    <div class="col-8 appointment-application">
-                        Tshepang Medical Centre
-                    </div>
-                </div>
-
-                <div class="row m-0 mt-3">
-                    <div class="col text-secondary">
-                        Address :
-                    </div>
-                    <div class="col-8 appointment-application">
-                        6558 Ndabezitha Street
-                        Tsakane
-                        1550
-                    </div>
-                </div>
-
-                <section class="mt-5">
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-danger py-3" style="width: 100%;">Cancel</button>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-light border py-3" style="width: 100%;">Reschedule</button>
-                        </div>
-                    </div>
-                </section>
-
-                <div style="height: 60px; width: 100%;"></div>
-            </section>
-          
+              </div>
+              <a style="color: darkblue;" class="btn m-0 p-0" data-bs-toggle="modal" href="#viewapplication{{data.id}}" role="button">View <span class="px-3"><i class="bi bi-arrow-right"></i></span></a>
+            </div>
+          </div>
         </div>
-    </div>
-      <!-- Confirmed card end -->
-
-
-      <!-- new card testing start  -->
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-
-
-        <!-- pending start  -->
-        <div class="col d-flex align-items-start bg-light border rounded py-3 mx-1">
-            <a href="#offcanvasExample" data-bs-toggle="offcanvas"  role="button" aria-controls="offcanvasExample" style="text-decoration: none;">
-                <i class="bi bi-arrow-repeat text-danger  appointment-icon-pending me-4"></i>
-                <div>
-                    <p class="fw-bold mb-0 text-secondary" style="font-size: 17px;">Dentist</p>
-                    <p class="mb-1 text-danger">Pending</p>
-                    <p class="mb-0" style="color: darkblue;">View <span class="px-3"><i class="bi bi-arrow-right"></i></span></p>
+        {% else %}
+        <div class="col-sm-4 mt-3">
+            <div class="card" style="background-color: darkblue;">
+              <div class="card-body">
+              <i class="bi bi-check-circle-fill text-success  appointment-icon-pending me-4"></i>
+              <p class="card-text mb-1" style="color: white;">{{data.patient_name}} {{data.patient_surname}}</p>
+              <p class="card-text text-white mb-1">{{data.service.service_name}}</p>
+              <p class="card-text text-success mb-2">{{data.application_status}}</p>
+                <div class="modal fade" id="viewapplication{{data.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">{{data.application_status}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-white py-2 rounded" style="background-color: darkblue;">Appointment Information</li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Appointment Status :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2 text-success">
+                                          {{data.application_status}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Medical Aid :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.medical_aid.name}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Service :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.service}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Service Fee :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          R {{data.service.service_fee}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Appointment Date :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.date_appointment}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Time Slot :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.time_slot_id.clinic_timeslot_id.timeslot}} 
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Clinic :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.clinic_id.clinic_name}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          location :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          <p class="mb-1">{{data.clinic_location.street}}</p>
+                                          <p class="mb-1">{{data.clinic_location.suburb}}</p>
+                                          <p class="mb-1">{{data.clinic_location.zipcode}}</p>
+                                          <p class="mb-0">{{data.clinic_location.province}}</p>
+                                      </div>
+                                  </div>
+                              </li>
+                              
+  
+                              <li class="list-group-item text-white py-2 rounded" style="background-color: darkblue;">Personal Information</li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Patient :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.patient_name}} {{data.patient_surname}}
+                                      </div>
+                                  </div>
+                              </li>
+                              {% if data.visit_status ==  "First-Time"%}
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Gender :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.gender}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          DOB :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.date_of_birth}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Identification :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.identification}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          contact :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.contact}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Email :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.email}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item text-white py-2 rounded" style="background-color: darkblue;">Adress</li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Street Address :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.street}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Town :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.town}}
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="list-group-item">
+                                  <div class="row">
+                                      <div class="col-12 col-lg-6 mt-2 text-secondary">
+                                          Postal Code :
+                                      </div>
+                                      <div class="col-12 col-lg-6 mt-2">
+                                          {{data.postal_code}}
+                                      </div>
+                                  </div>
+                              </li>
+                              {% endif %}
+                            </ul>
+                            <center>
+                                <div class="row my-3">
+                                    <div class="col">
+                                        <button class="btn btn-danger py-3" data-bs-target="#cancelappointmentnew{{data.id}}" data-bs-toggle="modal">Cancel Appointment</button>
+                                    </div>
+                                    <div class="col">
+                                        <a href="{% url 'reschedule' data.id %}" style="text-decoration: none;">
+                                            <button class="btn text-white py-3" style="background-color: darkblue;">Reschedule Appointment</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </center>
+                            <div style="height: 100px; width: 100%;"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-            </a>
-        </div>
-        <!-- pending end -->
+                <div class="modal fade" id="cancelappointmentnew{{data.id}}" aria-hidden="true" aria-labelledby="examplecancelappointmentnew" tabindex="-1">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="examplecancelappointmentnew">Cancel Appointment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <center>
+                              <h6>Are you sure</h6>
+                              <div class="row">
+                                  <div class="col">
+                                      <button class="btn text-white px-5" style="background-color: darkblue;" data-bs-target="#viewapplication{{data.id}}" data-bs-toggle="modal">No</button>
+                                  </div>
+                                  <div class="col">
+                                      <form action="" method="POST">
+                                           {% csrf_token %}
+                                          <input type="text" name="appointment_id" value="{{data.id}}" hidden="True">
+                                          <input type="text" name="timeslot_id" value="{{data.time_slot_id.id}}" hidden="True">
+                                          <button type="submit" name="cancel_appointment" class="btn btn-danger px-5">Yes</button>
+                                      </form>
+                                  </div>
+                              </div>
+                          </center>
+                          <div style="height: 100px; width: 100%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a style="color: white;" class="btn m-0 p-0" data-bs-toggle="modal" href="#viewapplication{{data.id}}" role="button">View <span class="px-3"><i class="bi bi-arrow-right"></i></span></a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% endfor %}
         
-
-        <!-- confirmed start -->
-        <div class="col d-flex align-items-start rounded py-3 mx-1" style="background-color: darkblue;">
-            <a href="#confirmedstatus" data-bs-toggle="offcanvas"  role="button" aria-controls="confirmedstatus" style="text-decoration: none;">
-                <i class="bi bi-check-circle-fill   appointment-icon-confirmed me-4"></i>
-                <div>
-                    <p class="fw-bold mb-0 text-white" style="font-size: 17px;">Dentist <span style="padding-left: 30px;"><i class="bi bi-bell-fill text-danger" style="font-size: 20px;"></i></span></p>
-                    <p class="mb-1 text-success">Confirmed</p>
-                    <p class="mb-0" style="color: white;">View <span class="px-3"><i class="bi bi-arrow-right"></i></span></p>
-                </div>
-            </a>
-        </div>
-        <!-- confirmed end  -->
-
       </div>
-      <!-- new card testing end  -->
-
-
 </section>
+
+<script type="text/javascript">
+
+    function userdate(event){
+      event.preventDefault();
+      document.getElementById('timeslots').style.display = "block";  
+      datepicked = document.querySelector('input[id="application_date"]').value;
+      console.log(datepicked)
+      document.getElementById("reschedule_date").value = datepicked;  
+    }
+
+  
+  </script>
 
 {% endblock %}

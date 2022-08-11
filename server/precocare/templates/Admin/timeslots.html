@@ -1,0 +1,93 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-warning py-3" role="alert">
+        <p>{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+<section class="mt-5 container">
+    <ul class="list-group">
+        <li class="list-group-item py-4 text-white" style="background-color: darkblue;">TimeSlot Settings</li>
+        {% for service in services %}
+        <li class="list-group-item py-3">
+            <a type="button" style="text-decoration: none; width: 100%;" data-bs-toggle="modal" data-bs-target="#timeslotmodal{{service.id}}">
+                <div class="row">
+                    <div class="col">
+                        {{service.service_name}}
+                    </div>
+                    <div class="col">
+                        <button class="btn text-white" style="background-color: darkblue;">Add Time slot</button>
+                    </div>
+                </div>
+            </a>
+             <!-- Modal -->
+            <div class="modal fade" id="timeslotmodal{{service.id}}" tabindex="-1" aria-labelledby="timeslotmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{service.service_name}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input type="text" value="{{service.id}}" name="service_id" hidden="True">
+                            <input type="text" name="service_name" value="{{service.service_name}}" hidden="True">
+                            <div class="mb-3">
+                                <label for="timeslotexample" class="form-label">Time Slot</label>
+                                <input type="text" class="form-control" id="timeslotexample" aria-describedby="timeslothelp" placeholder="08:00 am - 08:30 am" name="time_slot">
+                                <!-- <div id="timeslothelp" placeholder="08:00 am - 08:30 am" class="form-text mt-3">Examples  11:30 am - 12:00 pm , 12:00 pm - 12:30 pm</div> -->
+                            </div>
+                            <center>
+                                <button type="submit" name="add_timeslot" class="btn btn-success px-5 my-4">Add Time-Slot</button>
+                            </center>
+                        </form>
+                        <div style="height: 50px; width: 100%;"></div>
+                    </div>
+                </div>
+                </div>
+            </div> 
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section class="mt-5 container">
+
+    {% for data in services %}
+    <ul class="list-group mb-5">
+        <li class="list-group-item py-4" style="background-color: #CFE2FF; color: darkblue;">{{data.service_name}}</li>
+        {% for showtime in timeslot_list %}
+        {% if data.id == showtime.service.id %}
+        <li class="list-group-item py-3">
+            <div class="row d-flex ">
+                <div class="col-9 col-lg-6 d-flex align-items-start">
+                   <span><i class="bi bi-arrow-right px-3"></i></span> {{showtime.timeslot}} 
+                </div>
+                <div class="col-3 col-lg-6 d-flex align-items-start">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="text" value="{{showtime.id}}" name="timeslot_delete" hidden="True">
+                        <input type="text" value="{{showtime.timeslot}}" name="time_name" hidden="True">
+                        <button class="border-0" style="background-color: white;" type="submit" name="delete_timeslot">
+                            <i class="bi bi-trash3-fill text-danger"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    {% endfor %}
+</section>
+
+
+
+{% endblock %}

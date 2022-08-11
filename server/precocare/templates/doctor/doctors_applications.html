@@ -38,7 +38,7 @@
 
 <section class="container mt-5">
     <p class="text-secondary mb-2" style="font-size: 20px;">Filters</p>
-    <div class="row py-3 bg-light rounded">
+    <div class="row py-3 bg-light rounded border">
         <div class="col">
                 <input class="form-control me-2" type="search" placeholder="Search Patinet" aria-label="Search">
         </div>
@@ -79,18 +79,143 @@
         <div class="col hide-components-lg">Service</div>
         <div class="col hide-components-lg">File #</div>
         <div class="col hide-components-lg">Visit Status</div>
-        <div class="col">Complete</div>
+        <div class="col hide-components-lg">Complete</div>
         <div class="col">View</div>
     </div>
-    <div class="row py-4 rounded bg-light card-1 mb-4">
-        <div class="col col-lg-1">10:00 am</div>
-        <div class="col">Mark Smith</div>
-        <div class="col hide-components-lg">Male</div>
-        <div class="col hide-components-lg">General Practionior</div>
-        <div class="col hide-components-lg">73635376365</div>
-        <div class="col hide-components-lg">Returning</div>
-        <div class="col hide-components-lg text-success">Complete</div>
-        <div class="col">View</div>
+    {% for appointment in  all_appointments %}
+    <div class="row py-4 rounded  card-1 mb-4 bg-light border">
+        <div class="col">{{appointment.time_slot_id.clinic_timeslot_id.timeslot}}</div>
+        <div class="col">{{appointment.patient_name}} {{appointment.patient_surname}}</div>
+        <div class="col hide-components-lg hide-components-ipad">{{appointment.gender}}</div>
+        <div class="col hide-components-lg hide-components-ipad">{{appointment.patient_file_number}}</div>
+        <div class="col hide-components-lg hide-components-ipad text-secondary">{{appointment.application_status}}</div>
+        <div class="col">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn text-white" style="background-color: darkblue;" data-bs-toggle="modal" data-bs-target="#doctorviewpatient{{appointment.id}}">
+                View
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="doctorviewpatient{{appointment.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Patient Applicantion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item py-3 text-white" style="background-color: darkblue;">Patient Information</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Time-slot</div>
+                                    <div class="col">{{appointment.time_slot_id.clinic_timeslot_id.timeslot}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Patient File Number</div>
+                                    {% if appointment.patient_file_number == None %}
+                                        <div class="col text-secondary">New Patient</div>
+                                    {% else %}
+                                        <div class="col" style="color: darkblue;">{{appointment.patient_file_number}}</div>
+                                    {% endif %}
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Patient</div>
+                                    <div class="col">{{appointment.patient_name}} {{appointment.patient_surname}}</div>
+                                </div>
+                            </li>
+
+                            {% if appointment.visit_status == "First-Time" %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Gender</div>
+                                    <div class="col">{{appointment.gender}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Date Of Birth</div>
+                                    <div class="col">{{appointment.date_of_birth}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Identification</div>
+                                    <div class="col">{{appointment.identification}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Contact 1</div>
+                                    <div class="col">{{appointment.contact}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Email</div>
+                                    <div class="col">{{appointment.email}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Address</div>
+                                    <div class="col">
+                                        <p class="mb-1">{{appointment.street}}</p>
+                                        <p class="mb-1">{{appointment.town}}</p>
+                                        <p class="mb-1">{{appointment.postal_code}}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endif %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Reason For Visit</div>
+                                    <div class="col">{{appointment.reason_visit}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Allergies</div>
+                                    <div class="col">{{appointment.allergies}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item py-3 text-white" style="background-color: darkblue;">Service Information</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Service</div>
+                                    <div class="col">{{appointment.service.service_name}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Visit Status</div>
+                                    <div class="col">{{appointment.visit_status}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Medical Scheme</div>
+                                    <div class="col">{{appointment.medical_aid.name}}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col text-secondary">Appointment Status</div>
+                                    <div class="col">{{appointment.application_status}}</div>
+                                </div>
+                            </li>
+                          </ul>
+                          <hr>
+                          <div style="height: 100px; width: 100%;"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
+    {% endfor %}
 </section>
 {% endblock %}

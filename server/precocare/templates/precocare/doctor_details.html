@@ -22,8 +22,6 @@
         background-color: var(--main-color);
         height: 25vh;
         width: 100%;
-        border-bottom-right-radius: 0.30rem!important;
-        border-bottom-left-radius: 0.30rem!important;
     }
 
     .doctor-card-position{
@@ -54,6 +52,15 @@
         color: white;
         font-size: 18px;
         font-weight: 500;
+    }
+
+    @media (min-width: 992px) {
+
+        .image-height{
+            height: 300px !important;
+            width: 100% !important;
+            object-fit: cover;
+        }
     }
 </style>
 
@@ -108,20 +115,27 @@
 
     <section class="about-doctor container mt-5">
         <p class="main-headings m-0">About Doctor</p>
-        <p class="text-secondary">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias possimus veniam, fuga aliquid dicta officia maxime nulla blanditiis dolorem, dolore voluptates, exercitationem maiores quisquam minima. Laudantium ullam laboriosam tenetur totam.</p>
+        <p class="text-secondary">{{doctor.about_doctor}}</p>
     </section>
 
     <section class="consultation-fee mt-5 container">
         <p class="main-headings m-0">Consulation Fee</p>
-        <div class="row m-0">
+
+        {% if doctor_service %}
+        {% for service in doctor_service%}
+        <div class="row m-0 py-3">
             <div class="col">
-                <p class="m-0" style="color: darkblue;">Fee</p>
+                <p class="m-0" style="color: darkblue;">{{service.service_name}} Fee</p>
             </div>
-            <div class="col text-secondary m-0" style="font-weight: 500;">R350</div>
+            <div class="col text-secondary m-0" style="font-weight: 500;">R {{service.service_fee}}</div>
         </div>
+        {% endfor %}
+        {% else %}
+        <p class="py-3 text-secondary">Services not registed.</p>
+        {% endif %}
         <hr>
 
-        <div class="alert alert-primary mt-2" role="alert">
+        <div class="alert alert-primary my-5" role="alert">
             Please note there may be additianal charges depending on your consultation.
           </div>
     </section>
@@ -129,10 +143,27 @@
     <section class="doctor-clinics mt-5 container">
         <p class="main-headings m-0">Doctors Clinics</p>
         <div class="row">
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
+
+            {% for clinic in doctor_clinics %}
+            <div class="col-sm-12 col-lg-6 mt-3">
+                <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                    <div class="rounded">
+                        {% if clinic.hero_image %}
+                        <img src="{{clinic.hero_image.url}}" class="img-thumbnail image-height" alt="...">
+                        {% else %}
+                        <div class="clinic-image bg-light rounded border"></div>
+                        {% endif %}
+                        <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
+                        <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
         </div>
     </section>
+
+
+    
 
     <section class="reviews container mt-5">
         <p class="main-headings m-0 mb-5">Reviews</p>

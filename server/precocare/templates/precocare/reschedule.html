@@ -1,0 +1,77 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+<section class="container mt-5">
+    <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+        <i class="bi bi-arrow-left-circle-fill" style="color: darkblue; font-size: 25px;"></i>
+    </button>
+</section>
+
+
+<section class="mt-5 container">
+    <section class="my-3">
+        <p class="py-2">Search for available time-slots.</p>
+        <form>
+            {% csrf_token %}
+            <input type="text" value="{{appointment.service.id}}" name="service_selected" hidden="True">
+              <div class="form-floating mb-3">
+                <input type="date" class="form-control" id="application_date" placeholder="Appointment Date" name="selected_user_date" required>
+                <label for="floatingInput">Appointment Date</label>
+                <div id="appointmentdatehelp" class="form-text">Please Press the calendar <strong>Icon</strong> if you having trouble.</div>
+              </div>
+              <input type="text" name="clinic_id" value="{{appointment.clinic_id.id}}" hidden="True">
+              <center>
+                <button onclick="userdate(event);getpageurl(event)"  name="post_timeslot" hx-post="{% url 'show-timeslot' %}" hx-target="#timeslots" type="submit" class="my-4 btn btn-success px-5">Search For timeslot</button>
+              </center>
+        </form>
+      </section>
+      <section class="my-5" id="timeslots" style="display: none;">
+        <div class="row">
+            {% include 'partials/timeslot_id.html' %}
+        </div>
+    </section>
+    <section id="reschedulediv" style="display: none;">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <!-- get old appointment information -->
+            <section>
+                <input type="text" name="old_date" value="{{data.time_slot_id.date_field}}" hidden="True">
+                <input type="text" value="{{appointment.id}}" name="appointment_id" hidden="True">
+                <input class="bg-danger" type="text" value="{{appointment.time_slot_id.id}}" name="timeslot_value_id" hidden="True">
+            </section>
+            <input type="text" id="timeslot_value" name="timeslot_value" hidden="True">
+            <input type="text" id="clinic_value" name="clinic_value" hidden="True">
+            <input type="text" id="service_value" name="service_value" hidden="True">
+            <div class="mb-3">
+                <label for="reschedule_date" class="form-label">New Appointment Date</label>
+                <input type="text" class="form-control" id="reschedule_date" aria-describedby="rescheduleHelp" name="reschedule_date">
+            </div>
+            <center>
+                <button name="reschedule_application" class="btn btn-warning my-3" type="submit">Comfirm Reschedule</button>
+            </center>
+        </form>
+      </section>
+    </section>
+</section>
+
+<script type="text/javascript">
+
+    function userdate(event){
+      event.preventDefault();
+      document.getElementById('timeslots').style.display = "block";  
+      datepicked = document.querySelector('input[id="application_date"]').value;
+      document.getElementById("reschedule_date").value = datepicked;  
+    }
+
+    function getpageurl(event){
+        event.preventDefault();
+        reschedule_window = window.location.href
+
+        sessionStorage.setItem('reschedule_url', reschedule_window)
+    } 
+
+</script>
+
+{% endblock %}

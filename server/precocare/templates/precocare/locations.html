@@ -14,8 +14,6 @@
         background-color: var(--main-color);
         height: 25vh;
         width: 100%;
-        border-bottom-right-radius: 0.30rem!important;
-        border-bottom-left-radius: 0.30rem!important;
         padding-top: 44px;
     }
 
@@ -37,6 +35,15 @@
         font-weight: 500;
     }
 
+    @media (min-width: 992px) {
+
+        .image-height{
+            height: 300px !important;
+            width: 100% !important;
+            object-fit: cover;
+        }
+    }
+
 </style>
 
 <section>
@@ -49,7 +56,7 @@
                     </button>
                 </div>
                 <div class="col-8 d-flex align-items-center" style="color: white;">
-                    <p class="Page-headings mb-0">Tsakane Clinics</p>
+                    <p class="Page-headings mb-0">{{location.name}} Clinics</p>
                 </div>
             </div>
         </div>
@@ -58,10 +65,29 @@
 
     <section class="clinics container overflow-hidden mt-5">
         <div class="row gy-4">
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
-            {% include 'partials/clinic_card.html' %}
+
+            {% if clinics_location%}
+                {% for data in clinics_location %}
+                    <div class="col-sm-12 col-lg-6 mt-3">
+                        <a href="{% url 'clinic' data.clinic_id.id %}" style="text-decoration: none;">
+                            <div class="rounded">
+                                {% if data.clinic_id.hero_image %}
+                                <img src="{{data.clinic_id.hero_image.url}}" class="img-thumbnail image-height" alt="...">
+                                {% else %}
+                                <div class="clinic-image bg-light rounded border"></div>
+                                {% endif %}
+                                <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{data.clinic_id.clinic_name}}</p>
+                                <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+            <div class="alert alert-primary py-4" role="alert">
+                Sorry We currenty have no Clinics in this area.
+              </div>
+            {% endif %}
         </div>
     </section>
     

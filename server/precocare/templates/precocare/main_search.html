@@ -1,0 +1,86 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+<style>
+    :root {
+        --main-color: darkblue;
+    }
+
+    .insurance-hero{
+        background-color: var(--main-color);
+        height: 25vh;
+        width: 100%;
+        padding-top: 44px;
+    }
+
+    .clinic-image{
+    height: 170px; 
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+
+    .image-height{
+        height: 300px !important;
+        width: 100% !important;
+        object-fit: cover;
+    }
+}
+</style>
+
+<section>
+    <div class="insurance-hero">
+        <div class="container">
+            <div class="row pt-3">
+                <div class="col">
+                    <button class="p-0 m-0" onclick="history.back()" style="border: none; background-color: transparent;">
+                        <i class="bi bi-arrow-left-circle-fill" style="color: white; font-size: 25px;"></i>
+                    </button>
+                </div>
+                <div class="col-8 d-flex align-items-center" style="color: white;">
+                </div>
+            </div>
+            <p class="Page-headings mb-0 text-white pt-4">Showing results for clinics in <strong>{{searched_location}}</strong> and <strong>{{searched_service}}</strong> service.</p>
+        </div>
+    </div>
+</section>
+
+<section class="container mt-5">
+    <div class="alert alert-secondary" role="alert">
+        If Search results is blank,means we have no clinics matching your search.
+      </div>
+</section>
+<section class="container mt-5">
+    <div class="row">
+        {% for service_list in services %}
+
+        {% if service_list  %}
+        <div class="col-sm-12 col-lg-6 mt-3">
+            <a href="{% url 'clinic' service_list.clinic_id.id%}" style="text-decoration: none;">
+                <div class="rounded">
+                    {% if service_list.clinic_id.hero_image %}
+                    <img src="{{service_list.clinic_id.hero_image.url}}" class="img-thumbnail image-height" alt="...">
+                    {% else %}
+                    <div class="clinic-image bg-light rounded border"></div>
+                    {% endif %}
+                    <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{service_list.clinic_id.clinic_name}}</p>
+                    <P class="m-0 mt-1 text-secondary">{{service_list.service_name}} supported</P>
+                </div>
+            </a>
+        </div>
+        {% else %}
+        <div class="alert alert-primary py-3" role="alert">
+            Sorry there are no clinics that meet your search.
+        </div>
+        {% endif %}
+
+        {% endfor %}
+    </div>
+</section>
+
+
+
+
+{% endblock %}

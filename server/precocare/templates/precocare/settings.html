@@ -13,8 +13,6 @@
         background-color: var(--main-color);
         height: 25vh;
         width: 100%;
-        border-bottom-right-radius: 0.30rem!important;
-        border-bottom-left-radius: 0.30rem!important;
         padding-top: 44px;
     }
 
@@ -56,7 +54,7 @@
                 </div>
             </div>
             {% if user.is_authenticated %}
-            <p class="location-hero-text">Hello <strong>{{request.user}}</p>
+            <p class="location-hero-text">Hello <strong>{{request.user}}<strong></p>
             {% else %}
             <p class="location-hero-text">Hello <a href="{% url 'login'%}" style="text-decoration: none; color: red;"> <strong> Login </strong></a>  to get the best exprience out of <strong>PrecoCare</strong>.</p>
             {% endif %}
@@ -81,6 +79,7 @@
         </div>
         {% endif %}
 
+        {% if user.is_authenticated %}
 
         <a href="{% url 'appointments' %}" style="text-decoration: none;">
             <div class="row bg-light border m-0 p-3 rounded mt-3">
@@ -95,6 +94,7 @@
                 </div>
             </div>
         </a>
+        {% endif %}
         
 
         <div class="row bg-light border m-0 p-3 rounded mt-3">
@@ -111,7 +111,7 @@
 
 
         {% if user.groups.all.0.name == "admin" %}
-        <a href="{% url 'dashboard'%}" style="text-decoration: none;">
+        <a href="{% url 'admin-clinics'%}" style="text-decoration: none;">
             <div class="row bg-light border m-0 p-3 rounded mt-3">
                 <div class="col-2">
                     <i class="bi bi-clipboard-pulse settings-icons"></i>

@@ -41,6 +41,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
+    <!-- htmx-cnd -->
+    <script src="https://unpkg.com/htmx.org@1.8.0" integrity="sha384-cZuAZ+ZbwkNRnrKi05G/fjBX+azI9DNOkNYysZ0I/X5ZFgsmMiBXgDZof30F5ofc" crossorigin="anonymous"></script>
 
     <style>
         .body-fonts{
@@ -117,7 +119,7 @@
               <button type="button" class="btn text-white" style="background-color: darkblue; font-size: 17px;">Sign out</button>
             </a>
             {% else %}
-            <a class="nav-link px-3" href="#">
+            <a class="nav-link px-3" href="{% url 'login'%}">
               <button type="button" class="btn text-white" style="background-color: darkblue; font-size: 17px;">Login</button>
             </a>
             {% endif %}

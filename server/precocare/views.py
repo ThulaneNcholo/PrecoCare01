@@ -1,12 +1,19 @@
+from hashlib import new
+from http import server
+from multiprocessing import context
+from sqlite3 import Date
 from tokenize import group
 from unicodedata import name
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-
+from django.db.models import Q
 
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import AdministratorModel, DoctorModel
+
+from .models import AdministratorModel, ApplicationForm, BookedTimeslotModel, ClinicLocationsModel, ClinicModel, ClinicTimeSlotModel, DoctorModel, DoctorServices, InsuranceModel, ProvinceModel, ServiceListedModel, ServiceModel, SuburbModel
+
+from django.contrib.auth.models import User
 
 from .forms import CreateUserForm
 from django.contrib.auth import authenticate,login,logout
@@ -15,6 +22,10 @@ from .decorators import unauthenticated_user, allowed_user, admin_only
 from django.contrib.auth.models import Group
 
 from django.contrib import messages
+
+from itertools import chain
+
+import datetime
 
 # Create your views here.
 
@@ -113,26 +124,369 @@ def IndexPage (request):
     return render(request, "precocare/index.html")
 
 
-def InsurancePage(request):
-    return render(request, "precocare/insurance.html")
-
-def DoctorDetails(request):
-    return render(request, "precocare/doctor_details.html")
-
-def LocationsPage(request):
-    return render(request, "precocare/locations.html")
-
-def ClinicPage(request):
-    return render(request, "precocare/clinic.html")
-
-def AppointmentsPage(request):
-    return render(request, "precocare/appointments.html")
 
 def Bottomnav(request):
     return render(request, "partials/bottomnav.html")
 
+
+
 def Homepage(request):
-    return render(request, "precocare/homepage.html")
+    locations_list = SuburbModel.objects.all()
+    services_list = ServiceListedModel.objects.all()
+    all_clinics = ClinicModel.objects.filter(clinic_status = "Active")
+    doctors = DoctorModel.objects.all()
+    main_locations = SuburbModel.objects.all()[:4]
+    limited_clinics = ClinicModel.objects.filter(clinic_status = "Active")[:4]
+
+    
+
+
+    context = {
+        "locations_list": locations_list,
+        "services_list" : services_list,
+        "all_clinics": all_clinics,
+        "list_doctors" : doctors,
+        "main_locations": main_locations,
+        "limited_clinics" : limited_clinics
+    }
+    return render(request, "precocare/homepage.html", context)
+
+def MainSearch(request):
+    if request.method == 'POST' and 'main_search' in request.POST:
+        location_search = request.POST.get('location')
+        service_search = request.POST.get('service')
+        searched_results = ClinicLocationsModel.objects.filter(suburb = location_search).values_list('clinic_id_id')
+        services = ServiceModel.objects.filter(clinic_id__in= searched_results)
+        clinics_list = services.filter(service_name = service_search)
+
+        context = {
+            "searched_location" : location_search,
+            "searched_service" : service_search,
+            "searched_results" : searched_results,
+            "services" : clinics_list
+        }
+
+
+    return render(request, "precocare/main_search.html", context)
+
+def ClinicCardsView(request):
+    clinics_list = ClinicModel.objects.all()
+    # print(clinics_list)
+
+    context = {
+        "preco_clinics" : clinics_list
+    }
+
+    return render(request ,"partials/clinic_card.html", context)
+
+
+def ClinicPage(request,clinic_id):
+    clinic = ClinicModel.objects.get(id = clinic_id)
+    doctors = clinic.clinic_doctors.all()
+    services = ServiceModel.objects.filter(clinic_id = clinic_id)
+    locations = ClinicLocationsModel.objects.filter(clinic_id = clinic_id)
+    insurance_list = clinic.insurance_cover.all()
+
+    if request.method == 'POST' and 'submit-application' in request.POST:
+        current_user = request.user
+        # save timeslot as booked function start 
+        save_timeslot = BookedTimeslotModel()
+        save_timeslot.user = current_user
+        timeslot_picked = request.POST.get('input_time_javascript')
+        save_timeslot.clinic_timeslot_id = ClinicTimeSlotModel.objects.get(id=timeslot_picked)
+        save_timeslot.date = request.POST.get('picked_date')
+        save_timeslot.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        service_pk = request.POST.get('service_javascript')
+        save_timeslot.service = ServiceModel.objects.get(id=service_pk)
+        save_timeslot.save()
+        # save timeslot as book function end
+        save_application = ApplicationForm()
+        save_application.User = current_user
+        save_application.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        save_application.visit_status = request.POST.get('visit_status')
+        save_application.application_for = request.POST.get('application_for')
+        save_application.patient_name = request.POST.get('patient_name')
+        save_application.patient_surname = request.POST.get('patient_surname')
+        save_application.gender = request.POST.get('gender')
+        save_application.date_of_birth = request.POST.get('Date_of_Birth')
+        save_application.identification = request.POST.get('identification')
+        save_application.contact = request.POST.get('contact1')
+        save_application.email = request.POST.get('email_address')
+        save_application.street = request.POST.get('street')
+        save_application.town = request.POST.get('town')
+        save_application.postal_code = request.POST.get('postal_code')
+        save_application.allergies = request.POST.get('allergies')
+        save_application.reason_visit = request.POST.get('reason')
+        insurance = request.POST.get('insurance')
+        save_application.time_slot_id = save_timeslot
+
+        # Javascript components start 
+        save_application.date_appointment = request.POST.get('picked_date')
+        patient_service = request.POST.get('service_javascript')
+        save_application.service = ServiceModel.objects.get(id = patient_service)
+        timeslot_id = request.POST.get('input_time_javascript')
+        time_model = ClinicTimeSlotModel.objects.get(id=timeslot_id)
+        save_application.time_slot = time_model.timeslot
+        # Javascript components end 
+
+        if insurance == 'Select Medical Aid':
+            save_application.medical_aid 
+        else :
+            save_application.medical_aid = InsuranceModel.objects.get(id = insurance) 
+        
+        location  = request.POST.get('location')
+        save_application.clinic_location = ClinicLocationsModel.objects.get(id = location)
+        save_application.save()
+
+        
+
+
+        messages.success(request, 'Appointment Booked Please wait for confirmation.Thank you')
+        return redirect('appointments')
+
+
+    if request.method == 'POST' and 'returning_submit' in request.POST:
+
+        current_user = request.user
+        # save timeslot as booked function start 
+        save_timeslot = BookedTimeslotModel()
+        save_timeslot.user = current_user
+        timeslot_picked = request.POST.get('input_time_javascript')
+        save_timeslot.clinic_timeslot_id = ClinicTimeSlotModel.objects.get(id=timeslot_picked)
+        save_timeslot.date = request.POST.get('picked_date')
+        save_timeslot.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        service_pk = request.POST.get('service_javascript')
+        save_timeslot.service = ServiceModel.objects.get(id=service_pk)
+        save_timeslot.save()
+
+        save_returning = ApplicationForm()
+        save_returning.User = current_user
+        save_returning.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        save_returning.visit_status = request.POST.get('visit_status')
+        save_returning.application_for = request.POST.get('Application_for')
+        save_returning.date_appointment = request.POST.get('appointment-date')
+        save_returning.patient_name = request.POST.get('patient_name')
+        save_returning.patient_surname = request.POST.get('patient_surname')
+        save_returning.patient_file_number = request.POST.get('file_number')
+        save_returning.time_slot_id = save_timeslot
+
+        # Javascript components start 
+        save_returning.date_appointment = request.POST.get('picked_date')
+        patient_service = request.POST.get('service_javascript')
+        save_returning.service = ServiceModel.objects.get(id = patient_service)
+        timeslot_id = request.POST.get('input_time_javascript')
+        time_model = ClinicTimeSlotModel.objects.get(id=timeslot_id)
+        save_returning.time_slot = time_model.timeslot
+        # Javascript components end 
+
+        insurance = request.POST.get('medical_aid')
+        if insurance == 'Select Medical Aid':
+            save_returning.medical_aid 
+        else :
+            save_returning.medical_aid = InsuranceModel.objects.get(id = insurance) 
+
+        
+        location  = request.POST.get('location')
+        save_returning.clinic_location = ClinicLocationsModel.objects.get(id = location)
+        save_returning.save()
+        messages.success(request, 'Appointment Booked Please wait for confirmation.Thank you')
+        return redirect('appointments')
+
+
+    context = {
+        "clinic" : clinic,
+        "doctors_list" : doctors,
+        "services" : services,
+        "locations_list" : locations,
+        "insurance_list" : insurance_list
+    }
+    return render(request, "precocare/clinic.html",context)
+
+
+# htmx timeslot start 
+def ShowtimeslotsView(request):
+        selected_service = request.POST.get('service_selected') 
+        date_chosen = request.POST.get('selected_user_date') 
+        clinic_id = request.POST.get('clinic_id') 
+        clinic = ClinicModel.objects.get(id = clinic_id)
+        availability_check  = BookedTimeslotModel.objects.filter( Q(date =date_chosen) & Q(service=selected_service) & Q(booked="Pending")).values('clinic_timeslot_id')
+        
+        taken_timeslot = ClinicTimeSlotModel.objects.filter(id__in= availability_check)
+
+        available_timeslot = ClinicTimeSlotModel.objects.exclude(id__in = taken_timeslot)
+        
+        new_available = available_timeslot.filter(clinic_id=clinic)
+        show_timeslots = new_available.filter(service = selected_service)
+
+        context = {
+            "available_timeslot": show_timeslots,
+            "selected_service" : selected_service
+        }
+
+        return render(request, 'partials/timeslot_id.html',context)
+# htmx timeslot end
+
+
+def LocationsPage(request,location_id):
+    location = SuburbModel.objects.get(id = location_id)
+    location_name = location.name
+    clinics_in_location = ClinicLocationsModel.objects.filter( suburb = location_name)
+
+    context = {
+        "location" : location,
+        "clinics_location" : clinics_in_location
+    }
+
+    return render(request, "precocare/locations.html", context)
+
+def InsurancePage(request):
+    insurance_list = InsuranceModel.objects.all()
+    locations_list = SuburbModel.objects.all().order_by("name")
+
+    if request.method == 'POST' and 'insurance_search' in request.POST:
+        selected_insurance = request.POST.get('selected_insurance') 
+        insurance_name = InsuranceModel.objects.get(id = selected_insurance)
+        selected_suburb = request.POST.get('selected_suburb')
+
+        filter_clinic = ClinicModel.objects.filter(insurance_cover = selected_insurance)
+        clinic_location_list = ClinicLocationsModel.objects.filter( Q(clinic_id__in= filter_clinic) & Q(suburb = selected_suburb))
+
+
+        clinics = ClinicModel.objects.filter(insurance_cover = selected_insurance)
+        location_clinics = ClinicLocationsModel.objects.filter(clinic_id__in = clinics)
+
+        context = {
+            "insurance_list" : insurance_list,
+            "locations_list" : locations_list,
+            "list_clinics" : clinics,
+            "selected_insurance ": selected_insurance,
+            "selected_suburb" : selected_suburb,
+            "insurance_name": insurance_name,
+            "clinic_list" : location_clinics,
+            "clinic_location_list"  : clinic_location_list 
+            
+        }
+
+        return render(request, "precocare/insurance.html",context)
+
+    else :
+        context = {
+            "insurance_list" : insurance_list,
+            "locations_list" : locations_list,
+        }
+
+        return render(request, "precocare/insurance.html",context)
+        
+
+def DoctorDetails(request,doctor_id):
+    doctor = DoctorModel.objects.get(id = doctor_id)
+    doctor_service = DoctorServices.objects.filter(doctor_id = doctor_id)
+    doctor_clinics = ClinicModel.objects.filter(clinic_doctors = doctor_id)
+    
+
+
+    context = {
+        "doctor": doctor,
+        "doctor_service" : doctor_service,
+        "doctor_clinics" : doctor_clinics,
+    }
+    return render(request, "precocare/doctor_details.html",context)
+
+def AppointmentsPage(request):
+    current_user = request.user   
+    application = ApplicationForm.objects.filter( Q(User=current_user) & Q (cancel_appointment="Ongoing") )
+
+    # if request.method == 'POST' and 'reschedule' in request.POST:
+    #     reschule_id = request.POST.get('application_id')
+    #     reschule_save = ApplicationForm.objects.get(id = reschule_id)
+    #     reschule_save.date_appointment = request.POST.get('reschedule_appointment')
+    #     get_old_time = request.POST.get('reschedule_old')
+    #     booked_timeslot = BookedTimeslotModel.objects.get(clinic_timeslot_id= get_old_time)
+    #     print(booked_timeslot)
+    #     print(booked_timeslot.date)
+    #     print(booked_timeslot.clinic_timeslot_id.timeslot)
+    #     # reschule_save.save()
+    #     messages.success(request, 'Your Appointment has been Rescheduled, Please wait for confirmation.Thank you')
+
+    # if request.method == 'POST' and 'cancel_submit' in request.POST:
+    #     reschule_id = request.POST.get('application_id')
+    #     service_name = request.POST.get('service_name')
+    #     reschule_save = ApplicationForm.objects.get(id = reschule_id)
+    #     reschule_save.cancel_appointment = request.POST.get('cancel_appointment')
+    #     reschule_save.save()
+    #     messages.success(request, service_name + ' ' 'appointment has been canceled')
+
+
+    if request.method == 'POST' and 'cancel_appointment' in request.POST:
+        timeslot_id = request.POST.get('timeslot_id')
+        update_bookedTimeslot = BookedTimeslotModel.objects.get(id = timeslot_id)
+        update_bookedTimeslot.booked = "Canceled"
+        update_bookedTimeslot.save()
+
+
+        appointmentValue = request.POST.get('appointment_id')
+        update_appointment = ApplicationForm.objects.get( Q(User=current_user) & Q (pk=appointmentValue) )
+        update_appointment.cancel_appointment = "Canceled"
+        update_appointment.save()
+
+        
+        messages.success(request,'Your Appointment has been Canceled')
+
+
+    context = {
+        "application" : application
+    }
+    return render(request, "precocare/appointments.html",context)
+
+def RescheduleAppointment(request,reschedule_id):
+    appointment = ApplicationForm.objects.get(id = reschedule_id)
+
+    if request.method == 'POST' and 'reschedule_application' in request.POST:
+        appointment = ApplicationForm.objects.get(id = reschedule_id)
+        timeslot_id = appointment.time_slot_id
+        # delete this one 
+        booked_timeslot = BookedTimeslotModel.objects.get(id = timeslot_id.id)
+        booked_timeslot.delete()
+
+
+        # getting new timeslot bookedtimeslots
+        addBookedtimeslot = BookedTimeslotModel()
+        current_user = request.user
+        addBookedtimeslot.user = current_user
+        # clinic_timeslot_id
+        new_timeslot_id = request.POST.get('timeslot_value')
+        get_new_timeslot = ClinicTimeSlotModel.objects.get(id = new_timeslot_id)
+        addBookedtimeslot.clinic_timeslot_id = get_new_timeslot
+        # get the date
+        appointment_date = request.POST.get('reschedule_date')
+        addBookedtimeslot.date = appointment_date
+        # get the clinic 
+        clinic = request.POST.get('clinic_value')
+        patient_clinic = ClinicModel.objects.get(id = clinic)
+        addBookedtimeslot.clinic_id = patient_clinic
+        # get the service 
+        service = request.POST.get('service_value')
+        patient_service = ServiceModel.objects.get(id = service)
+        addBookedtimeslot.service = patient_service
+        addBookedtimeslot.save()
+
+        # updating patient appointment form
+        appointment.time_slot_id = addBookedtimeslot
+        appointment.date_appointment = appointment_date
+        appointment.save()
+        messages.success(request, 'appointment has been rescheduled')
+        return redirect('appointments')
+
+
+        
+        print(patient_service)
+
+
+    context = {
+        "appointment":appointment
+    }
+
+    return render(request,"precocare/reschedule.html", context)
 
 def SettingsPage(request):
     return render(request, "precocare/settings.html")
@@ -145,54 +499,558 @@ def SettingsPage(request):
 # Admin Dashboard start 
 
 
+@allowed_user(allowed_roles=['admin'])
+def AdminProfileView(request):
+    current_user = request.user
+    admin_model_user = AdministratorModel.objects.filter(user = current_user)
+
+    if request.method == 'POST' and 'submit-profile' in request.POST:
+         save_admin = AdministratorModel.objects.get(user = current_user)
+         save_admin.first_name = request.POST.get('first_name')
+         save_admin.last_name = request.POST.get('last_name')
+         save_admin.mobile_number = request.POST.get('phonenumber')
+         save_admin.email = request.POST.get('emailaddress')
+         save_admin.user_identification = request.POST.get('Identification')
+         save_admin.profile_set = request.POST.get('profile_status')
+         save_admin.save()
+         messages.success(request, 'Profile Updated')
+
+    context = {
+        "admin_model_user" : admin_model_user
+    }
+    
+    return render(request,  "Admin/admin_profile.html", context)
+
+
+@allowed_user(allowed_roles=['admin'])
 def LocumView(request):
-    return render(request, "Admin/locum.html")
+    # Checking if user profile is complete start 
+    current_user = request.user
+    admin = AdministratorModel.objects.get(user = current_user)
+    administrators = admin
+    # Checking if user profile is complete End
 
+    context = {
+        "administrators" : administrators
+    }
+
+    return render(request, "Admin/locum.html",context)
+
+
+@allowed_user(allowed_roles=['admin'])
 def AdminClinicsView(request):
-    return render(request, "Admin/admin-clinics.html")
+    current_user = request.user
+    admin = AdministratorModel.objects.get(user = current_user)
+    clinics = admin.admins.all()
 
-def AdminDoctors(request):
-    return render(request, "Admin/admin-doctors.html")
+    administrators = admin
 
-def AllApplicatoinsView(request):
-    return render(request, "Admin/allapplications.html")
 
-def ClinicSettingsView(request):
-    return render(request, "Admin/clinic-settings.html")
+    context = {
+        "admin_clinics" : clinics,
+        "administrators" : administrators
+    }
+    
 
+    return render(request, "Admin/admin-clinics.html" , context)
+
+
+@allowed_user(allowed_roles=['admin'])
+def AdminDoctors(request,clinic_id):
+    clinic = ClinicModel.objects.filter(id = clinic_id)
+    doctor_services = DoctorServices.objects.all()
+
+    # Checking if user profile is complete start 
+    current_user = request.user
+    admin = AdministratorModel.objects.get(user = current_user)
+    administrators = admin
+    # Checking if user profile is complete End
+
+    
+
+    context = {
+        "clinic" : clinic,
+        "services" : doctor_services,
+        "administrators" : administrators
+    } 
+
+    return render(request, "Admin/admin-doctors.html",context)
+
+
+@allowed_user(allowed_roles=['admin'])
+def AllApplicatoinsView(request,clinic_id):
+    # Checking if user profile is complete start 
+    current_user = request.user
+    admin = AdministratorModel.objects.get(user = current_user)
+    administrators = admin
+    # Checking if user profile is complete End
+
+    appointments_list = ApplicationForm.objects.filter(clinic_id = clinic_id)
+
+    context = {
+        "administrators" : administrators,
+        "appointments_list" : appointments_list
+    }
+    return render(request, "Admin/allapplications.html",context)
+
+
+
+@allowed_user(allowed_roles=['admin'])
+def ClinicSettingsView(request,clinic_id):
+    clinic = ClinicModel.objects.filter(id = clinic_id) 
+    services = ServiceListedModel.objects.all()
+    insurance = InsuranceModel.objects.all()
+    province = ProvinceModel.objects.all()
+    towns = SuburbModel.objects.all()
+
+
+
+    # Checking if user profile is complete start 
+    current_user = request.user
+    admin = AdministratorModel.objects.get(user = current_user)
+    administrators = admin
+    # Checking if user profile is complete End
+
+
+    clinic_services = ServiceModel.objects.filter(clinic_id= clinic_id)
+    clinic_locations = ClinicLocationsModel.objects.filter(clinic_id= clinic_id)
+
+    if request.method == 'POST' and 'clinic_details' in request.POST:
+        save_details = ClinicModel.objects.get(id = clinic_id)
+        save_details.clinic_name = request.POST.get('clinic-name')
+        save_details.contact1 = request.POST.get('contact-1')
+        save_details.contact2 = request.POST.get('contact-2')
+        save_details.emial = request.POST.get('email-address')
+        save_details.about_clinic = request.POST.get('about-clinic')
+        save_details.mon_fri_hours = request.POST.get('mon-fri')
+        save_details.saturday = request.POST.get('saturday')
+        save_details.sunday = request.POST.get('sunday')
+        save_details.holidays = request.POST.get('holidays')
+        save_details.clinic_type = request.POST.get('clinictype')
+        save_details.save()
+        messages.success(request, 'Clinic Details has been successfully updated!')
+
+
+    # adding clinics locations
+    if request.method == 'POST' and 'clinic_locatoins' in request.POST:
+        save_location = ClinicLocationsModel()
+        save_location.clinic_id = ClinicModel.objects.get(id = clinic_id) 
+        save_location.clinic_name = save_location.clinic_id.clinic_name
+        save_location.street = request.POST.get('street')
+        save_location.province = request.POST.get('province_selected')
+        save_location.suburb = request.POST.get('suburb')
+        save_location.zipcode = request.POST.get('zipcode')
+        save_location.save()
+        messages.success(request, 'Clinic Locations has been successfully updated!')
+
+    # Delete Clinic location
+    if request.method == 'POST' and 'delete_location' in request.POST:
+        location_id = request.POST.get('location_id')
+        locations_in_model = ClinicLocationsModel.objects.get(id=location_id)
+        locations_in_model.delete()
+        messages.success(request, locations_in_model.street + ' ' 'location has been deleted')
+        
+
+    if request.method == 'POST' and 'add_service' in request.POST:
+        save_service = ServiceModel() 
+        save_service.clinic_id  = ClinicModel.objects.get(id = clinic_id) 
+        save_service.service_name = request.POST.get('clinic_service')
+
+        # adding clinic service fee with precocare fee
+        fee = int(request.POST.get('service_fee'))
+        precocare_fee = int(5)
+        display_fee = fee + precocare_fee
+        
+        save_service.service_fee = display_fee
+        save_service.save()
+        messages.success(request, save_service.service_name + ' ' 'service has been successfully added to your clinic')
+
+    
+    # add insurance many to many field
+    if request.method == 'POST' and 'add_insurance' in request.POST:
+        insurance_id = request.POST.getlist('insurancebox')
+        add_insurance = ClinicModel.objects.get(id = clinic_id)
+        add_insurance.insurance_cover.add(*insurance_id)
+        messages.success(request, 'Clinic Insurance list has been successfully updated')
+
+
+    # Delete insurance 
+    if request.method == 'POST' and 'delete-insurance' in request.POST:
+        insurance_id = request.POST.getlist('insurance-id')
+        add_insurance = ClinicModel.objects.get(id = clinic_id)
+        add_insurance.insurance_cover.remove(*insurance_id)
+        messages.success(request, 'Insurance has been Deleted')
+
+    # Edit service-fee  
+    if request.method == 'POST' and 'edit-service-fee' in request.POST:
+        service_id = request.POST.get('service_id')
+        fee = int(request.POST.get('fee_edit'))
+        precocare_fee = int(5)
+        display_fee = fee + precocare_fee
+        save_service_object = ServiceModel.objects.get(pk = service_id)
+        save_service_object.service_fee = display_fee
+        save_service_object.save()
+        messages.success(request, save_service_object.service_name + ' ' 'has been successfully updated')
+
+    # Delete service 
+    if request.method == 'POST' and 'delete-service' in request.POST:
+        service_id = request.POST.get('service_id')
+        save_service_object = ServiceModel.objects.get(pk = service_id)
+        save_service_object.delete()
+        messages.success(request, save_service_object.service_name + ' ' 'Deleted')
+
+
+    # Remove Admin from Clinic 
+    if request.method == 'POST' and 'remove_admin' in request.POST:
+        admin_id = request.POST.get('admin_selected')
+        admin_name = request.POST.get('admin_user')
+        remove_admin = ClinicModel.objects.get(id = clinic_id)
+        remove_admin.clinic_admins.remove(admin_id)
+        messages.success(request, admin_name + ' ' 'has been removed as Administrator')
+
+    # Remove Doctor from Clinic 
+    if request.method == 'POST' and 'remove_doctor' in request.POST:
+        doctor_id = request.POST.get('doctor_selected')
+        doctor_user = request.POST.get('doctor_user')
+        remove_doctor = ClinicModel.objects.get(id = clinic_id)
+        remove_doctor.clinic_doctors.remove(doctor_id)
+        messages.success(request, doctor_user + ' ' 'has been removed as Doctor from Clinic')
+    
+
+    context = {
+        "clinic" : clinic,
+        "services" : services,
+        "clinic_services" : clinic_services,
+        "insurance" : insurance,
+        "province" : province,
+        "towns" : towns,
+        "clinic_locations" : clinic_locations,
+        "administrators" : administrators
+        
+    }
+    return render(request, "Admin/clinic-settings.html", context)
+
+def TimeslotsSettings(request,clinic_id):
+    services = ServiceModel.objects.filter(clinic_id = clinic_id)
+    clinic = ClinicModel.objects.get(id = clinic_id)
+    timeslot_list = ClinicTimeSlotModel.objects.filter(clinic_id = clinic_id)
+
+    if request.method == 'POST' and 'add_timeslot' in request.POST:
+        save_timeslot = ClinicTimeSlotModel()
+        save_timeslot.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        service_id = request.POST.get('service_id')
+        service_name = request.POST.get('service_name')
+        save_timeslot.service = ServiceModel.objects.get(id = service_id)
+        save_timeslot.timeslot = request.POST.get('time_slot')
+        save_timeslot.save()
+        messages.success(request, service_name + ' ' 'timeslot added')
+
+    if request.method == 'POST' and 'delete_timeslot' in request.POST:
+        timeslot_id = request.POST.get('timeslot_delete')   
+        time_name = request.POST.get('time_name') 
+        time_delete = ClinicTimeSlotModel.objects.get(id = timeslot_id)
+        time_delete.delete()
+        messages.success(request, time_name + ' ' 'has been deleted')
+
+    context = {
+        "services": services,
+        "clinic": clinic,
+        "timeslot_list" : timeslot_list
+    }
+
+    return render(request, "Admin/timeslots.html",context)
+
+@allowed_user(allowed_roles=['admin'])
 def EditClinicView(request):
     return render(request, "Admin/edit-clinic.html")
 
 @login_required(login_url='login')
-@admin_only
+@allowed_user(allowed_roles=['admin'])
 def AdminPage(request):
+   
     return render(request, "Admin/admin.html")
 
 @login_required(login_url='login')
-@admin_only
-def DashboardPage(request):
-    return render(request, "Admin/dashboard.html")
+@allowed_user(allowed_roles=['admin'])
+def DashboardPage(request,clinic_id):
+    admin_dashboard = ClinicModel.objects.get(id = clinic_id)
+    current_date = datetime.date.today()
+    new_date = current_date.isoformat
+
+    # Checking if user profile is complete start 
+    current_user = request.user
+    admin = AdministratorModel.objects.get(user = current_user)
+    administrators = admin
+    all_appointments = ApplicationForm.objects.filter(clinic_id = clinic_id).order_by('date_created')
+    # Checking if user profile is complete End
+
+    if request.method == 'POST' and 'confirm_appointment' in request.POST:
+        appointment_id = request.POST.get('appointment_id')
+        confirmAppointment = ApplicationForm.objects.get(id = appointment_id)
+        doctor_id = request.POST.get('select_doctor')
+        confirmAppointment.doctor = DoctorModel.objects.get(id = doctor_id)
+        confirmAppointment.paid_status = request.POST.get('payment')
+        confirmAppointment.application_status = request.POST.get('status')
+        confirmAppointment.save()
+        messages.success(request, 'Appointment Confirmed')
+
+
+    if request.method == 'POST' and 'complete_appointment' in request.POST:
+        complete_appointment_id = request.POST.get('complete_appointmentId')
+        save_complete = ApplicationForm.objects.get(id = complete_appointment_id)
+        save_complete.paid_status = request.POST.get('complete_payment')
+        save_complete.application_status = request.POST.get('complete_status')
+        save_complete.save()
+        messages.success(request, 'Appointment Complete')
+
+    context = {
+        "admin_dashboard" : admin_dashboard,
+        "administrators" : administrators,
+        "all_appointments" : all_appointments,
+        "current_date" : new_date
+    }
+    return render(request, "Admin/dashboard.html", context)
+
+
+@allowed_user(allowed_roles=['admin'])
+def AdminSearchView(request,clinic_id):
+    admin_clinic = ClinicModel.objects.get(id = clinic_id)
+
+    if request.method == 'POST' and 'admin_search' in request.POST:
+        searched = request.POST.get('searched_id')
+        admin_result = AdministratorModel.objects.filter(user_identification__contains = searched)
+
+        context = {
+        "admin_clinic" : admin_clinic,
+        "searched" : searched,
+        "admin_result" :admin_result,
+
+        }
+        
+        return render(request, "Admin/search_admins.html", context)
+
+
+    # adding searched admin to the clinic as a administrator
+    if request.method == 'POST' and 'add_to_clinic' in request.POST:
+        admin_id = request.POST.get('add_adminid')
+        user_added = request.POST.get('admin_name')
+        add_admin = ClinicModel.objects.get(id = clinic_id)
+        add_admin.clinic_admins.add(admin_id)
+        messages.success(request, user_added + ' ' 'added as Administrator')
+        context = {
+        "admin_clinic" : admin_clinic,
+
+        }
+    
+    return render(request, "Admin/search_admins.html", context)
+
+
+@allowed_user(allowed_roles=['admin'])
+def SearchDoctorView(request,clinic_id):
+    doctors_clinic = ClinicModel.objects.get(id = clinic_id)
+
+    if request.method == 'POST' and 'doctor_search' in request.POST:
+        searched = request.POST.get('searched_doctor_id')
+        doctor_result = DoctorModel.objects.filter(doctor_license = searched)
+
+        context = {
+            "searched" : searched,
+            "doctor_result" : doctor_result,
+            "doctors_clinic": doctors_clinic
+        }
+
+        return render(request, "Admin/search_doctor.html", context)
+
+    # adding searched admin to the clinic as a administrator
+    if request.method == 'POST' and 'add_to_clinic' in request.POST:
+        doctor_id = request.POST.get('add_doctor')
+        user_added = request.POST.get('doctor_name')
+        add_admin = ClinicModel.objects.get(id = clinic_id)
+        add_admin.clinic_doctors.add(doctor_id)
+        messages.success(request, user_added + ' ' 'added as Doctor')
+        context = {
+        "doctors_clinic" : doctors_clinic,
+
+        }
+
+
+    return render(request, "Admin/search_doctor.html",context)
+    
+
 # Admin Dashboard end 
+
+
 
 
 
 # Doctor Dashboards start 
 
+@allowed_user(allowed_roles=['doctors'])
+def DoctorProfileView(request):
+    current_user = request.user
+    doctor_profile = DoctorModel.objects.filter(user = current_user)
+    doctor_service = DoctorServices.objects.all()
+    service_list = ServiceListedModel.objects.all()
+
+    if request.method == 'POST' and 'submit-doctor' in request.POST:
+         save_doctor = DoctorModel.objects.get(user = current_user)
+         save_doctor.first_name = request.POST.get('first_name')
+         save_doctor.last_name = request.POST.get('last_name')
+         save_doctor.mobile_number = request.POST.get('phone')
+         save_doctor.email = request.POST.get('emailaddress')
+         save_doctor.about_doctor = request.POST.get('about')
+         save_doctor.doctor_license = request.POST.get('license')
+         save_doctor.profile_set = request.POST.get('Complete')
+         save_doctor.save()
+         messages.success(request, 'Profile Updated')
+
+    if request.method == 'POST' and 'submit-picture' in request.POST:
+         save_profilePicture = DoctorModel.objects.get(user = current_user)
+         save_profilePicture.profile_pic.delete(False)
+         save_profilePicture.profile_pic = request.FILES['profile_picture']
+         save_profilePicture.save()
+         messages.success(request, 'Profile Picture Updated')
+
+    if request.method == 'POST' and 'edit_service_fee' in request.POST:
+        service_id = request.POST.get('service_id')
+        service_modal = DoctorServices.objects.get(id = service_id)
+        doctor_fee = int(request.POST.get('service_fee'))
+        precocare_fee = int(5)
+        total_fee = doctor_fee + precocare_fee
+        service_modal.service_fee = total_fee
+        service_modal.save()
+        messages.success(request, 'Service Updated')
+
+    if request.method == 'POST' and 'add_service' in request.POST:
+        service_add = DoctorServices()
+        service_add.service_name = request.POST.get('service_name')
+        service_add.service_fee = request.POST.get('newservicefee')
+        service_add.doctor_id = DoctorModel.objects.get(user = current_user)
+        service_add.save()
+        messages.success(request, service_add.service_name  + ' ' 'Service Updated')
+
+    if request.method == 'POST' and 'delete_service' in request.POST:
+        service_id = request.POST.get('service_id')
+        service_names = request.POST.get('service_names')
+        delete_service = DoctorServices.objects.get(id = service_id)
+        delete_service.delete()
+        messages.success(request, service_names  + ' ' 'has been deleted')
+
+    context = {
+        "doctor_profile" : doctor_profile,
+        "doctor_service" : doctor_service,
+        "service_list" : service_list
+    }
+    return render(request, "doctor/doctor_profile.html", context)
+
 
 @allowed_user(allowed_roles=['doctors'])
-def DoctorDashboardView(request):
-    return render(request, "doctor/doctordashboard.html")
+def DoctorDashboardView(request,clinic_id):
+    clinic_dashboard = ClinicModel.objects.get(id = clinic_id)    
+    current_user = request.user
+    current_doctor = DoctorModel.objects.get(user = current_user)
+    all_appointments = ApplicationForm.objects.filter( Q(clinic_id=clinic_id)  & Q (doctor=current_doctor)).order_by('date_created')
+    current_date = datetime.date.today()
+    new_date = current_date.isoformat
+
+    if request.method == 'POST' and 'doctor_complete' in request.POST:
+        application_id = request.POST.get('appointment_id')
+        appointment_id = ApplicationForm.objects.get(id= application_id)
+        appointment_id.application_status = request.POST.get('doctorasses')
+        appointment_id.save()
+        messages.success(request, appointment_id.application_status  + ' ' 'Appointment')
+
+    context = {
+        "dashboard" : clinic_dashboard,
+        "all_appointments" : all_appointments,
+        "current_date" : new_date
+    }
+
+    return render(request, "doctor/doctordashboard.html" ,context)
 
 
 @allowed_user(allowed_roles=['doctors'])
 def DoctorsClinics(request):
-    return render(request, "doctor/doctor_clinics.html")
+    current_user = request.user
+    clinics = current_user.owner.all()
+
+    context = {
+        "clinics" : clinics
+    }
+    return render(request, "doctor/doctor_clinics.html" ,context)
+
 
 @allowed_user(allowed_roles=['doctors'])
-def DoctorsApplications(request):
-    return render(request, "doctor/doctors_applications.html")
+def DoctorClinicSetting(request,clinic_id):
+    admins = AdministratorModel.objects.all()
+    clinics_settings = ClinicModel.objects.get(id = clinic_id)
+
+    if request.method == 'POST':
+        admin = request.POST.get('admins')
+        add_admin = AdministratorModel.objects.get(id=admin)
+        clinic_id = request.POST.get('clinic_id') 
+        clinic_add = ClinicModel.objects.get(id = clinic_id)
+        clinic_add.clinic_admins.add(add_admin)
+        messages.success(request, add_admin.first_name + ' ' 'has been successfully added to your clinic')
+
+    context = {
+        "admins" : admins,
+        "set_clinic" : clinics_settings,
+        
+    }
+
+    return render(request, "doctor/doctor-clinic-set.html", context)
+
+
+@allowed_user(allowed_roles=['doctors'])
+def DoctorsApplications(request,clinic_id):
+    current_user = request.user
+    current_doctor = DoctorModel.objects.get(user = current_user)
+    all_appointments = ApplicationForm.objects.filter( Q(clinic_id=clinic_id)  & Q (doctor=current_doctor)).order_by('date_created')
+
+    context = {
+        "all_appointments" : all_appointments
+    }
+    return render(request, "doctor/doctors_applications.html", context)
 
 # Doctor Dashboard End
 
+# htmx start 
+@allowed_user(allowed_roles=['doctors'])
+def add_clinic(request):
+        clinic = request.POST.get('clinic-name')
+        contact1 = request.POST.get('contact-1')
+        contact2 = request.POST.get('contact-2')
+        email_clinic = request.POST.get('email-address')
+        about = request.POST.get('about-clinic')
+        street = request.POST.get('street')
+        province = request.POST.get('province')
+        suburb = request.POST.get('suburb')
+        zipcode = request.POST.get('zipcode')
+        clinic_type = request.POST.get('clinictype')
 
+        clinic = ClinicModel.objects.create(
+            clinic_name = clinic,
+            contact1 = contact1,
+            contact2 = contact2,
+            emial = email_clinic,
+            about_clinic = about,
+            street = street,
+            province = province,
+            suburb = suburb,
+            zipcode = zipcode,
+            clinic_type = clinic_type
+        )
 
+        # add clinic to user list
+        request.user.owner.add(clinic)
+
+        # get all the clinics to template
+        current_user = request.user
+        clinics = current_user.owner.all()
+
+        context = {
+            "clinics" : clinics
+        }
+        return render(request, 'admins_patials/clinics-list.html',context) 
+# htmx end 

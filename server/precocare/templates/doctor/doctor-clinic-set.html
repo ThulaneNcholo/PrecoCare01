@@ -1,0 +1,66 @@
+{% extends 'doctor/doctor-base.html' %}
+
+
+{% block content %}
+
+<section class="my-4 container">
+    {% for message in messages %}
+    <div class="alert alert-primary" role="alert">
+        <p>{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+<section class="container mt-5">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#doctor-clinic-settings">
+        Clinic Settings
+      </button>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="doctor-clinic-settings" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+
+              <form action="" method="POST">
+                {% csrf_token %}
+
+
+                <input type="text" value="{{set_clinic.id}}" name="clinic_id" hidden=True>
+
+
+                <label for="clinicnameinput" class="form-label">Add Admins</label>
+                <select class="form-select py-3 bg-light" aria-label="Default select example" name="admins">
+                    <option selected>Select Admin</option>
+                    {% for data in admins %}
+                    <option value="{{data.id}}">{{data.first_name}}</option>
+                    {% endfor %}
+                </select>
+
+                    <center>
+                         <button type="submit" class="btn btn-success px-5 my-5">Submit Admin</button>
+                    </center>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
+<section class="mt-5 container">
+
+
+    <p>{{set_clinic.clinic_name}}</p>
+
+    {% for admin in set_clinic.clinic_admins.all %}
+        <p>{{admin.first_name}}</p>
+    {% endfor %}
+
+</section>
+
+{% endblock %}
