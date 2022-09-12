@@ -38,36 +38,65 @@
 
 <section class="container mt-5">
     <p class="text-secondary mb-2" style="font-size: 20px;">Filters</p>
-    <div class="row py-3 bg-light rounded border">
-        <div class="col">
-                <input class="form-control me-2" type="search" placeholder="Search Patinet" aria-label="Search">
+    <form method="POST" autocomplete="off">
+        {% csrf_token %}
+        <div class="row py-3 bg-light rounded">
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <input class="form-control me-2" type="text" placeholder="Name" aria-label="Search" name="firstNameSearch">
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <input class="form-control me-2" type="text" placeholder="Surname" aria-label="Search" name="lastNameSearch">
+                
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <input class="form-control me-2" type="text" placeholder="File Number" aria-label="Search" name="fileSearch">
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <input class="date-style" type="date" placeholder="Select Date" name="DateSearch">
+                <label for="datepicker" class="form-label mt-3 text-secondary">Appointment Date</label>
+
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <select class="form-select" aria-label="Default select example" name="paymentSearch">
+                    <option value= >Payment</option>
+                    <option value=Paid>Paid</option>
+                    <option value=Outstanding>Outstanding</option>
+                  </select>
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <select class="form-select" aria-label="Default select example" name="AppointmentStatusSearch">
+                    <option selected value= >Status</option>
+                    <option value=Confirmed>Confirmed</option>
+                    <option value=Complete>Complete</option>
+                    <option value=Pending>Pending</option>
+                    <option value=Canceled>Canceled</option>
+                    <option value=No-Show>No-Show</option>
+    
+                  </select>
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <select class="form-select" aria-label="Default select example" name="ServiceSearchApp">
+                    <option value= >Service</option>
+                    {% for service in serviceList %}
+                    <option value="{{service.id}}">{{service.service_name}}</option>
+                    {% endfor %}
+                  </select>
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <select class="form-select" aria-label="Default select example" name="InsuranceSearch">
+                    <option value= >Insurance</option>
+                    {% for insurance in clinic.insurance_cover.all %}
+                    <option value="{{insurance.id}}">{{insurance.name}}</option>
+                    {% endfor %}
+                  </select>
+            </div>
+            <div class="col-sm-12 col-lg col-md-6 mt-3">
+                <center>
+                    <button type="submit" class="btn btn-success px-5" name="applicationsSearch">Search</button>
+                </center>
+            </div>
         </div>
-        <div class="col">
-            <input class="form-control me-2" type="search" placeholder="File Number" aria-label="Search">
-        </div>
-        <div class="col">
-            <input class="date-style" type="date" placeholder="Select Date">
-        </div>
-        <div class="col">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Application</option>
-                <option value="1">Complete</option>
-                <option value="2">Pending</option>
-                <option value="3">Canceled</option>
-              </select>
-        </div>
-        <div class="col">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Insurance</option>
-                <option value="1">Discovery</option>
-                <option value="2">Bonitas</option>
-                <option value="3">Discovery</option>
-              </select>
-        </div>
-        <div class="col">
-            <button class="btn btn-success px-5">Search</button>
-        </div>
-    </div>
+    </form>
 </section>
 
 
@@ -86,7 +115,7 @@
     <div class="row py-4 rounded  card-1 mb-4 bg-light border">
         <div class="col">{{appointment.time_slot_id.clinic_timeslot_id.timeslot}}</div>
         <div class="col">{{appointment.patient_name}} {{appointment.patient_surname}}</div>
-        <div class="col hide-components-lg hide-components-ipad">{{appointment.gender}}</div>
+        <div class="col hide-components-lg hide-components-ipad">{{appointment.service.service_name}}</div>
         <div class="col hide-components-lg hide-components-ipad">{{appointment.patient_file_number}}</div>
         <div class="col hide-components-lg hide-components-ipad text-secondary">{{appointment.application_status}}</div>
         <div class="col">
@@ -107,62 +136,62 @@
                             <li class="list-group-item py-3 text-white" style="background-color: darkblue;">Patient Information</li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Time-slot</div>
-                                    <div class="col">{{appointment.time_slot_id.clinic_timeslot_id.timeslot}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Time-slot</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.time_slot_id.clinic_timeslot_id.timeslot}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Patient File Number</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Patient File Number</div>
                                     {% if appointment.patient_file_number == None %}
-                                        <div class="col text-secondary">New Patient</div>
+                                        <div class="col-12 col-md-6 mt-3 text-secondary">New Patient</div>
                                     {% else %}
-                                        <div class="col" style="color: darkblue;">{{appointment.patient_file_number}}</div>
+                                        <div class="col-12 col-md-6 mt-3" style="color: darkblue;">{{appointment.patient_file_number}}</div>
                                     {% endif %}
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Patient</div>
-                                    <div class="col">{{appointment.patient_name}} {{appointment.patient_surname}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Patient</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.patient_name}} {{appointment.patient_surname}}</div>
                                 </div>
                             </li>
 
                             {% if appointment.visit_status == "First-Time" %}
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Gender</div>
-                                    <div class="col">{{appointment.gender}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Gender</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.gender}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Date Of Birth</div>
-                                    <div class="col">{{appointment.date_of_birth}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Date Of Birth</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.date_of_birth}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Identification</div>
-                                    <div class="col">{{appointment.identification}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Identification</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.identification}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Contact 1</div>
-                                    <div class="col">{{appointment.contact}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Contact 1</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.contact}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Email</div>
-                                    <div class="col">{{appointment.email}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Email</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.email}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Address</div>
-                                    <div class="col">
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Address</div>
+                                    <div class="col-12 col-md-6 mt-3">
                                         <p class="mb-1">{{appointment.street}}</p>
                                         <p class="mb-1">{{appointment.town}}</p>
                                         <p class="mb-1">{{appointment.postal_code}}</p>
@@ -172,39 +201,39 @@
                             {% endif %}
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Reason For Visit</div>
-                                    <div class="col">{{appointment.reason_visit}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Reason For Visit</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.reason_visit}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Allergies</div>
-                                    <div class="col">{{appointment.allergies}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Allergies</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.allergies}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item py-3 text-white" style="background-color: darkblue;">Service Information</li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Service</div>
-                                    <div class="col">{{appointment.service.service_name}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Service</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.service.service_name}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Visit Status</div>
-                                    <div class="col">{{appointment.visit_status}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Visit Status</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.visit_status}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Medical Scheme</div>
-                                    <div class="col">{{appointment.medical_aid.name}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Medical Scheme</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.medical_aid.name}}</div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col text-secondary">Appointment Status</div>
-                                    <div class="col">{{appointment.application_status}}</div>
+                                    <div class="col-12 col-md-6 mt-3 text-secondary">Appointment Status</div>
+                                    <div class="col-12 col-md-6 mt-3">{{appointment.application_status}}</div>
                                 </div>
                             </li>
                           </ul>
@@ -216,6 +245,10 @@
             </div>
         </div>
     </div>
+    {% empty %}
+        <div class="alert alert-secondary my-4" role="alert">
+            No records found
+         </div>
     {% endfor %}
 </section>
 {% endblock %}

@@ -9,7 +9,28 @@
     }
 </style>
 
-<a href="#" style="text-decoration: none; color: darkblue;">
+{% if doctor.verified == "Verified" %}
+<a href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
+    <div class="row border m-0 bg-light rounded px-2 py-3 mt-4">
+        <div class="col-4 d-flex align-items-center">
+            <div class="px-2">
+                {% if doctor.profile_pic %}
+                <img src="{{doctor.profile_pic.url}}" alt="Avatar" class="avatar">
+                {% else %}
+                <i class="bi bi-person-fill" style="font-size: 40px;"></i>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col">
+            <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}} <i class="bi bi-check-circle-fill" style="color: #1DA1F2;"></i></p>
+            {% for service in doctor_service %}
+            <p class="m-0 text-secondary">{{service.service_name}}</p>
+            {% endfor %}
+        </div>
+    </div>
+</a>
+{% else %}
+<a href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
     <div class="row border m-0 bg-light rounded px-2 py-3 mt-4">
         <div class="col-4 d-flex align-items-center">
             <div class="px-2">
@@ -22,7 +43,10 @@
         </div>
         <div class="col">
             <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}}</p>
-            <p class="m-0 text-secondary">general practitioner</p>
+            {% for service in doctor_service %}
+            <p class="m-0 text-secondary">{{service.service_name}}</p>
+            {% endfor %}
         </div>
     </div>
 </a>
+{% endif %}

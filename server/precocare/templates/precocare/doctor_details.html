@@ -54,6 +54,12 @@
         font-weight: 500;
     }
 
+    .offcanvas-bottom {
+   
+    height: 60vh;
+    max-height: 100%;
+    }
+
     @media (min-width: 992px) {
 
         .image-height{
@@ -90,14 +96,23 @@
         </div>
     </div>
 
+
+    <section class="container mt-5">
+        {% for message in messages %}
+        <div class="alert alert-warning" role="alert">
+            {{message}}
+          </div>
+        {% endfor %}
+    </section>
+
     <section class="quicklinks container" style="margin-top: 100px;">
         <div id="list-example" class="list-group">
             <div class="row">
                 <div class="col">
-                    <a class="list-group-item list-group-item-action rounded p-3 bg-light cards-shadow" href="#list-item-1">
+                    <a class="list-group-item list-group-item-action rounded p-3 bg-light cards-shadow" href="#list-item-1" style="border-color: grey;">
                         <center>
                             <p class="m-0 mb-2" style="font-weight: 500; font-size: 18px; color: grey;">Upvotes</p>
-                            <p class="m-0" style="color: darkblue; font-weight: 500; font-size: 17px;">11</p>
+                            <p class="m-0" style="color: darkblue; font-weight: 500; font-size: 17px;">{{doctorUpvotes}}</p>
                         </center>
                     </a>
                 </div>
@@ -105,7 +120,7 @@
                     <a class="list-group-item list-group-item-action rounded p-3 cards-shadow" href="#list-item-2" style="background-color: darkblue; border: darkblue;">
                         <center>
                             <p class="m-0 mb-2" style="font-weight: 500; font-size: 18px; color: lightgray;">Reviews</p>
-                            <p class="m-0" style="color: lightgrey; font-weight: 500; font-size: 17px;">22</p>
+                            <p class="m-0" style="color: lightgrey; font-weight: 500; font-size: 17px;">{{reviewsCount}}</p>
                         </center>
                     </a>
                 </div>
@@ -120,24 +135,22 @@
 
     <section class="consultation-fee mt-5 container">
         <p class="main-headings m-0">Consulation Fee</p>
-
         {% if doctor_service %}
         {% for service in doctor_service%}
         <div class="row m-0 py-3">
-            <div class="col">
-                <p class="m-0" style="color: darkblue;">{{service.service_name}} Fee</p>
+            <div class="col px-0">
+                <p class="m-0" style="color: grey;">{{service.service_name}} Fee</p>
             </div>
-            <div class="col text-secondary m-0" style="font-weight: 500;">R {{service.service_fee}}</div>
+            <div class="col px-0 text-secondary m-0" style="font-weight: 500;">R {{service.service_fee}}</div>
         </div>
         {% endfor %}
         {% else %}
         <p class="py-3 text-secondary">Services not registed.</p>
         {% endif %}
-        <hr>
-
         <div class="alert alert-primary my-5" role="alert">
-            Please note there may be additianal charges depending on your consultation.
-          </div>
+            Please note there may be additianal charges depending on your consultation,extra medication etc.
+        </div>
+        <hr>
     </section>
 
     <section class="doctor-clinics mt-5 container">
@@ -170,10 +183,68 @@
         <center>
             <div class="row mt-5">
                 <div class="col">
-                    <button class="btn btn-light border py-3" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;">Add Upvote</button>
+                      <button  style="width: 100%;" class="btn btn-light border py-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                        Add Upvote
+                      </button>
+                      <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                        <div class="offcanvas-header">
+                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">Add Upvote</h5>
+                          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <form method="POST" autocomplete="off">
+                                {% csrf_token %}
+                                <center>
+                                    <p class="text-secondary">Please Check the checkbox to upvote</p>
+                                    <div class="alert alert-secondary" role="alert" style="margin-left: 25%; margin-right: 25%;">
+                                        <div class="form-check" >
+                                            <input class="form-check-input" type="checkbox" value="voted" id="flexCheckDefault" name="voted" required>
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                              Upvote Doctor
+                                            </label>
+                                          </div>
+                                    </div>
+                                    <button name="submit-upvote" type="submit" class="btn mt-4 text-white fw-bold py-3" style="background-color: darkblue; width: 80%;">Submit</button>
+                                    <p class="text-secondary mt-4">Upvote is a symbol to show that you like or agree with what the doctor is doing.</p>
+                                </center>
+                            </form>
+                          <div style="height: 100px; width: 100%;"></div>
+                        </div>
+                      </div>
                 </div>
                 <div class="col">
-                    <button class="btn btn-light border py-3"  data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">Add Review</button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-light border py-3" data-bs-toggle="modal" data-bs-target="#addreviewmodal" style="width: 100%;">
+                        Add Review
+                      </button>
+                      
+                      <!-- Modal -->
+                      <div class="modal fade" id="addreviewmodal" tabindex="-1" aria-labelledby="addreviewmodalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="addreviewmodalLabel">Doctor Review</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control text-secondary" id="floatingInput" placeholder="Full Name" name="patientName" required>
+                                        <label class="text-secondary" for="floatingInput">Full Name</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <textarea class="form-control text-secondary" placeholder="Leave you review here" id="floatingTextarea2" style="height: 300px" name="review" required></textarea>
+                                        <label class="text-secondary" for="floatingTextarea2">Add Review here...</label>
+                                    </div>
+                                    <center>
+                                        <button name="add-review" class="btn text-white my-4 fw-bold py-3" style="background-color: darkblue; width: 70%;">Submit</button>
+                                    </center>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                 </div>
             </div>
         </center>
@@ -197,51 +268,31 @@
               </div>
             </div>
 
-            
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item" style="border: none;">
-              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control text-secondary" id="floatingInput" placeholder="Full Name">
-                        <label class="text-secondary" for="floatingInput">Full Name</label>
-                    </div>
-                    <div class="form-floating">
-                        <textarea class="form-control text-secondary" placeholder="Leave you review here" id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label class="text-secondary" for="floatingTextarea2">Add Review here...</label>
-                    </div>
-                    <button type="button" class="btn mt-3 text-white" style="background-color: darkblue;">Submit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
+            <!-- <i class="bi bi-shift-fill"></i> -->
     <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
         <section class="mt-5 upvotes" id="list-item-1">
             <div class="alert alert-primary" role="alert">
-                <span style="font-weight: 500; padding-right: 10px;">
-                    11 Upvotes
-                </span>  <i class="bi bi-caret-up-fill" style="font-size: 23px;"></i>
-                
+                <center>
+                    <p>Dr {{doctor.first_name}} {{doctor.last_name}}</p>
+                    <span style="font-weight: 500; padding-right: 10px;">
+                        <i class="bi bi-shift-fill"></i>
+                    </span>  Upvotes <span class="px-2 fw-bold">{{doctorUpvotes}}</span>
+                </center>
+              </div>
+        </section>
+        <section>
+            <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+                {% for review in doctorReview %}
+                <div class="feature col border pb-2">
+                    <i class="bi bi-chat-left-text-fill px-4 py-2 rounded text-light" style="font-size: 20px; background-color: darkblue;"></i>
+                  <h5 class="mt-4">{{review.patient}}</h5>
+                  <p>{{review.review}}</p>
+                  <p class="m-0 text-secondary" style="font-size: 14px;">{{review.date_created}}</p>
+                </div>
+                {% endfor %}
               </div>
         </section>
 
-        <section class="mt-5" id="list-item-2">
-            <div class="rounded p-2 border p-4 bg-light">
-                <div class="row m-0 ">
-                    <div class="col-3 d-flex align-items-center p-0">
-                        <i class="bi bi-chat-left-text-fill bg-light px-4 py-2 rounded" style="font-size: 25px; color: darkblue;"></i>
-                    </div>
-                    <div class="col">
-                        <P class="m-0" style="color: darkblue;">Thulane Ncholo</P>
-                        <p class="m-0 text-secondary" style="font-size: 14px;">12 August 2022</p>
-                    </div>
-                </div>
-                <p class="text-secondary pt-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perferendis, exercitationem. Iusto, asperiores pariatur. Modi est mollitia voluptas reprehenderit fuga molestias at, vero ut voluptatum. Vitae sint quisquam atque minima magnam.</p>
-            </div>
-            
-        </section>
       </div>
     </section>
 

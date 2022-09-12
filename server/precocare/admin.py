@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AdministratorModel, ApplicationForm, BookedTimeslotModel, ClinicLocationsModel, ClinicModel, ClinicTimeSlotModel, DoctorModel, DoctorServices, InsuranceModel, PatientModel, ProvinceModel, ServiceListedModel, ServiceModel, SuburbModel
+from .models import AdministratorModel, ApplicationForm, BookedTimeslotModel, ClinicLocationsModel, ClinicModel, ClinicTimeSlotModel, DoctorModel, DoctorReview, DoctorServices, DoctorUpvote, InsuranceModel, PatientModel, PrecoCareComments, ProvinceModel, ServiceListedModel, ServiceModel, SuburbModel
 
 # Register your models here.
 
@@ -54,6 +54,21 @@ class BookedTimeslotModelAdmin(admin.ModelAdmin):
          'user','clinic_timeslot_id','date','date_field','clinic_id','service','id'
     )
 
+class DoctorReviewAdmin(admin.ModelAdmin):
+    list_display = (
+        'patient','date_created'
+    )
+
+class DoctorUpvoteAdmin(admin.ModelAdmin):
+    list_display = (
+        'doctor','upvote','date_created'
+    )
+
+class PrecoCareCommentsAdmin(admin.ModelAdmin):
+    list_display = (
+        'fullName','comment','date_created'
+    )
+
 admin.site.register(PatientModel, PatientModelAdmin)
 admin.site.register(AdministratorModel, AdministratorModelAdmin)
 admin.site.register(DoctorModel, DoctorModelAdmin)
@@ -68,3 +83,6 @@ admin.site.register(DoctorServices,DoctorServicesAdmin)
 admin.site.register(ApplicationForm,ApplicationFormAdmin)
 admin.site.register(ClinicTimeSlotModel,ClinicTimeSlotModelAdmin)
 admin.site.register(BookedTimeslotModel,BookedTimeslotModelAdmin)
+admin.site.register(DoctorReview,DoctorReviewAdmin)
+admin.site.register(DoctorUpvote,DoctorUpvoteAdmin)
+admin.site.register(PrecoCareComments,PrecoCareCommentsAdmin)

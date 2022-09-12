@@ -9,11 +9,17 @@
         </a>
       </li>
       <li class="nav-item my-1">
-        <a class="nav-link" aria-current="page" href="{% url 'insurance' %}" style="color: grey;">
+        <a class="nav-link" aria-current="page" href="{% url 'insurance' %}" style="color: grey;">  
           <span> <i class="bi bi-search navbar-icons-lg px-2"></i></span>
           Medical Aid
         </a>
       </li>
+      <!-- <li class="nav-item my-1">
+        <a class="nav-link" aria-current="page" href="{% url 'wrapper' %}" style="color: grey;">  
+          <span> <i class="bi bi-search navbar-icons-lg px-2"></i></span>
+        wrapper
+        </a>
+      </li> -->
       {% if user.is_authenticated %}
       <li class="nav-item my-1">
         <a class="nav-link" aria-current="page" href="{% url 'appointments' %}" style="color: grey;">

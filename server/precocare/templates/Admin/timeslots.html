@@ -3,6 +3,13 @@
 
 {% block content %}
 
+<section class="container mt-5">
+    <a href="{% url 'clinic-settings' clinic.id %}">
+        <i class="bi bi-arrow-left-circle-fill" style="color: darkblue; font-size: 30px;"></i>
+    </a>
+</section>
+
+
 <section class="my-5 container">
     {% for message in messages %}
     <div class="alert alert-warning py-3" role="alert">

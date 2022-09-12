@@ -1,4 +1,5 @@
 {% extends 'precocare/base.html' %}
+{% load static %}
 
 
 {% block content %}
@@ -18,8 +19,6 @@
     height: 35vh;
     width: 100%;
     background-color: var(--main-color);
-    border-bottom-right-radius: 0.30rem!important;
-    border-bottom-left-radius: 0.30rem!important;
 }
 
 .hero-padding{
@@ -140,6 +139,12 @@ transform: translateX(-100%);
     }
     }
 
+    .img-sizes{
+        height: 150px;
+        width: 100%;
+        object-fit: cover;
+    }
+
 </style>
 
 <section>
@@ -188,13 +193,22 @@ transform: translateX(-100%);
 </section>
 
 
+
 <!-- clinic type section start  -->
 <div class="top-spacing" style="height: 50px;"></div>
+<section class="container mt-5">
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        {{message}}
+      </div>
+    {% endfor %}
+</section>
+
 <section class="mt-5 container">
     <p class="main-headings m-0">Clinic Type</p>
-    <div class="row">
+    <div class="row ">
         <div class="col">
-            <button data-bs-toggle="offcanvas" data-bs-target="#allclinics" aria-controls="allclinics" type="button" class="btn border" style="width: 100%; background-color: darkblue; color: lightgray;">All</button>
+            <button data-bs-toggle="offcanvas" data-bs-target="#allclinics" aria-controls="allclinics" type="button" class="btn border py-3" style="width: 100%; background-color: darkblue; color: lightgray;">All</button>
        
               <div class="offcanvas offcanvas-start" tabindex="-1" id="allclinics" aria-labelledby="offcanvasExampleLabel">
                 <div class="offcanvas-header">
@@ -204,23 +218,31 @@ transform: translateX(-100%);
                 <div class="offcanvas-body">
                     <div class="container">
                         <form>
+                            {% csrf_token %}
                             <div class="row">
                                 <div class="col">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="clinic_search" placeholder="clinic name">
-                                        <label for="clinic_search">Search for clinic</label>
+                                        <input type="text" class="form-control" id="clinic_search" placeholder="clinic name" name="clinicName">
+                                        <label for="clinic_search">Enter clinic name</label>
                                     </div>
                                 </div>
                                 <div class="col-2 p-0">
-                                    <div class="search-icon rounded">
+                                    <button hx-post="{% url 'clinic-search' %}" hx-target="#clinicResults" type="submit" class="search-icon rounded" style="width: 100%;">
                                         <center>
-                                        <i class="bi bi-search"></i>
-                                        </center>
-                                    </div>
+                                            <i class="bi bi-search"></i>
+                                            </center>
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
+
+                    <!-- clinic search results start  -->
+                    <section class="my-3" id="clinicResults">
+                        {% include "partials/clinicresults.html"%}
+                    </section>
+                    <!-- clinic search results end  -->
+
 
                     <section class="mt-5">
                         <div class="row">
@@ -229,12 +251,16 @@ transform: translateX(-100%);
                                 <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
                                     <div class="rounded">
                                         {% if clinic.hero_image %}
-                                        <img src="{{clinic.hero_image.url}}" class="img-thumbnail" alt="...">
+                                        <img src="{{clinic.hero_image.url}}" class="img-thumbnail img-sizes" alt="...">
                                         {% else %}
-                                        <div class="clinic-image bg-light rounded border"></div>
+                                        <div class="clinic-image bg-light rounded border img-sizes"></div>
                                         {% endif %}
                                         <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
-                                        <P class="m-0 mt-1 text-secondary">Tsakane</P>
+                                        {% for location in clinicLocation %}
+                                        {% if location.clinic_id.id == clinic.id %}
+                                        <p class="text-secondary mb-1 mt-2"><i class="bi bi-geo-alt-fill text-secondary" style="color: darkblue; padding-right: 10px;"></i>{{location.suburb}}</p>
+                                        {% endif %}
+                                        {% endfor %}
                                     </div>
                                 </a>
                             </div>
@@ -246,7 +272,7 @@ transform: translateX(-100%);
 
         </div>
         <div class="col">
-            <button type="button" class="btn btn-light border" style="width: 100%;"  data-bs-toggle="offcanvas" data-bs-target="#privateclinics" aria-controls="privateclinics">Private</button>
+            <button type="button" class="btn btn-light border py-3" style="width: 100%;"  data-bs-toggle="offcanvas" data-bs-target="#privateclinics" aria-controls="privateclinics">Private</button>
 
               <div class="offcanvas offcanvas-start" tabindex="-1" id="privateclinics" aria-labelledby="offcanvasExampleLabel">
                 <div class="offcanvas-header">
@@ -261,9 +287,9 @@ transform: translateX(-100%);
                                     <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
                                         <div class="rounded">
                                             {% if clinic.hero_image %}
-                                            <img src="{{clinic.hero_image.url}}" class="img-thumbnail" alt="...">
+                                            <img src="{{clinic.hero_image.url}}" class="img-thumbnail img-sizes" alt="...">
                                             {% else %}
-                                            <div class="clinic-image bg-light rounded border"></div>
+                                            <div class="clinic-image bg-light rounded border img-sizes"></div>
                                             {% endif %}
                                             <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
                                             <P class="m-0 mt-1 text-secondary">Tsakane</P>
@@ -277,7 +303,7 @@ transform: translateX(-100%);
               </div>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-light border"  style="width: 100%;"  data-bs-toggle="offcanvas" data-bs-target="#publicclinics" aria-controls="publicclinics">Public</button>
+            <button type="button" class="btn btn-light border py-3"  style="width: 100%;"  data-bs-toggle="offcanvas" data-bs-target="#publicclinics" aria-controls="publicclinics">Public</button>
 
               
               <div class="offcanvas offcanvas-start" tabindex="-1" id="publicclinics" aria-labelledby="offcanvasExampleLabel">
@@ -293,9 +319,9 @@ transform: translateX(-100%);
                                     <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
                                         <div class="rounded">
                                             {% if clinic.hero_image %}
-                                            <img src="{{clinic.hero_image.url}}" class="img-thumbnail" alt="...">
+                                            <img src="{{clinic.hero_image.url}}" class="img-thumbnail img-sizes" alt="...">
                                             {% else %}
-                                            <div class="clinic-image bg-light rounded border"></div>
+                                            <div class="clinic-image bg-light rounded border img-sizes"></div>
                                             {% endif %}
                                             <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
                                             <P class="m-0 mt-1 text-secondary">Tsakane</P>
@@ -326,35 +352,11 @@ transform: translateX(-100%);
 
                   <div class="offcanvas offcanvas-start" tabindex="-1" id="viewalllocations" aria-labelledby="offcanvasExampleLabel">
                     <div class="offcanvas-header">
-                      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Locations</h5>
+                      <h5 class="offcanvas-title" id="offcanvasExampleLabel">All Locations availabe on PrecoCare</h5>
                       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
-
-                        <div class="mb-3">
-                            <form>
-                                <div class="row m-0 p-0">
-                                    <div class="col ">
-                                        <select class="dropdown_style rounded" name="cars" id="cars" style="width: 100%;">
-                                            <option>Select Location</option>
-                                            <option value="volvo">Volvo</option>
-                                            <option value="saab">Saab</option>
-                                            <option value="opel">Opel</option>
-                                            <option value="audi">Audi</option>
-                                          </select>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <div class="search-icon rounded bg-light">
-                                            <center>
-                                            <i class="bi bi-search" style="color: darkblue;"></i>
-                                            </center>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                      <section class="mt-5">
+                      <section class="mt-3">
                         {% for location in locations_list%}
                         <a href="{% url 'locations' location.id %}" style="text-decoration: none;">
                             <div class="row p-0 m-0 mt-3 p-3 rounded border" style="background-color: darkblue;">
@@ -408,21 +410,55 @@ transform: translateX(-100%);
                   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                  <section class="mt-5">
+                  <section>
+                    <div class="mt-2">
+                        <form>
+                            {% csrf_token %}
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="doctorFirstName_search" placeholder="doctor name" name="DoctorName">
+                                <label class="text-secondary" for="Firstname_search">First Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="doctorLastName_search" placeholder="doctor surname" name="DoctorSurname">
+                                <label class="text-secondary" for="lastName_search">Last Name</label>
+                            </div>
+                            <center>
+                                <button hx-post="{% url 'doctor-search' %}" hx-target="#doctorResults" type="submit" class="search-icon rounded my-4" style="width: 70%;">
+                                    <p>Search</p>
+                                </button>
+                                <p class="text-secondary mb-5">If search result is blank means doctor could not be found</p>
+                            </center>
+                            
+                        </form>
+                    </div>
+
+                    <!-- clinic search results start  -->
+                    <section class="mt-5 " id="doctorResults">
+                        {% include "partials/doctorresults.html"%}
+                    </section>
+                    <!-- clinic search results end  -->
 
                     {% for doctor in list_doctors %}
-                    <a href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
+                    <a class="mt-5" href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
                         <div class="row border m-0 bg-light rounded px-2 py-3 mt-4">
-                            <div class="col-3 d-flex align-items-center">
+                            <div class="col-3 d-flex align-items-center" style="padding-right: 100px;">
                                 {% if doctor.profile_pic %}
-                                    <img src="{{doctor.profile_pic.url}}" alt="Avatar" class="avatar">
+                                <img src="{{doctor.profile_pic.url}}" alt="Avatar" class="avatar">
                                 {% else %}
                                     <i class="bi bi-person-fill" style="font-size: 40px;"></i>
                                 {% endif %}
                             </div>
-                            <div class="col ">
+                            <div class="col">
+                                {% if doctor.verified == "Verified"%}
+                                <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}} <i class="bi bi-check-circle-fill" style="color: #1DA1F2;"></i></p>
+                                {% else %}
                                 <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}}</p>
-                                <p class="m-0 text-secondary">general practitioner</p>
+                                {% endif %}
+                                {% for service in doctorService%}
+                                {% if service.doctor_id.id == doctor.id%}
+                                <p class="m-0 text-secondary">{{service.service_name}}</p>
+                                {% endif %}
+                                {% endfor%}
                             </div>
                         </div>
                     </a>
@@ -443,9 +479,17 @@ transform: translateX(-100%);
                     <i class="bi bi-person-fill" style="font-size: 40px;"></i>
                 {% endif %}
             </div>
-            <div class="col ">
+            <div class="col">
+                {% if doctor.verified == "Verified"%}
+                <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}} <i class="bi bi-check-circle-fill" style="color: #1DA1F2;"></i></p>
+                {% else %}
                 <p class="m-0" style="font-weight: 500;">Dr {{doctor.first_name}} {{doctor.last_name}}</p>
-                <p class="m-0 text-secondary">general practitioner</p>
+                {% endif %}
+                {% for service in doctorService%}
+                {% if service.doctor_id.id == doctor.id%}
+                <p class="m-0 text-secondary">{{service.service_name}}</p>
+                {% endif %}
+                {% endfor%}
             </div>
         </div>
     </a>
@@ -510,14 +554,13 @@ transform: translateX(-100%);
 
 <!-- share with us start  -->
 <div class="container mt-5 ">
-    
-    <section class="bg-light border p-3 rounded">
-        <p class="main-headings m-0">Share with us</p>
+    <p class="main-headings mb-3">Share with us</p>
+    <img src="{% static 'images/precocare.svg' %}" alt="" style="width: 100%; height: 400px;">
+    <section class="bg-light border px-3 rounded py-4">
         <div>
             <p style="color: darkblue;">PrecoCare Application</p>
             <p class="text-secondary">Share with us your experience with our app,We would like to get your feedback to better improve PrecoCare for better experience for our end users.Thank you.</p>
             <button class="btn text-white" style="background-color: darkblue;" data-bs-toggle="modal" data-bs-target="#sharewithus">Share Now</button>
-
 
             <!-- Modal -->
             <div class="modal fade" id="sharewithus" tabindex="-1" aria-labelledby="sharewithusform" aria-hidden="true">
@@ -528,23 +571,20 @@ transform: translateX(-100%);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-
-                        <form autocomplete="off">
+                        <form method="POST" autocomplete="off">
+                            {% csrf_token %}
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" placeholder="Full Name">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Full Name" name="userName" required>
                                 <label for="floatingInput">Full Name</label>
                             </div>
-    
                             <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 250px" name="userComment" required></textarea>
                                 <label for="floatingTextarea2">leave your comment here</label>
                             </div>
-
                             <center>
-                                <button type="submit" class="btn  py-3 mt-3 mb-3 text-white px-4" style="width: 70%; background-color: darkblue;">Submit</button>
+                                <button name="precocare-comment" type="submit" class="btn  py-3 mt-3 mb-3 text-white px-4 fw-bold" style="width: 70%; background-color: darkblue;">Submit</button>
                             </center>
                         </form>
-                        
                     </div>
                 </div>
                 </div>

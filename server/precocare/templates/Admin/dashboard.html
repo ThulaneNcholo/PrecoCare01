@@ -84,6 +84,8 @@
 </style>
 
 
+<section class="" id="wholepage">
+
 <section>
   <nav class="navbar navbar-expand-lg navbar-light py-3" style="background-color: darkblue;">
   <div class="container-fluid">
@@ -105,13 +107,6 @@
 </nav>
 </section>
 
-{% if administrators.user.id == request.user.id %}
-  {% if administrators.profile_set == "Incomplete" %}
-    <div class="alert alert-primary my-5 py-5 container" role="alert">
-      Hello <strong>{{request.user}}</strong> Please Complete your Profile <strong class="px-3"><a href="{% url 'admin_profile' %}">Click Here</a></strong>
-    </div>
-  {% endif %}
-{% endif %}
 
 <section class="my-5 container">
   {% for message in messages %}
@@ -126,9 +121,10 @@
   <div class="row align-items-md-stretch">
       <div class="col-6 col-md-6 col-lg-3 mt-4">
         <a data-bs-toggle="modal" href="#exampleModal" role="button"  style="text-decoration: none;">
-          <div class="h-100 py-3 px-3 text-white border rounded-3" style="background-color: #B00020;">
+          <div class="h-100 py-3 px-3 text-white border rounded-3" style="background-color: darkblue;">
             <center>
-                Book Patient
+              <i class="bi bi-plus-circle-fill" style="font-size: 25px;"></i>
+              <p>Book Patient</p>
             </center>
           </div>
         </a>
@@ -155,7 +151,8 @@
         <a href="{% url 'admin-doctors' admin_dashboard.id%}" style="text-decoration: none;">
           <div class="h-100 py-3 px-3 bg-light border rounded-3 text-dark">
             <center>
-              Doctors
+              <i class="bi bi-person-circle" style="font-size: 25px; color: darkblue;"></i>
+              <p>Doctors</p>
             </center>
           </div>
         </a>
@@ -164,16 +161,18 @@
         <a href="{% url 'all-applications' admin_dashboard.id%}" style="text-decoration: none;">
           <div class="h-100 py-3 px-3 bg-light border rounded-3 text-dark">
             <center>
-              All Applications
+              <i class="bi bi-bookmark-check-fill" style="font-size: 25px; color: darkblue;"></i>
+              <p>Applications</p>
             </center>
           </div>
         </a>
     </div>
     <div class="col-6 col-md-6 col-lg-3 mt-4">
-      <a href="{% url 'locum'%}" style="text-decoration: none;">
+      <a href="#" style="text-decoration: none;">
         <div class="h-100 py-3 px-3 bg-light border rounded-3 text-dark">
           <center>
-              Locum Jobs
+            <i class="bi bi-clipboard2-pulse-fill"  style="font-size: 25px; color: darkblue;"></i>
+            <p>Careers</p>
           </center>
         </div>
       </a>
@@ -240,765 +239,386 @@
     </div>
   </div>
 
-  <!-- {% now "d-m-Y" %}   {% now "Y-m-d" %} -->
-  {% for application in all_appointments %}
-  {% if application.application_status == "Pending" %}
-  <div class="row pb-2 m-0">
-    <div class="col-sm-12 col-lg-1 mt-1 d-flex align-items-center">
-      {% if application.date_appointment == current_date %}
-      <i class="bi bi-bell-fill text-danger" style="font-size: 20px;"></i>
-      {% else %}
-      <i class="bi bi-bell-slash-fill text-secondary" style="font-size: 20px;"></i>
-      {% endif %}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center">
-      {{application.patient_name}} {{application.patient_surname}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center">
-      {{application.service.service_name}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center" style="color: darkblue;">
-      {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center">
-      {{application.date_appointment}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center text-danger">
-      {{application.application_status}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1">
-      <button class="btn text-white" style="background-color: darkblue;" data-bs-toggle="modal" data-bs-target="#completeAppointment{{application.id}}">View</button>
-        <!-- Modal -->
-        <div class="modal fade" id="completeAppointment{{application.id}}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="completeAppointmentModalLabel">{{application.patient_name}} {{application.patient_surname}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Confirm Appointment</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Service
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.service.service_name}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Time Slot
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Date
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.date_appointment}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <center>
-                      <button class="btn btn-success px-5 my-4" data-bs-target="#confirmAppointment{{application.id}}" data-bs-toggle="modal">Confirm Appointment</button>
-                    </center>
-                  </li>
+  <!-- hx-trigger="every 2s" -->
 
-                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Visit Status
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.visit_status}} Patient
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Service Fee
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        R {{application.service.service_fee}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Balance
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                          {{application.paid_status}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Appointment Status
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-danger">
-                          {{application.application_status}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Patient Information</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Patient File Number
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.patient_file_number}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Full Name
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.patient_name}} {{application.patient_surname}}
-                      </div>
-                    </div>
-                  </li>
-
-                  {% if application.visit_status == "First-Time" %}
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Gender
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.gender}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        DOB
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.date_of_birth}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Identification
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.identification}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Contact
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.contact}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Email
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.email}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Address
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        <p class="mb-1">
-                          {{application.street}}
-                        </p>
-                        <p class="mb-1">
-                          {{application.town}}
-                        </p>
-                        <p class="mb-1">
-                          {{application.postal_code}}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                  {% endif %}
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Reason For Visit
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.reason_visit}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Allergies
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.allergies}}
-                      </div>
-                    </div>
-                  </li>
-
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade" id="confirmAppointment{{application.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel2">Confirm Appointment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item bg-success rounded py-3 text-white">Complete Appointment</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Service
-                      </div>
-                      <div class="col">
-                        {{application.service.service_name}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Date
-                      </div>
-                      <div class="col">
-                        {{application.date_appointment}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Time Slot
-                      </div>
-                      <div class="col">
-                        {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-                      </div>
-                    </div>
-                  </li>
-
-                    <li class="list-group-item py-3">
-                     <form action="" method="POST">
-                      {% csrf_token %}
-                      <div class="row">
-                        <div class="col text-secondary">
-                          Assign a Doctor
-                        </div>
-                        <div class="col">
-                          <select class="form-select" aria-label="Default select example" name="select_doctor" style="background-color: #CFE2FF; color: darkblue;">
-                            <option selected style="color: grey !important;"> Select A Doctor</option>
-                            {% for doctor in admin_dashboard.clinic_doctors.all %}
-                            <option value="{{doctor.id}}">Dr {{doctor.first_name}} {{doctor.last_name}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item py-3">
-                      <div class="row">
-                        <div class="col text-secondary">
-                          Payment Status
-                        </div>
-                        <div class="col">
-                          <select class="form-select" aria-label="Default select example" name="payment" style="background-color: #CFE2FF; color: darkblue;">
-                            <option selected  style="color: grey !important;">Select Payment Status</option>
-                            <option value="Outstanding">Outstanding</option>
-                            <option value="Paid">Paid</option>
-                          </select>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item py-3">
-                      <div class="row">
-                        <div class="col text-secondary">
-                          Application Status
-                        </div>
-                        <div class="col">
-                          <select class="form-select" aria-label="Default select example" name="status" style="background-color: #CFE2FF; color: darkblue;">
-                            <option selected style="color: grey !important;">Select Application Status</option>
-                            <option value="Confirmed">Confirmed</option>
-                            <option value="Pending">Pending</option>
-                          </select>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item py-4">
-                      <center>
-                        <input type="text" value="{{application.id}}" name="appointment_id" hidden="True">
-                        <button type="submit" name="confirm_appointment" class="btn btn-success">Submit Appointment</button>
-                      </center>
-                    </form>
-                    </li>
-
-                  <li class="list-group-item py-4">
-                    <center>
-                      <button class="btn btn-warning">Reschedule Appointment</button>
-                    </center>
-                  </li>
-                </ul>
-              </div>
-              <div class="modal-footer">
-                <button class="btn" style="color: darkblue;" data-bs-target="#completeAppointment{{application.id}}" data-bs-toggle="modal">back to appointment form</button>
-              </div>  
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-  {% endif %}
-  {% endfor %}
+  <!-- hx-swap="innerHTML"  -->
+  
+  <section class="my-5">
+    <ul class="list-group">
+      <section  hx-get="{% url 'patientfile' admin_dashboard.id%}"  hx-trigger="every 2s">
+        {% include "admins_patials/pending_appointments.html" with clinic_id=admin_dashboard.id only %}
+      </section>
+    </ul>
+  </section>
 </section>
 <!-- Pending appointment end  -->
 
-
-
 <!-- todays confirmed appointment start  -->
-<section class="container mt-5">
-  <p class="main-headings m-0"><span><i class="bi bi-check-circle-fill text-success" style="padding-right: 10px;"></i></span> Todays Appointments</p>
-  <div class="row text-white border rounded py-3 m-0 my-2 hide-components-lg" style="background-color: darkblue;">
-    <div class="col">
-      Full Name
-    </div>
-    <div class="col">
-      Service
-    </div>
-    <div class="col">
-      Time Slot
-    </div>
-    <div class="col">
-      Date
-    </div>
-    <div class="col">
-      Status
-    </div>
-    <div class="col">
-      Action
-    </div>
-  </div>
-
-  {% for application in all_appointments %}
-  {% if application.application_status == "Confirmed" %}
-  <div class="row pb-2 m-0">
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center">
-      {{application.patient_name}} {{application.patient_surname}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center">
-      {{application.service.service_name}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center" style="color: darkblue;">
-      {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center">
-      {{application.date_appointment}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1 d-flex align-items-center text-success">
-      {{application.application_status}}
-    </div>
-    <div class="col-sm-12 col-lg mt-1">
-      <button class="btn text-white" style="background-color: darkblue;" data-bs-toggle="modal" data-bs-target="#confirmedtodayAppointment{{application.id}}">View</button>
-        <!-- Modal -->
-        <div class="modal fade" id="confirmedtodayAppointment{{application.id}}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="completeAppointmentModalLabel">{{application.patient_name}} {{application.patient_surname}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Todays Appointment</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Service
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.service.service_name}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Time Slot
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Date
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.date_appointment}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item py-3">
-                    <form action="" method="POST">
-                    {% csrf_token %}
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Mark as Complete
-                      </div>
-                      <div class="col">
-                        <select class="form-select" aria-label="Default select example" name="complete_status" style="background-color: #CFE2FF; color: darkblue;">
-                          <option selected style="color: grey !important;">Select Application Status</option>
-                          <option value="Complete">Complete</option>
-                          <option value="No-Show">No-Show</option>
-                        </select>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item py-3">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Payment Status
-                      </div>
-                      <div class="col">
-                        <select class="form-select" aria-label="Default select example" name="complete_payment" style="background-color: #CFE2FF; color: darkblue;">
-                          <option selected  style="color: grey !important;">Select Payment Status</option>
-                          <option value="Outstanding">Outstanding</option>
-                          <option value="Paid">Paid</option>
-                        </select>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item py-4">
-                    <center>
-                      <div class="row">
-                        <div class="col">
-                          <input type="text" value="{{application.id}}" name="complete_appointmentId" hidden="True">
-                          <button type="submit" name="complete_appointment" class="btn btn-success px-5 py-3">Submit Complete</button>
-                        </div>
-                        <div class="col">
-                          <button class="btn btn-warning px-5 py-3">Reschedule</button>
+<section class="container" style="margin-top: 100px;">
+  <p class="main-headings m-0 text-white px-2 py-3 rounded" style="background-color: darkblue;"><span><i class="bi bi-check-circle-fill text-success" style="padding-right: 10px;"></i></span> Todays Appointments</p>
+  <div class="accordion mt-4" id="accordionExample">
+    {% for service in ClinicServices %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed py-4" type="button" data-bs-toggle="collapse" data-bs-target="#service{{service.id}}" aria-expanded="false" aria-controls="service{{service.id}}">
+          {{service.service_name}}
+        </button>
+      </h2>
+      <div id="service{{service.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+        <div class="accordion-body py-5">
+          <div class="row">
+            {% for application in all_appointments %}
+              {% if application.service.id == service.id %}
+                {% if application.date_appointment == current_date %}    
+                  {% if application.application_status == 'Confirmed'%} 
+                  <a type="button" href="#confirmedtodayAppointment{{application.id}}"  data-bs-toggle="modal" style="text-decoration: none;">
+                    <div class="col-sm-4 mt-3">
+                      <div class="card" style="background-color: darkblue;">
+                        <div class="card-body">
+                          <h6 class="card-title text-white">{{application.time_slot_id.clinic_timeslot_id.timeslot}}</h6>
+                          <p class="card-text text-white">{{application.patient_name}} {{application.patient_surname}}</p>
                         </div>
                       </div>
-                    </center>
-                  </form>
-                  </li>
-                  <!-- <li class="list-group-item">
-                    <center>
-                      <button class="btn btn-secondary px-5 my-4" data-bs-target="#completetodaysAppointment{{application.id}}" data-bs-toggle="modal">Complete Appointment</button>
-                    </center>
-                  </li> -->
+                    </div>
+                  </a>
 
-                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Visit Status
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.visit_status}} Patient
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Service Fee
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        R {{application.service.service_fee}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Balance
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                          {{application.paid_status}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Appointment Status
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-success">
-                          {{application.application_status}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Patient Information</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Patient File Number
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.patient_file_number}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Full Name
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.patient_name}} {{application.patient_surname}}
-                      </div>
-                    </div>
-                  </li>
+                  <section class="Modal">
+                    <!-- Modal -->
+                      <div class="modal fade" id="confirmedtodayAppointment{{application.id}}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="completeAppointmentModalLabel">{{application.patient_name}} {{application.patient_surname}}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Todays Appointment</li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Patient
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.patient_name}} {{application.patient_surname}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Service
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.service.service_name}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Time Slot
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.time_slot_id.clinic_timeslot_id.timeslot}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Patient Doctor
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.doctor.first_name}} {{application.doctor.last_name}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Date
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.date_appointment|date:"l,d M"}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                  <form action="" method="POST">
+                                  {% csrf_token %}
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-12 text-secondary mt-3">
+                                      Mark as Complete
+                                    </div>
+                                    <div class="col-sm-12 col-lg-12 mt-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Complete" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Complete
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="No-Show" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              No Show
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Confirmed" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Confirmed
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Pending" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Pending
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- <select class="form-select mt-3" aria-label="Default select example" name="complete_status" style="background-color: #CFE2FF; color: darkblue;">
+                                        <option selected style="color: grey !important;">Select Application Status</option>
+                                        <option value="Complete">Complete</option>
+                                        <option value="No-Show">No-Show</option>
+                                        <option value="Confirmed">Confirmed</option>
+                                        <option value="Pending">Pending</option>
 
-                  {% if application.visit_status == "First-Time" %}
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Gender
+                                      </select> -->
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item py-3">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-12 mt-3 text-secondary">
+                                      Payment Status
+                                    </div>
+                                    <div class="col-sm-12 col-lg-12 mt-3">
+                                      <div class="row">
+                                        <div class="col col-lg-3">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Paid" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Paid
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="col col-lg-3">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Outstanding" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Outstanding
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- <select class="form-select mt-3" aria-label="Default select example" name="complete_payment" style="background-color: #CFE2FF; color: darkblue;">
+                                        <option selected  style="color: grey !important;">Select Payment Status</option>
+                                        <option value="Outstanding">Outstanding</option>
+                                        <option value="Paid">Paid</option>
+                                      </select> -->
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item py-5">
+                                  <center>
+                                    <div class="row my-4">
+                                      <div class="col">
+                                        <input type="text" value="{{application.id}}" name="complete_appointmentId" hidden="True">
+                                        <button type="submit" name="complete_appointment" class="btn py-3 text-white" style="width: 100%; background-color: darkblue;">Submit</button>
+                                      </div>
+                                        </form>
+                                      <div class="col">
+                                        <a href="{% url 'reschedule' application.id %}" style="text-decoration: none;">
+                                        <button class="btn text-secondary py-3 bg-light border" style="width: 100%;">Reschedule</button>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </center>
+                                </li>
+                                <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Visit Status
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.visit_status}} Patient
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Service Fee
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      R {{application.service.service_fee}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Balance
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{application.paid_status}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Appointment Status
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-success">
+                                        {{application.application_status}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Patient Information</li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Patient File Number
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.patient_file_number}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Full Name
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.patient_name}} {{application.patient_surname}}
+                                    </div>
+                                  </div>
+                                </li>
+
+                                {% if application.visit_status == "First-Time" %}
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Gender
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.gender}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      DOB
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.date_of_birth}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Identification
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.identification}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Contact
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.contact}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Email
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.email}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Address
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      <p class="mb-1">
+                                        {{application.street}}
+                                      </p>
+                                      <p class="mb-1">
+                                        {{application.town}}
+                                      </p>
+                                      <p class="mb-1">
+                                        {{application.postal_code}}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </li>
+                                {% endif %}
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Reason For Visit
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.reason_visit}}
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                      Allergies
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                      {{application.allergies}}
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                              <div style="height: 100px; width: 100%;"></div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.gender}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        DOB
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.date_of_birth}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Identification
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.identification}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Contact
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.contact}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Email
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.email}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Address
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        <p class="mb-1">
-                          {{application.street}}
-                        </p>
-                        <p class="mb-1">
-                          {{application.town}}
-                        </p>
-                        <p class="mb-1">
-                          {{application.postal_code}}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
+                      <!-- second modal start -->
+                  </section>
                   {% endif %}
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Reason For Visit
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.reason_visit}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                        Allergies
-                      </div>
-                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                        {{application.allergies}}
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-                <div style="height: 100px; width: 100%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade" id="completetodaysAppointment{{application.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel2">Complete Appointment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item bg-success rounded py-3 text-white">Complete Appointment</li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Service
-                      </div>
-                      <div class="col">
-                        {{application.service.service_name}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Date
-                      </div>
-                      <div class="col">
-                        {{application.date_appointment}}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item">
-                    <div class="row">
-                      <div class="col text-secondary">
-                        Time Slot
-                      </div>
-                      <div class="col">
-                        {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-                      </div>
-                    </div>
-                  </li>
-
-                    <li class="list-group-item py-3">
-                     <form action="" method="POST">
-                      {% csrf_token %}
-                      <div class="row">
-                        <div class="col text-secondary">
-                          Assign a Doctor
-                        </div>
-                        <div class="col">
-                          <select class="form-select" aria-label="Default select example" name="select_doctor">
-                            <option selected style="color: grey !important;"> Select A Doctor</option>
-                            {% for doctor in admin_dashboard.clinic_doctors.all %}
-                            <option value="{{doctor.id}}">Dr {{doctor.first_name}} {{doctor.last_name}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item py-3">
-                      <div class="row">
-                        <div class="col text-secondary">
-                          Payment Status
-                        </div>
-                        <div class="col">
-                          <select class="form-select" aria-label="Default select example" name="payment">
-                            <option selected  style="color: grey !important;">Select Payment Status</option>
-                            <option value="Outstanding">Outstanding</option>
-                            <option value="Paid">Paid</option>
-                          </select>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item py-3">
-                      <div class="row">
-                        <div class="col text-secondary">
-                          Application Status
-                        </div>
-                        <div class="col">
-                          <select class="form-select" aria-label="Default select example" name="status">
-                            <option selected style="color: grey !important;">Select Application Status</option>
-                            <option value="Confirmed">Confirmed</option>
-                            <option value="Pending">Pending</option>
-                          </select>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item py-4">
-                      <center>
-                        <input type="text" value="{{application.id}}" name="appointment_id" hidden="True">
-                        <button type="submit" name="confirm_appointment" class="btn btn-success">Submit Appointment</button>
-                      </center>
-                    </form>
-                    </li>
-
-                  <li class="list-group-item py-4">
-                    <center>
-                      <button class="btn btn-warning">Reschedule Appointment</button>
-                    </center>
-                  </li>
-                </ul>
-              </div>
-              <div class="modal-footer">
-                <button class="btn" style="color: darkblue;" data-bs-target="#confirmedtodayAppointment{{application.id}}" data-bs-toggle="modal">back to appointment form</button>
-              </div>  
-            </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
           </div>
         </div>
       </div>
+    </div>
+    {% endfor %}
   </div>
-  <hr>
-  {% endif %}
-  {% endfor %}
 </section>
 
-<!-- todays confirmed appointment end  -->
+
+</section>
 
 {% endblock %}

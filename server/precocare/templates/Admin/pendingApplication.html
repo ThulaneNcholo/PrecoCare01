@@ -1,0 +1,325 @@
+{% extends 'Admin/admin.html' %}
+
+
+{% block content %}
+
+<section class="mt-4 container">
+    <a href="{% url 'dashboard' applicationClinic.id %}">
+        <button style="border: none; background-color: transparent;">
+            <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+          </button>
+    </a>
+  </section>
+
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-warning py-3" role="alert">
+        <p style="font-size: 18px;">{{message}}</p>
+      </div>
+    {% endfor %}
+  </section>
+
+<section class="container mt-5">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Confirm Appointment</li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Service
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.service.service_name}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Time Slot
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.time_slot_id.clinic_timeslot_id.timeslot}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Date
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.date_appointment |date:"l,d M"}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <center>
+            <button class="btn btn-success px-5 my-4 py-3" data-bs-target="#confirmAppointment{{application.id}}" data-bs-toggle="modal">Confirm Appointment</button>
+          </center>
+        </li>
+
+        <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Visit Status
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.visit_status}} Patient
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Service Fee
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              R {{application.service.service_fee}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Balance
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                {{application.paid_status}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Appointment Status
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-danger">
+                {{application.application_status}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Patient Information</li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Patient File Number
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.patient_file_number}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Full Name
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.patient_name}} {{application.patient_surname}}
+            </div>
+          </div>
+        </li>
+
+        {% if application.visit_status == "First-Time" %}
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Gender
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.gender}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              DOB
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.date_of_birth}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Identification
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.identification}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Contact
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.contact}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Email
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.email}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Address
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              <p class="mb-1">
+                {{application.street}}
+              </p>
+              <p class="mb-1">
+                {{application.town}}
+              </p>
+              <p class="mb-1">
+                {{application.postal_code}}
+              </p>
+            </div>
+          </div>
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Reason For Visit
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.reason_visit}}
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+              Allergies
+            </div>
+            <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+              {{application.allergies}}
+            </div>
+          </div>
+        </li>
+      </ul>
+</section>
+<div class="modal fade" id="confirmAppointment{{application.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Confirm Appointment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item rounded py-3 text-white" style="background-color: darkblue;">Complete Appointment</li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-12 col-md-6 mt-3 text-secondary">
+                  Service
+                </div>
+                <div class="col-sm-12 col-md-6 mt-3">
+                  {{application.service.service_name}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-12 col-md-6 mt-3 text-secondary">
+                  Date
+                </div>
+                <div class="col-sm-12 col-md-6 mt-3">
+                  {{application.date_appointment |date:"l,d M"}}
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-12 col-md-6 mt-3 text-secondary">
+                  Time Slot
+                </div>
+                <div class="col-sm-12 col-md-6 mt-3">
+                  {{application.time_slot_id.clinic_timeslot_id.timeslot}}
+                </div>
+              </div>
+            </li>
+
+              <li class="list-group-item py-3">
+               <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-sm-12 col-md-6 mt-3 text-secondary">
+                    Assign a Doctor
+                  </div>
+                  <div class="col-sm-12 col-md-6 mt-3">
+                    <select class="form-select" aria-label="Default select example" name="select_doctor" style="background-color: #CFE2FF; color: darkblue;">
+                      <option selected style="color: grey !important;"> Select A Doctor</option>
+                      {% for doctor in applicationClinic.clinic_doctors.all %}
+                      <option value="{{doctor.id}}">Dr {{doctor.first_name}} {{doctor.last_name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item py-3">
+                <div class="row">
+                  <div class="col-sm-12 col-md-6 mt-3 text-secondary">
+                    Payment Status
+                  </div>
+                  <div class="col-sm-12 col-md-6 mt-3">
+                    <select class="form-select" aria-label="Default select example" name="payment" style="background-color: #CFE2FF; color: darkblue;">
+                      <option selected  style="color: grey !important;">Select Payment Status</option>
+                      <option value="Outstanding">Outstanding</option>
+                      <option value="Paid">Paid</option>
+                    </select>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item py-5">
+                <div class="row">
+                  <div class="col">
+                    <input type="text" value="{{application.id}}" name="appointment_id" hidden="True">
+                    <input type="text" value="Confirmed" name="status" hidden="True">
+                    <button type="submit" name="confirm_appointment" class="btn text-white py-3" style="background-color: darkblue; width: 100%;">
+                      Confirm
+                    </button>
+                  </div>
+                  <div class="col">
+                    <button class="btn btn-light border text-dark border py-3" style="width: 100%;">
+                      Reschedule
+                    </button>
+                  </div>
+                </div>
+              </li>
+              <!-- <li class="list-group-item py-4">
+                <center>
+                  <input type="text" value="{{application.id}}" name="appointment_id" hidden="True">
+                  <button type="submit" name="confirm_appointment" class="btn btn-success">Submit Appointment</button>
+                </center>
+              </form>
+              </li>
+
+            <li class="list-group-item py-4">
+              <center>
+                <button class="btn btn-warning">Reschedule Appointment</button>
+              </center>
+            </li> -->
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" style="color: darkblue;" data-bs-target="#completeAppointment{{application.id}}" data-bs-toggle="modal">back to appointment form</button>
+        </div>  
+      </div>
+    </div>
+  </div>
+{% endblock %}

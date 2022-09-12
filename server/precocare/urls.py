@@ -6,6 +6,9 @@ from django.conf import settings
 
 urlpatterns = [
 
+    path('wrapper/', views.Wrapper, name="wrapper"),
+
+
     # Authentication urls
     path('register/', views.RegisterPage,name="register"),
     path('admin-register/', views.AdminRegisterView,name="admin-register"),
@@ -47,6 +50,10 @@ urlpatterns = [
     path('admin-search/<int:clinic_id>', views.AdminSearchView, name="admin-search"),
     path('doctor-search/<int:clinic_id>', views.SearchDoctorView, name="doctor-search"),
     path('timeslots/<int:clinic_id>', views.TimeslotsSettings, name="timeslots"),
+    path('patientfile/<int:clinic_id>', views.PatientFile, name="patientfile"),
+    path('pending/<int:appointment_id>', views.PendingApplications, name="pending"),
+
+
 
     # Doctor Urls
     path('doctor-dashboard/<int:clinic_id>',views.DoctorDashboardView, name="doctor-dashboard"),
@@ -63,6 +70,9 @@ htmx_urlpatterns = [
     path('add-clinic/',views.add_clinic, name="add-clinic"),
     path('show-timeslot/',views.ShowtimeslotsView, name="show-timeslot"),
     path('clinics-list/',views.ClinicCardsView, name="clinic-list"),
+    path('clinic-search/',views.ClinicSearchView, name="clinic-search"),
+    path('doctor-search/',views.DoctorSearchView, name="doctor-search"),
+
 ]
 
 

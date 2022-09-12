@@ -3,6 +3,12 @@
 
 {% block content %}
 
+<style>
+  .iconSize{
+    font-size: 25px;
+  }
+</style>
+
 
 {% if administrators.user.id == request.user.id %}
   {% if administrators.profile_set == "Incomplete" %}
@@ -13,19 +19,41 @@
 {% endif %}
 
 
+
+
 <section class="container mt-4">
     <h2 class="text-secondary">Administrator Clinics</h2>
 </section>
 
-<section class="mt-4 container">
-  <div class="alert alert-success" role="alert">
-    Tshepang Medical Centre Clinic created
-    <p class="my-2">Step 1 go to your clinic settings and add doctors,services and medical schemes</p>
+<section class="my-5 container">
+  {% for message in messages %}
+  <div class="alert alert-warning py-3" role="alert">
+      <p style="font-size: 18px;">{{message}}</p>
+    </div>
+  {% endfor %}
+</section>
+
+<section class="container mt-4">
+  <div class="row">
+    <div class="col-sm-12 col-md-6 mt-3">
+      <button class="btn btn-light py-3 border" style="color: darkblue; width: 100%;"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-plus-circle-fill iconSize"></i>
+        <p>Create Clinic</p>
+      </button>
+    </div>
+    <div class="col-sm-12 col-md-6 mt-3">
+      <a href="{% url 'admin_profile' %}" style="text-decoration: none;">
+        <button class="btn text-white py-3" style="background-color: darkblue; width: 100%;">
+          <i class="bi bi-person-circle iconSize"></i>
+          <p>Admin Profile</p>
+        </button>
+      </a>
+    </div>
   </div>
-  <section class="my-4">
+</section>
 
-  <button class="btn btn-success px-5 my-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Create Clinic</button>
-
+<section class="mt-4 container">
+  <section class="mt-5">
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -79,18 +107,18 @@
                           <label for="clinicnameinput" class="form-label">Provice</label>
                           <select class="form-select py-3 bg-light" aria-label="Default select example" name="province">
                               <option selected>Select Provice</option>
-                              <option value="Gauteng">Gauteng</option>
-                              <option value="2">Two</option>
-                              <option value="3">Three</option>
+                              {% for province in provinceList %}
+                              <option value="{{province.name}}">{{province.name}}</option>
+                              {% endfor %}
                             </select>
                       </div>
                       <div class="col-6 col-md-6 col-lg-5 mt-3">
                           <label for="clinicnameinput" class="form-label">Suburb</label>
                           <select class="form-select py-3 bg-light" aria-label="Default select example" name="suburb">
                               <option selected>Select Suburb</option>
-                              <option value="Tsakane">Tsakane</option>
-                              <option value="2">Two</option>
-                              <option value="3">Three</option>
+                              {% for suburb in suburbList%}
+                              <option value="{{suburb.name}}">{{suburb.name}}</option>
+                              {% endfor %}
                             </select>
                       </div>
                       <div class="col-12 col-md-12 col-lg-2 mt-3">
@@ -120,7 +148,7 @@
                       </div>
                   </div>
                   <center>
-                      <button type="submit" class="btn btn-warning my-5 py-3" style="width: 50%;">Submit</button>
+                      <button name="submit-adminClinic" type="submit" class="btn btn-warning my-5 py-3" style="width: 50%;">Submit</button>
                   </center>
               </form>
           </section>
@@ -128,29 +156,61 @@
         </div>
       </div>
     </div>
-
   </section>
-  <div class="alert alert-primary" role="alert">
-      Please contact us if your clinic is <span class="text-danger">Disabled</span> or having troubles with your application.
-      <p class="my-2">whatsapp : 084 847 474</p>
-      <p  class="my-2">Email : admin@precocare.com</p>
-      <p  class="my-2" >Call : 094 748 8484</p>
-  </div>
+
+  <section>
     <div class="alert alert-primary mt-3" role="alert">
       Your Clinic Won't be <span class="text-success">active</span>  till we verify your clinic.
     </div>
-      
+    <div class="alert alert-primary" role="alert">
+        Please contact us if your clinic is <span class="text-danger">Disabled</span> or having troubles with your application.
+        <p class="my-2">whatsapp : 084 847 474</p>
+        <p  class="my-2">Email : admin@precocare.com</p>
+        <p  class="my-2" >Call : 094 748 8484</p>
+    </div>
 </section>
 
-<section class="mt-3 container">
+<section class="mt-5">
+  <h6 style="color: darkblue;">Clinics you created</h6>
+  <div class="mt-2" style="height: 2px; width: 20%; background-color: darkblue;"></div>
+  <div class="row">
+    {% for data in adminCreatedClinics%}
+      <div class="col-sm-6">
+        <div class="card py-3 bg-light mt-3">
+          <div class="card-body">
+            <h5 class="card-title">{{data.clinic_name}}</h5>
+            {% if data.clinic_status == "Disabled" %}
+            <p class="card-text">Clinic Status : <span class="text-danger">{{data.clinic_status}}</span> </p>
+            {% else %}
+            <p class="card-text">Clinic Status : <span class="text-success">{{data.clinic_status}}</span> </p>
+            {% endif %}
+            <a href="{% url 'dashboard' data.id %}" class="btn text-white" style="background-color: darkblue;">View Dashboard</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <div class="alert alert-secondary mt-3" role="alert">
+          You have not created any clinics.
+        </div>
+      {% endfor %}
+  </div
+</section>
+
+<section class="mt-5">
+  <h6 style="color: gray;">Clinics you are admin</h6>
+  <div class="mt-2" style="height: 2px; width: 20%; background-color: darkblue;"></div>
   {% if admin_clinics %}
     <div class="row">
         {% for data in admin_clinics%}
           <div class="col-sm-6">
-            <div class="card p-4 bg-light mt-3">
+            <div class="card py-3 bg-light mt-3">
               <div class="card-body">
                 <h5 class="card-title">{{data.clinic_name}}</h5>
+                {% if data.clinic_status == "Disabled" %}
+                <p class="card-text">Clinic Status : <span class="text-danger">{{data.clinic_status}}</span> </p>
+                {% else %}
                 <p class="card-text">Clinic Status : <span class="text-success">{{data.clinic_status}}</span> </p>
+                {% endif %}
                 <a href="{% url 'dashboard' data.id %}" class="btn text-white" style="background-color: darkblue;">View Dashboard</a>
               </div>
             </div>

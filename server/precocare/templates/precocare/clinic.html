@@ -127,23 +127,23 @@
             <div class="container">
                 <div class="row gx-4">
                   <div class="col">
-                   <div class="p-2 border bg-light rounded">
+                   <div class="p-2  py-3 border bg-light rounded">
                     <center>
                         <i class="bi bi-telephone-fill clinic-icons"></i>
                     </center>
                    </div>
                   </div>
                   <div class="col">
-                    <div class="p-2 border bg-light rounded">
+                    <div class="p-2  py-3 border bg-light rounded">
                         <center>
                         <i class="bi bi-envelope-fill clinic-icons"></i>
                         </center>
                     </div>
                   </div>
                   <div class="col">
-                    <div class="p-2 border bg-light rounded">
+                    <div class="p-2  py-3 border bg-light rounded">
                         <center>
-                        <i class="bi bi-geo-alt-fill clinic-icons"></i>
+                        <i class="bi bi-globe clinic-icons"></i>
                         </center>
                     </div>
                   </div>
@@ -162,6 +162,7 @@
         <section class="about-clinic mt-5 container">
             <p class="main-headings m-0">About Us</p>
             <p class="text-secondary">{{clinic.about_clinic}}</p>
+            <p class="text-secondary">website :  <span><a href="#" style="color: darkblue;">www.tshepanghealthcareclinic.co.za</a></span></p>
         </section>
 
 
@@ -169,7 +170,7 @@
             <p class="main-headings m-0">Services we offer</p>
 
             <div class="alert alert-primary" role="alert">
-                Prices may change depending on your consultation!
+                Prices may change depending on your consultation, medication outside of your consultation!
             </div>
 
             {% for service in services%}
@@ -198,7 +199,6 @@
         
         <section class="clinic-doctors mt-5 container">
             <p class="main-headings m-0">Practice Doctors</p>
-
             {% for doctor in doctors_list %}
                 {% include 'partials/doctors_card.html' %}
             {% endfor %}
@@ -246,7 +246,7 @@
                             </div>
                             <input type="text" name="clinic_id" value="{{clinic.id}}" hidden="True">
                             <center>
-                              <button onclick="userdate(event)"  name="post_timeslot" hx-post="{% url 'show-timeslot' %}" hx-target="#timeslots" type="submit" class="my-4 btn btn-success px-5">Search For timeslot</button>
+                              <button onclick="userdate(event)"  name="post_timeslot" hx-post="{% url 'show-timeslot' %}" hx-target="#timeslots" type="submit" class="my-4 btn btn-success py-3" style="width: 100%;">Search Time-Slot</button>
                             </center>
                       </form>
                     </section>
@@ -268,7 +268,7 @@
                           </button>
                         </h2>
                         <div id="flush-collapseOneYes" class="accordion-collapse collapse" aria-labelledby="flush-headingOneYes" data-bs-parent="#accordionFlushExample">
-                          <div class="accordion-body">
+                          <div class="accordion-body px-0">
                             
                               <form autocomplete="false" method="POST" >
                                 {% csrf_token %}
@@ -339,6 +339,7 @@
                                           <div class="form-floating mb-3">
                                               <input type="email" class="form-control" id="floatingInput" placeholder="Email Address" name="email_address" required>
                                               <label for="floatingInput">Email Address</label>
+                                              <div id="emailHelp" class="form-text">We use emails to send Appointment confirmations</div>
                                           </div>
                                   </section>
   
@@ -366,12 +367,12 @@
                                       <p class="mb-1" style="color: darkblue; font-weight: 500;">Extra information</p>
                                       <p class="text-secondary mb-1">Allergies ( Optional )</p>
                                       <div class="form-floating  mb-3">
-                                        <textarea name="allergies" class="form-control" placeholder="Write allergies here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                        <textarea name="allergies" class="form-control" placeholder="Write allergies here" id="floatingTextarea2" style="height: 200px"></textarea>
                                         <label for="floatingTextarea2">Allergies</label>
                                     </div>
                                       <p class="text-secondary">Reason for visit</p>
                                       <div class="form-floating  mb-3">
-                                          <textarea name="reason" class="form-control" placeholder="leave reason for visit here!!" id="floatingTextarea2" style="height: 100px"></textarea>
+                                          <textarea name="reason" class="form-control" placeholder="leave reason for visit here!!" id="floatingTextarea2" style="height: 200px"></textarea>
                                           <label for="floatingTextarea2">Reason for visit</label>
                                       </div>
                                   </section>
@@ -396,7 +397,7 @@
                           </button>
                         </h2>
                         <div id="flush-collapseTwoNo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwoNo" data-bs-parent="#accordionFlushExample">
-                          <div class="accordion-body">
+                          <div class="accordion-body px-0">
                               <form autocomplete="false" method="POST">
                                 {% csrf_token %}
                                 <div>
@@ -445,6 +446,11 @@
                                           <input type="text" class="form-control" id="floatingInput" placeholder="Patient File Number" name="file_number" required>
                                           <label for="floatingInput">Patient File Number</label>
                                       </div>
+                                      <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" id="floatingInput" placeholder="Email Address" name="email_address" required>
+                                        <label for="floatingInput">Email Address</label>
+                                        <div id="emailHelp" class="form-text">We use emails to send Appointment confirmations</div>
+                                    </div>
                                   </section>
                                   <center>
                                     <button name="returning_submit" type="submit" class="btn text-white" style="background-color: darkblue; width: 100%;">Submit</button>

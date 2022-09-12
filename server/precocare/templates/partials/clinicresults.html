@@ -1,0 +1,24 @@
+<div class="row mb-5">
+    {% for data in clinic %}
+    {% if data.clinic_status == "Active"%}
+    <div class="col mb-5">
+        <a href="{% url 'clinic' data.id%}" style="text-decoration: none;">
+            <button type="button" class="btn border position-relative p-3">
+                {{data.clinic_name}}
+                <span class="position-absolute top-0 start-100 translate-middle badge">
+                    <i class="bi bi-check-circle-fill" style="color: #1DA1F2; font-size: 18px;"></i>
+                </span>
+            </button>
+        </a>
+    </div>
+    {% else %}
+    <div class="col mb-5">
+        <a href="{% url 'clinic' data.id%}" style="text-decoration: none;">
+            <button type="button" class="btn border position-relative p-3">
+                {{data.clinic_name}}
+            </button>
+        </a>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>

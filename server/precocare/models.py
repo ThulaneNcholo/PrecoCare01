@@ -81,6 +81,25 @@ class DoctorModel(models.Model):
     def __str__(self):
         return self.first_name
 
+class DoctorReview(models.Model):
+    doctor = models.ForeignKey(DoctorModel,related_name="doctor_review",blank=True,default=None,on_delete=models.CASCADE)
+    patient = models.CharField(max_length=300,null=True)
+    review =  models.TextField(blank = True)
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.patient
+
+class DoctorUpvote(models.Model):
+    doctor = models.ForeignKey(DoctorModel,related_name="doctor_upvote",blank=True,default=None,on_delete=models.CASCADE)
+    upvote = models.CharField(max_length=100,null=True)
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.upvote
+
+
+
 
 class ClinicModel(models.Model):
     user = models.ForeignKey(User,null=True, on_delete=models.CASCADE,blank=True,default=None , related_name='owner')
@@ -173,7 +192,7 @@ class ApplicationForm(models.Model):
     fee = models.CharField(max_length=1000,null=True,blank=True)
     time_slot = models.CharField(max_length=1000,null=True,blank=True)
     time_slot_id = models.ForeignKey(BookedTimeslotModel, on_delete=models.CASCADE , blank=True, related_name="time_slot_pk", default=None)
-    date_appointment = models.CharField(max_length=500,null=True,blank=True)
+    date_appointment = models.DateField(auto_now_add=False,null=True,blank=True)
     reschedule_date = models.CharField(max_length=500,null=True,blank=True)
     patient_name = models.CharField(max_length=500,null=True,blank=True)
     patient_surname = models.CharField(max_length=500,null=True,blank=True)
@@ -200,3 +219,13 @@ class ApplicationForm(models.Model):
 
     def __str__(self):
         return self.patient_name
+
+
+class PrecoCareComments(models.Model):
+    fullName = models.CharField(max_length=250,null=True,blank=True)
+    comment = models.TextField(blank = True)
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+
+    def __str__(self):
+        return self.fullName

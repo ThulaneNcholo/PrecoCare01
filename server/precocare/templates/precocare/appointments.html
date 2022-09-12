@@ -95,12 +95,108 @@
         {{message}}
       </div>
     <div class="alert alert-primary" role="alert">
-        You will receive an email confirmation.
+        You will receive an email confirmation or check appointment status here.
     </div>
     {% endfor %}
 </section>
 
-<p class="main-headings m-0 container">Appointments</p>
+
+<section class="container">
+    <div class="row px-0">
+        <div class="col-sm-12 col-md-6">
+            <p class="main-headings m-0">Appointments</p>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <button class="btn btn-light border" style="color: darkblue;" data-bs-toggle="modal" data-bs-target="#exampleModal">Complete Appointments</button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Complete Appointment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="accordion" id="accordionExample">
+
+                                {% for data in application %}
+                                {% if data.application_status == "Complete" %}
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#completed{{data.id}}" aria-expanded="false" aria-controls="completed{{data.id}}">
+                                        {{data.patient_name}} {{data.patient_surname}}
+                                    </button>
+                                  </h2>
+                                  <div id="completed{{data.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-lg-6 mt-3 text-secondary">
+                                                        Full Name
+                                                    </div>
+                                                    <div class="col-sm-12 col-lg-6 mt-3">
+                                                        {{data.patient_name}} {{data.patient_surname}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-lg-6 mt-3 text-secondary">
+                                                        Service
+                                                    </div>
+                                                    <div class="col-sm-12 col-lg-6 mt-3">
+                                                        {{data.service}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-lg-6 mt-3 text-secondary">
+                                                        Date
+                                                    </div>
+                                                    <div class="col-sm-12 col-lg-6 mt-3">
+                                                        {{data.date_appointment|date:"l,d M"}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-lg-6 mt-3 text-secondary">
+                                                        Time Slot
+                                                    </div>
+                                                    <div class="col-sm-12 col-lg-6 mt-3">
+                                                        {{data.time_slot_id.clinic_timeslot_id.timeslot}} 
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-lg-6 mt-3 text-secondary">
+                                                        Clinic
+                                                    </div>
+                                                    <div class="col-sm-12 col-lg-6 mt-3">
+                                                        {{data.clinic_id.clinic_name}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                          </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+
+
+                              </div>
+                              <div style="height: 100px; width: 100%;"></div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
 
 <section class="mt-5">
     <div class="row p-0 m-0">
@@ -169,7 +265,7 @@
                                         Appointment Date :
                                     </div>
                                     <div class="col-12 col-lg-6 mt-2">
-                                        {{data.date_appointment}}
+                                        {{data.date_appointment|date:"l,d M"}}
                                     </div>
                                 </div>
                             </li>
@@ -354,7 +450,7 @@
             </div>
           </div>
         </div>
-        {% else %}
+        {% elif  data.application_status == "Confirmed"%}
         <div class="col-sm-4 mt-3">
             <div class="card" style="background-color: darkblue;">
               <div class="card-body">
@@ -418,7 +514,7 @@
                                           Appointment Date :
                                       </div>
                                       <div class="col-12 col-lg-6 mt-2">
-                                          {{data.date_appointment}}
+                                          {{data.date_appointment|date:"l,d M"}}
                                       </div>
                                   </div>
                               </li>

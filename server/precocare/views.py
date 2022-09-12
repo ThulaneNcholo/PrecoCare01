@@ -1,3 +1,4 @@
+from email.mime import application
 from hashlib import new
 from http import server
 from multiprocessing import context
@@ -11,7 +12,7 @@ from django.db.models import Q
 from django.contrib.auth.forms import UserCreationForm
 
 
-from .models import AdministratorModel, ApplicationForm, BookedTimeslotModel, ClinicLocationsModel, ClinicModel, ClinicTimeSlotModel, DoctorModel, DoctorServices, InsuranceModel, ProvinceModel, ServiceListedModel, ServiceModel, SuburbModel
+from .models import AdministratorModel, ApplicationForm, BookedTimeslotModel, ClinicLocationsModel, ClinicModel, ClinicTimeSlotModel, DoctorModel, DoctorReview, DoctorServices, DoctorUpvote, InsuranceModel, PrecoCareComments, ProvinceModel, ServiceListedModel, ServiceModel, SuburbModel
 
 from django.contrib.auth.models import User
 
@@ -26,6 +27,8 @@ from django.contrib import messages
 from itertools import chain
 
 import datetime
+
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -102,7 +105,6 @@ def LoginPage(request):
         else:
             messages.info(request, 'Username or Password is incorrect')
             
-    context = {}
     return render(request, "Authentication/login.html")
 
 
@@ -131,14 +133,21 @@ def Bottomnav(request):
 
 
 def Homepage(request):
-    locations_list = SuburbModel.objects.all()
+    locations_list = SuburbModel.objects.all().order_by('name')
     services_list = ServiceListedModel.objects.all()
-    all_clinics = ClinicModel.objects.filter(clinic_status = "Active")
+    all_clinics = ClinicModel.objects.filter(clinic_status = "Active").order_by('clinic_name')
     doctors = DoctorModel.objects.all()
     main_locations = SuburbModel.objects.all()[:4]
     limited_clinics = ClinicModel.objects.filter(clinic_status = "Active")[:4]
+    doctorService = DoctorServices.objects.all()
+    clinicLocation = ClinicLocationsModel.objects.all()
 
-    
+    if request.method == 'POST' and 'precocare-comment' in request.POST:
+        precocare = PrecoCareComments()
+        precocare.fullName = request.POST.get('userName')
+        precocare.comment = request.POST.get('userComment')
+        precocare.save()
+        messages.success(request,'Thank you for your comment.')
 
 
     context = {
@@ -147,7 +156,9 @@ def Homepage(request):
         "all_clinics": all_clinics,
         "list_doctors" : doctors,
         "main_locations": main_locations,
-        "limited_clinics" : limited_clinics
+        "limited_clinics" : limited_clinics,
+        "doctorService" : doctorService,
+        "clinicLocation" : clinicLocation
     }
     return render(request, "precocare/homepage.html", context)
 
@@ -179,6 +190,29 @@ def ClinicCardsView(request):
 
     return render(request ,"partials/clinic_card.html", context)
 
+
+# Htmx  Search Html start 
+def ClinicSearchView(request):
+    clinicSearched = request.POST.get('clinicName')
+    clinic = ClinicModel.objects.filter(clinic_name__icontains = clinicSearched)
+
+    context = {
+        "clinic" : clinic
+    }
+    
+    return render(request, "partials/clinicresults.html",context)
+
+def DoctorSearchView(request):
+    name = request.POST.get('DoctorName')
+    surname = request.POST.get('DoctorSurname')
+    doctorResults = DoctorModel.objects.filter( Q(first_name__icontains=name) & Q(last_name__icontains=surname))
+    
+    context = {
+        "doctorResults" : doctorResults
+    }
+
+    return render(request, "partials/doctorresults.html", context)
+# Htmx  Search Html end
 
 def ClinicPage(request,clinic_id):
     clinic = ClinicModel.objects.get(id = clinic_id)
@@ -268,6 +302,8 @@ def ClinicPage(request,clinic_id):
         save_returning.patient_name = request.POST.get('patient_name')
         save_returning.patient_surname = request.POST.get('patient_surname')
         save_returning.patient_file_number = request.POST.get('file_number')
+        save_returning.email = request.POST.get('email_address')
+
         save_returning.time_slot_id = save_timeslot
 
         # Javascript components start 
@@ -288,6 +324,26 @@ def ClinicPage(request,clinic_id):
         
         location  = request.POST.get('location')
         save_returning.clinic_location = ClinicLocationsModel.objects.get(id = location)
+
+
+        # Sending Alert Email to user start    
+        clinicName = clinic.clinic_name
+        timepicked = save_timeslot.clinic_timeslot_id.timeslot
+        patientService = save_returning.service.service_name
+        patientDate = save_returning.date_appointment
+        # website = 'http://localhost:8000/'
+
+        subject  = 'Doctors Appointment Booked'
+        msg = 'Hello' + ' ' + save_returning.patient_name + ' ' + save_returning.patient_surname + ' ' + 'your' + ' ' + patientService + ' ' + 'appointment with' + ' ' + clinicName + ' ' + 'for the' + ' ' + patientDate + ' ' + 'and a time-slot of' + ' ' + timepicked + ' ' + 'is booked,please wait for your confirmation email or you can check your appointment status here precocare/website.wwww on the appointments page.Thank you for choosing PrecoCare.'
+        to_email = save_returning.email
+        send_mail(
+            subject,
+            msg,
+            'precocare@gmail.com',
+            [to_email]
+        )
+        # Sending Alert Email to user end 
+
         save_returning.save()
         messages.success(request, 'Appointment Booked Please wait for confirmation.Thank you')
         return redirect('appointments')
@@ -382,13 +438,36 @@ def DoctorDetails(request,doctor_id):
     doctor = DoctorModel.objects.get(id = doctor_id)
     doctor_service = DoctorServices.objects.filter(doctor_id = doctor_id)
     doctor_clinics = ClinicModel.objects.filter(clinic_doctors = doctor_id)
-    
+    doctorReview = DoctorReview.objects.filter(doctor = doctor)
+    doctorUpvotes = DoctorUpvote.objects.filter(doctor = doctor_id).count()
+    reviewsCount = DoctorReview.objects.filter(doctor = doctor).count()
+
+
+    if request.method == 'POST' and 'add-review' in request.POST:
+        doctor = DoctorModel.objects.get(id = doctor_id)
+        addReview = DoctorReview()
+        addReview.doctor = doctor
+        addReview.patient = request.POST.get('patientName')
+        addReview.review = request.POST.get('review')
+        addReview.save()
+        messages.success(request,'Review Added, Thank you for using PrecoCare.')
+
+    if request.method == 'POST' and 'submit-upvote' in request.POST:
+        doctor = DoctorModel.objects.get(id = doctor_id)
+        upvoteDoctor = DoctorUpvote()
+        upvoteDoctor.upvote = request.POST.get('voted')
+        upvoteDoctor.doctor = doctor
+        upvoteDoctor.save()
+        messages.success(request,'Upvote Added, Thank you for choosing PrecoCare.')
 
 
     context = {
         "doctor": doctor,
         "doctor_service" : doctor_service,
         "doctor_clinics" : doctor_clinics,
+        "doctorReview" : doctorReview,
+        "doctorUpvotes" : doctorUpvotes,
+        "reviewsCount" : reviewsCount
     }
     return render(request, "precocare/doctor_details.html",context)
 
@@ -428,8 +507,6 @@ def AppointmentsPage(request):
         update_appointment = ApplicationForm.objects.get( Q(User=current_user) & Q (pk=appointmentValue) )
         update_appointment.cancel_appointment = "Canceled"
         update_appointment.save()
-
-        
         messages.success(request,'Your Appointment has been Canceled')
 
 
@@ -475,7 +552,7 @@ def RescheduleAppointment(request,reschedule_id):
         appointment.date_appointment = appointment_date
         appointment.save()
         messages.success(request, 'appointment has been rescheduled')
-        return redirect('appointments')
+        return redirect('appointments') 
 
 
         
@@ -522,16 +599,11 @@ def AdminProfileView(request):
     return render(request,  "Admin/admin_profile.html", context)
 
 
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin','doctors'])
 def LocumView(request):
-    # Checking if user profile is complete start 
-    current_user = request.user
-    admin = AdministratorModel.objects.get(user = current_user)
-    administrators = admin
-    # Checking if user profile is complete End
+    
 
     context = {
-        "administrators" : administrators
     }
 
     return render(request, "Admin/locum.html",context)
@@ -542,60 +614,129 @@ def AdminClinicsView(request):
     current_user = request.user
     admin = AdministratorModel.objects.get(user = current_user)
     clinics = admin.admins.all()
-
+    provinceList = ProvinceModel.objects.all()
+    suburbList = SuburbModel.objects.all()
     administrators = admin
+    adminCreatedClinics = ClinicModel.objects.filter(user = current_user)
+
+    if request.method == 'POST' and 'submit-adminClinic' in request.POST:
+        adminCreateClinic = ClinicModel()
+        adminCreateClinic.user = current_user
+        adminCreateClinic.clinic_name = request.POST.get('clinic-name')
+        adminCreateClinic.contact1 = request.POST.get('contact-1')
+        adminCreateClinic.contact2 = request.POST.get('contact-2')
+        adminCreateClinic.emial = request.POST.get('email-address')
+        adminCreateClinic.about_clinic = request.POST.get('about-clinic')
+        adminCreateClinic.street = request.POST.get('street') 
+        adminCreateClinic.province = request.POST.get('province')
+        adminCreateClinic.suburb = request.POST.get('suburb')
+        adminCreateClinic.zipcode = request.POST.get('zipcode') 
+        adminCreateClinic.clinic_type = request.POST.get('clinictype') 
+        adminCreateClinic.save()
+        NewClinicId = adminCreateClinic.id
+        clinicSettings = ClinicModel.objects.get(id = NewClinicId )
+        messages.success(request, 'Clinic created successfully.Please complete your clinic profile from Edit Clinic.')
+        return redirect('clinic-settings', clinic_id = clinicSettings.id) 
 
 
     context = {
         "admin_clinics" : clinics,
-        "administrators" : administrators
+        "administrators" : administrators,
+        "provinceList" : provinceList,
+        "suburbList" : suburbList,
+        "adminCreatedClinics": adminCreatedClinics
     }
     
 
     return render(request, "Admin/admin-clinics.html" , context)
 
 
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin','doctors'])
 def AdminDoctors(request,clinic_id):
     clinic = ClinicModel.objects.filter(id = clinic_id)
     doctor_services = DoctorServices.objects.all()
 
-    # Checking if user profile is complete start 
-    current_user = request.user
-    admin = AdministratorModel.objects.get(user = current_user)
-    administrators = admin
-    # Checking if user profile is complete End
-
-    
 
     context = {
         "clinic" : clinic,
         "services" : doctor_services,
-        "administrators" : administrators
     } 
 
     return render(request, "Admin/admin-doctors.html",context)
 
 
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin','doctors'])
 def AllApplicatoinsView(request,clinic_id):
-    # Checking if user profile is complete start 
-    current_user = request.user
-    admin = AdministratorModel.objects.get(user = current_user)
-    administrators = admin
-    # Checking if user profile is complete End
 
     appointments_list = ApplicationForm.objects.filter(clinic_id = clinic_id)
+    clinicId = ClinicModel.objects.get(id= clinic_id)
+    services = ServiceModel.objects.filter(clinic_id = clinic_id)
+
+    if request.method == 'POST' and 'applicationsPayment' in request.POST:
+        applicationId = request.POST.get('appointmentId')
+        saveData = ApplicationForm.objects.get(id = applicationId)
+        saveData.paid_status = request.POST.get('payment')
+        saveData.save()
+        messages.success(request, 'Application Updated')
+
+
+    if request.method == 'POST' and 'appointmentSearch' in request.POST:
+        firstName = request.POST.get('firstNameSearch')
+        print(firstName)
+        if firstName!=None:
+           firstNameSearch =  appointments_list.filter(patient_name__icontains=firstName)
+
+        lastName = request.POST.get('lastNameSearch')
+        print(lastName)
+        if lastName!=None:
+            lastNameSearch = firstNameSearch.filter(patient_surname__icontains =lastName)
+
+        fileNumber = request.POST.get('fileSearch')
+        print(fileNumber)
+        if fileNumber!=None:
+            fileSearch = lastNameSearch.filter(patient_file_number__icontains = fileNumber)
+
+        dateSearch = request.POST.get('DateSearch')
+        print(dateSearch)
+        if dateSearch != None:
+            dateRange = fileSearch.filter(date_appointment__icontains = dateSearch)
+
+        paystatusSeach = request.POST.get('paymentSearch')
+        print(paystatusSeach)
+        if paystatusSeach !=None:
+            pay_search = dateRange.filter(paid_status__contains= paystatusSeach)
+
+        satusSearch = request.POST.get('AppointmentStatusSearch')
+        print(satusSearch)
+        if satusSearch != None:
+            applicationSatus = pay_search.filter(application_status__contains = satusSearch)
+
+
+        serviceSearch = request.POST.get('ServiceSearchApp')
+        print(serviceSearch)
+        if serviceSearch == '':
+            serviceSelected = applicationSatus
+        else: 
+            serviceSelected = applicationSatus.filter(service =serviceSearch)
+
+        insuranceSearch = request.POST.get('InsuranceSearch')
+        if insuranceSearch == '':
+            appointments_list = serviceSelected
+        else :
+            appointments_list = serviceSelected.filter(medical_aid = insuranceSearch)
+
+
 
     context = {
-        "administrators" : administrators,
-        "appointments_list" : appointments_list
+        "appointments_list" : appointments_list,
+        "clinic" : clinicId,
+        "services" : services
     }
     return render(request, "Admin/allapplications.html",context)
 
 
 
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin','doctors'])
 def ClinicSettingsView(request,clinic_id):
     clinic = ClinicModel.objects.filter(id = clinic_id) 
     services = ServiceListedModel.objects.all()
@@ -603,17 +744,50 @@ def ClinicSettingsView(request,clinic_id):
     province = ProvinceModel.objects.all()
     towns = SuburbModel.objects.all()
 
-
-
-    # Checking if user profile is complete start 
-    current_user = request.user
-    admin = AdministratorModel.objects.get(user = current_user)
-    administrators = admin
-    # Checking if user profile is complete End
-
-
     clinic_services = ServiceModel.objects.filter(clinic_id= clinic_id)
     clinic_locations = ClinicLocationsModel.objects.filter(clinic_id= clinic_id)
+
+
+    # deleting the clinic start 
+    if request.method == 'POST' and 'deleteClinic' in request.POST:
+        deleteClinic = ClinicModel.objects.get(id = clinic_id)
+        deleteClinic.delete()   
+        messages.success(request,'Clinic Deleted')
+        # return redirect('admin-clinics') 
+    # deleting the clinic end 
+
+
+    # Adding Clinic Images start
+    if request.method == 'POST' and 'heroImage' in request.POST:
+        save_gallary = ClinicModel.objects.get(id = clinic_id)
+        save_gallary.hero_image.delete(False)
+        save_gallary.hero_image = request.FILES['heroImage']
+        save_gallary.save()
+        messages.success(request, 'Clinic gallary updated')
+
+    if request.method == 'POST' and 'subImage1' in request.POST:
+        save_subImage1 = ClinicModel.objects.get(id = clinic_id)
+        save_subImage1.sub_image1.delete(False)
+        save_subImage1.sub_image1 = request.FILES['subImage1']
+        save_subImage1.save()
+        messages.success(request, 'Clinic gallary updated')
+
+
+    if request.method == 'POST' and 'subImage2' in request.POST:
+        save_subImage2 = ClinicModel.objects.get(id = clinic_id)
+        save_subImage2.sub_image2.delete(False)
+        save_subImage2.sub_image2 = request.FILES['subImage2']
+        save_subImage2.save()
+        messages.success(request, 'Clinic gallary updated')
+
+    if request.method == 'POST' and 'subImage3' in request.POST:
+        save_subImage3 = ClinicModel.objects.get(id = clinic_id)
+        save_subImage3.sub_image3.delete(False)
+        save_subImage3.sub_image3 = request.FILES['subImage3']
+        save_subImage3.save()
+        messages.success(request, 'Clinic gallary updated')
+
+    # Adding Clinic Images End 
 
     if request.method == 'POST' and 'clinic_details' in request.POST:
         save_details = ClinicModel.objects.get(id = clinic_id)
@@ -725,7 +899,6 @@ def ClinicSettingsView(request,clinic_id):
         "province" : province,
         "towns" : towns,
         "clinic_locations" : clinic_locations,
-        "administrators" : administrators
         
     }
     return render(request, "Admin/clinic-settings.html", context)
@@ -771,29 +944,17 @@ def AdminPage(request):
     return render(request, "Admin/admin.html")
 
 @login_required(login_url='login')
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin','doctors'])
 def DashboardPage(request,clinic_id):
     admin_dashboard = ClinicModel.objects.get(id = clinic_id)
     current_date = datetime.date.today()
-    new_date = current_date.isoformat
+    ClinicServices = ServiceModel.objects.filter(clinic_id=clinic_id)
+    clinicTimeslots = ClinicTimeSlotModel.objects.filter(clinic_id= clinic_id)
+    # new_date = current_date.isoformat
 
     # Checking if user profile is complete start 
-    current_user = request.user
-    admin = AdministratorModel.objects.get(user = current_user)
-    administrators = admin
     all_appointments = ApplicationForm.objects.filter(clinic_id = clinic_id).order_by('date_created')
     # Checking if user profile is complete End
-
-    if request.method == 'POST' and 'confirm_appointment' in request.POST:
-        appointment_id = request.POST.get('appointment_id')
-        confirmAppointment = ApplicationForm.objects.get(id = appointment_id)
-        doctor_id = request.POST.get('select_doctor')
-        confirmAppointment.doctor = DoctorModel.objects.get(id = doctor_id)
-        confirmAppointment.paid_status = request.POST.get('payment')
-        confirmAppointment.application_status = request.POST.get('status')
-        confirmAppointment.save()
-        messages.success(request, 'Appointment Confirmed')
-
 
     if request.method == 'POST' and 'complete_appointment' in request.POST:
         complete_appointment_id = request.POST.get('complete_appointmentId')
@@ -805,14 +966,15 @@ def DashboardPage(request,clinic_id):
 
     context = {
         "admin_dashboard" : admin_dashboard,
-        "administrators" : administrators,
         "all_appointments" : all_appointments,
-        "current_date" : new_date
+        "current_date" : current_date,
+        "ClinicServices" : ClinicServices,
+        "clinicTimeslots" : clinicTimeslots
     }
     return render(request, "Admin/dashboard.html", context)
 
 
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin', 'doctors'])
 def AdminSearchView(request,clinic_id):
     admin_clinic = ClinicModel.objects.get(id = clinic_id)
 
@@ -845,7 +1007,7 @@ def AdminSearchView(request,clinic_id):
     return render(request, "Admin/search_admins.html", context)
 
 
-@allowed_user(allowed_roles=['admin'])
+@allowed_user(allowed_roles=['admin', 'doctors'])
 def SearchDoctorView(request,clinic_id):
     doctors_clinic = ClinicModel.objects.get(id = clinic_id)
 
@@ -875,6 +1037,42 @@ def SearchDoctorView(request,clinic_id):
 
 
     return render(request, "Admin/search_doctor.html",context)
+
+def PatientFile(request,clinic_id):
+    allPatient = ApplicationForm.objects.filter( Q(clinic_id=clinic_id))
+    new_patients =allPatient.filter(application_status="Pending")
+    current_date = datetime.date.today()
+
+    context = {
+        "allPatient" : new_patients,
+        "current_date" : current_date,
+    }
+    return render(request, "admins_patials/pending_appointments.html", context)
+
+def PendingApplications(request,appointment_id):
+    appointmentView = ApplicationForm.objects.get(id = appointment_id)
+
+
+    clinicId = appointmentView.clinic_id
+    applicationClinic = ClinicModel.objects.get(id = clinicId.id)
+
+    if request.method == 'POST' and 'confirm_appointment' in request.POST:
+        appointment_id = request.POST.get('appointment_id')
+        confirmAppointment = ApplicationForm.objects.get(id = appointment_id)
+        doctor_id = request.POST.get('select_doctor')
+        confirmAppointment.doctor = DoctorModel.objects.get(id = doctor_id)
+        confirmAppointment.paid_status = request.POST.get('payment')
+        confirmAppointment.application_status = request.POST.get('status')
+        confirmAppointment.save()
+        messages.success(request, 'Appointment Confirmed')
+        # return redirect('appointments') 
+
+
+    context = {
+        "application" : appointmentView,
+        "applicationClinic" : applicationClinic
+    }
+    return render(request, "Admin/pendingApplication.html",context)
     
 
 # Admin Dashboard end 
@@ -891,6 +1089,13 @@ def DoctorProfileView(request):
     doctor_profile = DoctorModel.objects.filter(user = current_user)
     doctor_service = DoctorServices.objects.all()
     service_list = ServiceListedModel.objects.all()
+
+    if request.method == 'POST' and 'DeleteDoctorProfile' in request.POST:
+         delete_doctor = DoctorModel.objects.get(user = current_user)
+         delete_doctor.delete()
+         messages.success(request, 'Profile Deleted')
+         return redirect('homepage') 
+
 
     if request.method == 'POST' and 'submit-doctor' in request.POST:
          save_doctor = DoctorModel.objects.get(user = current_user)
@@ -949,9 +1154,9 @@ def DoctorDashboardView(request,clinic_id):
     clinic_dashboard = ClinicModel.objects.get(id = clinic_id)    
     current_user = request.user
     current_doctor = DoctorModel.objects.get(user = current_user)
-    all_appointments = ApplicationForm.objects.filter( Q(clinic_id=clinic_id)  & Q (doctor=current_doctor)).order_by('date_created')
     current_date = datetime.date.today()
-    new_date = current_date.isoformat
+    all_appointments = ApplicationForm.objects.filter( Q(clinic_id=clinic_id)  & Q (doctor=current_doctor) & Q (date_appointment=current_date)  & Q (application_status="Confirmed")).order_by('date_created')
+    # new_date = current_date.isoformat
 
     if request.method == 'POST' and 'doctor_complete' in request.POST:
         application_id = request.POST.get('appointment_id')
@@ -963,7 +1168,7 @@ def DoctorDashboardView(request,clinic_id):
     context = {
         "dashboard" : clinic_dashboard,
         "all_appointments" : all_appointments,
-        "current_date" : new_date
+        "current_date" : current_date
     }
 
     return render(request, "doctor/doctordashboard.html" ,context)
@@ -972,11 +1177,41 @@ def DoctorDashboardView(request,clinic_id):
 @allowed_user(allowed_roles=['doctors'])
 def DoctorsClinics(request):
     current_user = request.user
-    clinics = current_user.owner.all()
+    provinceList = ProvinceModel.objects.all()
+    suburbList = SuburbModel.objects.all()
+    doctorCreatedClinics = ClinicModel.objects.filter(user = current_user).order_by('-date_created')
+
+    # getting all clinics doctor is registed with 
+    doctorModal = DoctorModel.objects.get(user=current_user)
+    clinicModal = ClinicModel.objects.filter(clinic_doctors=doctorModal)
+
+    if request.method == 'POST' and 'CreateClinicDoctor' in request.POST:
+        doctorCreateClinic = ClinicModel()
+        doctorCreateClinic.user = current_user
+        doctorCreateClinic.clinic_name = request.POST.get('clinic-name')
+        doctorCreateClinic.contact1 = request.POST.get('contact-1')
+        doctorCreateClinic.contact2 = request.POST.get('contact-2')
+        doctorCreateClinic.emial = request.POST.get('email-address')
+        doctorCreateClinic.about_clinic = request.POST.get('about-clinic')
+        doctorCreateClinic.street = request.POST.get('street') 
+        doctorCreateClinic.province = request.POST.get('province')
+        doctorCreateClinic.suburb = request.POST.get('suburb')
+        doctorCreateClinic.zipcode = request.POST.get('zipcode') 
+        doctorCreateClinic.clinic_type = request.POST.get('clinictype') 
+        doctorCreateClinic.save()
+        NewClinicId = doctorCreateClinic.id
+        clinicSettings = ClinicModel.objects.get(id = NewClinicId )
+        messages.success(request, 'Clinic created successfully.Please complete your clinic profile from Edit Clinic.')
+        return redirect('clinic-settings', clinic_id = clinicSettings.id) 
+
 
     context = {
-        "clinics" : clinics
+        "doctorClinic" : clinicModal,
+        "provinceList" : provinceList,
+        "suburbList" : suburbList,
+        "doctorCreatedClinics" : doctorCreatedClinics
     }
+
     return render(request, "doctor/doctor_clinics.html" ,context)
 
 
@@ -1004,12 +1239,63 @@ def DoctorClinicSetting(request,clinic_id):
 
 @allowed_user(allowed_roles=['doctors'])
 def DoctorsApplications(request,clinic_id):
+    clinic = ClinicModel.objects.get(id = clinic_id)
     current_user = request.user
     current_doctor = DoctorModel.objects.get(user = current_user)
     all_appointments = ApplicationForm.objects.filter( Q(clinic_id=clinic_id)  & Q (doctor=current_doctor)).order_by('date_created')
+    serviceList  = ServiceModel.objects.filter( clinic_id = clinic_id)
+
+
+    if request.method == 'POST' and 'applicationsSearch' in request.POST:
+        firstName = request.POST.get('firstNameSearch')
+        print(firstName)
+        if firstName!=None:
+           firstNameSearch =  all_appointments.filter(patient_name__icontains=firstName)
+
+        lastName = request.POST.get('lastNameSearch')
+        print(lastName)
+        if lastName!=None:
+            lastNameSearch = firstNameSearch.filter(patient_surname__icontains =lastName)
+
+        fileNumber = request.POST.get('fileSearch')
+        print(fileNumber)
+        if fileNumber!=None:
+            fileSearch = lastNameSearch.filter(patient_file_number__icontains = fileNumber)
+
+        dateSearch = request.POST.get('DateSearch')
+        print(dateSearch)
+        if dateSearch != None:
+            dateRange = fileSearch.filter(date_appointment__icontains = dateSearch)
+
+        paystatusSeach = request.POST.get('paymentSearch')
+        print(paystatusSeach)
+        if paystatusSeach !=None:
+            pay_search = dateRange.filter(paid_status__contains= paystatusSeach)
+
+        satusSearch = request.POST.get('AppointmentStatusSearch')
+        print(satusSearch)
+        if satusSearch != None:
+            applicationSatus = pay_search.filter(application_status__contains = satusSearch)
+
+
+        serviceSearch = request.POST.get('ServiceSearchApp')
+        print(serviceSearch)
+        if serviceSearch == '':
+            serviceSelected = applicationSatus
+        else: 
+            serviceSelected = applicationSatus.filter(service =serviceSearch)
+
+        insuranceSearch = request.POST.get('InsuranceSearch')
+        if insuranceSearch == '':
+            all_appointments = serviceSelected
+        else :
+            all_appointments = serviceSelected.filter(medical_aid = insuranceSearch)
+
 
     context = {
-        "all_appointments" : all_appointments
+        "clinic" : clinic,
+        "all_appointments" : all_appointments,
+        "serviceList" : serviceList 
     }
     return render(request, "doctor/doctors_applications.html", context)
 
@@ -1050,7 +1336,13 @@ def add_clinic(request):
         clinics = current_user.owner.all()
 
         context = {
-            "clinics" : clinics
+            "clinics" : clinics,
         }
         return render(request, 'admins_patials/clinics-list.html',context) 
 # htmx end 
+
+
+# sidebar testing start 
+def Wrapper(request):
+    return render(request, 'precocare/wrapper.html')
+# sidebar testing end 

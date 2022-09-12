@@ -1,0 +1,26 @@
+
+{% for doctor in doctorResults %}
+<div class="row my-5">
+    {% if doctor.verified == "Verified"%}
+    <div class="col">
+        <a href="{% url 'doctor' doctor.id %}" style="text-decoration: none;">
+            <button type="button" class="btn border p-3 position-relative">
+                {{doctor.first_name}} {{doctor.last_name}} 
+                <span class="position-absolute top-0 start-100 translate-middle badge">
+                    <i class="bi bi-check-circle-fill" style="color: #1DA1F2; font-size: 18px;"></i>
+                </span>
+            </button>
+        </a>
+    </div>
+    {% else %}
+    <div class="col">
+        <a href="{% url 'doctor' doctor.id %}" style="text-decoration: none;">
+            <button type="button" class="btn border p-3 position-relative">
+                {{doctor.first_name}} {{doctor.last_name}} 
+            </button>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+

@@ -38,15 +38,6 @@
     </button>
   </section>
 
-{% if administrators.user.id == request.user.id %}
-  {% if administrators.profile_set == "Incomplete" %}
-    <div class="alert alert-primary my-5 py-5 container" role="alert">
-      Hello <strong>{{request.user}}</strong> Please Complete your Profile <strong class="px-3"><a href="{% url 'admin_profile' %}">Click Here</a></strong>
-    </div>
-  {% endif %}
-{% endif %}
-  
-  
   <section class="container mt-4">
     <h2 class="text-secondary">Clinic Doctors</h2>
   </section>
@@ -122,38 +113,38 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">Full Name</div>
-                                        <div class="col-8">
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">Full Name</div>
+                                        <div class="col-sm-12 col-md-6 mt-3">
                                             Dr {{data.first_name}} {{data.last_name}}
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">Phone Number</div>
-                                        <div class="col-8">
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">Phone Number</div>
+                                        <div class="col-sm-12 col-md-6 mt-3">
                                             {{data.mobile_number}}
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">Email Address</div>
-                                        <div class="col-8">
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">Email Address</div>
+                                        <div class="col-sm-12 col-md-6 mt-3">
                                             {{data.email}}
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">Verification Status</div>
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">Verification Status</div>
 
                                         {% if data.verified == "Verified"%}
-                                            <div class="col-8 text-success">
+                                            <div class="col-sm-12 col-md-6 mt-3 text-success">
                                                 {{data.verified}}
                                             </div>
                                         {% else %}
-                                            <div class="col-8 text-danger">
+                                            <div class="col-sm-12 col-md-6 mt-3 text-danger">
                                                 {{data.verified}}
                                             </div>
                                         {% endif %}
@@ -161,24 +152,24 @@
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">About Doctor</div>
-                                        <div class="col-8">
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">About Doctor</div>
+                                        <div class="col-sm-12 col-md-6 mt-3">
                                             {{data.about_doctor}}
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">Doctor License Number</div>
-                                        <div class="col-8">
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">Doctor License Number</div>
+                                        <div class="col-sm-12 col-md-6 mt-3">
                                             {{data.doctor_license}}
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col text-secondary">Services</div>
-                                        <div class="col-8">
+                                        <div class="col-sm-12 col-md-6 mt-3 text-secondary">Services</div>
+                                        <div class="col-sm-12 col-md-6 mt-3">
 
                                                 {% for service in services %}
                                                     {% if service.doctor_id.user.id == data.user.id %}

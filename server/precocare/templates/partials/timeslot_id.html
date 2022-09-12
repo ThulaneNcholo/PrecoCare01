@@ -18,8 +18,8 @@
   {% endfor %}
  
   <center>
-    <button type="submit" class="btn text-white my-3 px-5" style="background-color: darkblue;" id="submit_time">Submit Time-Slot</button>
-    <div id="timeslotHelp" class="form-text">Submit Timeslot and continue with your application.</div>
+    <button type="submit" class="btn text-white my-3 py-3" style="background-color: darkblue; width: 100%;" id="submit_time">Submit Time-Slot</button>
+    <div id="timeslotHelp" class="form-text">Time-Slot successfully submitted .Please continue with your application.</div>
   </center>
 </form>
 
@@ -42,7 +42,7 @@
       document.getElementById("service_javascript").value = service;
       document.getElementById("return_service").value = service;
 
-      alert('Timeslot Submited please continue with your application')
+      alert('Time-Slot successfully submitted .Please continue with your application below.')
 
       document.getElementById('showapplication').style.display = "block";
     } else {

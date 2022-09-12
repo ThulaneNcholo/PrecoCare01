@@ -27,6 +27,17 @@
     color: white;
     border-color: white;
   }
+
+  .heroImage{
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .noImage-container{
+    height: 200px;
+    width: 100%;
+  }
     
 
     
@@ -44,41 +55,145 @@
             <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: white; padding-right: 20px;"></i>
         </a>
       <button style="background-color: white;"  class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="bi bi-gear-fill " style="color: darkblue; font-size: 20px;"></i>
+        <i class="bi bi-list" style="color: darkblue; font-size: 20px;"></i>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="btn p-0 m-0 bg-light px-1 mx-1" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Clinic Profile Settings</a>
+                <a class="btn  text-white" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Edit Clinic <i class="bi bi-arrow-right-circle-fill text-white"></i></a>
             </li>
             <li class="nav-item">
-                <a class="btn p-0 m-0 bg-light px-1 mx-1" href="{% url 'timeslots' practice.id %}">Time-Slot Settings</a>
+                <a class="btn  text-white" href="{% url 'timeslots' practice.id %}">Time slots<i class="bi bi-arrow-right-circle-fill text-white"></i></a>
             </li>
-          <!-- <li class="nav-item">
-            <a  class="nav-link active text-light" role="button" aria-pressed="true" aria-current="page" href="#exampleModal"  data-bs-toggle="modal">Clinic Profile Settings</a>
-          </li> -->
+            <li class="nav-item">
+                <a type="button" class="btn  text-white" href="#clinicImages"  data-bs-toggle="modal">Gallary <i class="bi bi-arrow-right-circle-fill text-white"></i></a>
+            </li>
+              <!-- Modal -->
+              <div class="modal fade" id="clinicImages" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Clinic Gallary</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="color: darkblue;">Header Image</p>
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6 mt-3">
+                                {% if practice.hero_image %}
+                                <img src="{{practice.hero_image.url}}" class="img-thumbnail heroImage" alt="...">
+                                {% else %}
+                                <div class="noImage-container bg-light border rounded"></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12 col-lg-6 mt-3 d-flex align-items-center">
+                                <center>
+                                    <div class="row">
+                                        <form method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <input type="file" name="heroImage">
+                                            </div>
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <button class="btn text-white px-5" style="background-color: darkblue;" name="heroImage">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </center>
+                            </div> 
+                        </div>
+                        <hr class="my-5">
+                        <p style="color: darkblue;">Sub Image 1</p>
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6 mt-3">
+                                {% if practice.sub_image1 %}
+                                <img src="{{practice.sub_image1.url}}" class="img-thumbnail heroImage" alt="...">
+                                {% else %}
+                                <div class="noImage-container bg-light border rounded"></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12 col-lg-6 mt-3 d-flex align-items-center">
+                                <center>
+                                    <div class="row">
+                                        <form method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <input type="file" name="subImage1">
+                                            </div>
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <button class="btn text-white px-5" style="background-color: darkblue;" name="subImage1">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </center>
+                            </div> 
+                        </div>
+                        <hr class="my-5">
+                        <p style="color: darkblue;">Sub Image 2</p>
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6 mt-3">
+                                {% if practice.sub_image2 %}
+                                <img src="{{practice.sub_image2.url}}" class="img-thumbnail heroImage" alt="...">
+                                {% else %}
+                                <div class="noImage-container bg-light border rounded"></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12 col-lg-6 mt-3 d-flex align-items-center">
+                                <center>
+                                    <div class="row">
+                                        <form method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <input type="file" name="subImage2">
+                                            </div>
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <button class="btn text-white px-5" style="background-color: darkblue;" name="subImage2">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </center>
+                            </div> 
+                        </div>
+                        <hr class="my-5">
+                        <p style="color: darkblue;">Sub Image 3</p>
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6 mt-3">
+                                {% if practice.sub_image3 %}
+                                <img src="{{practice.sub_image3.url}}" class="img-thumbnail heroImage" alt="...">
+                                {% else %}
+                                <div class="noImage-container bg-light border rounded"></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12 col-lg-6 mt-3 d-flex align-items-center">
+                                <center>
+                                    <div class="row">
+                                        <form method="POST" enctype="multipart/form-data">
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <input type="file" name="subImage3">
+                                            </div>
+                                            <div class="col-sm-12 col-lg-12 mt-3">
+                                                <button class="btn text-white px-5" style="background-color: darkblue;" name="subImage3">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </center>
+                            </div> 
+                        </div>
+                        <div style="height: 150px; width: 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </ul>
-        <div class="d-flex">
-            <h6 class="text-white px-1">Administrator Dashboard</h6>
-
-        </div>
       </div>
     </div>
   </nav>
   </section>
 
-{% if administrators.user.id == request.user.id %}
-  {% if administrators.profile_set == "Incomplete" %}
-    <div class="alert alert-primary my-5 py-5 container" role="alert">
-      Hello <strong>{{request.user}}</strong> Please Complete your Profile <strong class="px-3"><a href="{% url 'admin_profile' %}">Click Here</a></strong>
-    </div>
-  {% endif %}
-{% endif %}
-
 <section class="my-5 container">
     {% for message in messages %}
-    <div class="alert alert-warning py-5" role="alert">
-        <p style="font-size: 20px;">{{message}}</p>
+    <div class="alert alert-warning py-3" role="alert">
+        <p style="font-size: 18px;">{{message}}</p>
       </div>
     {% endfor %}
 </section>
@@ -165,6 +280,12 @@
                                 </div>
                             </div>
                         </a>
+                    </li>
+                    <li class="list-group-item py-3">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="deleteClinic" class="btn btn-danger my-3">Delete Clinic</button>
+                        </form>
                     </li>
                   </ul>
             </div>
@@ -847,7 +968,7 @@
   <section class="mt-5 container">
     <p class="clinic-headings">Clinic Status</p>
 
-    {% if practice.clinic_status == "clinic_disabled" %}
+    {% if practice.clinic_status == "Disabled" %}
         <p class="mb-1 text-danger">{{practice.clinic_status}}</p>
     {% else %}
         <p class="mb-1 text-success">{{practice.clinic_status}}</p>

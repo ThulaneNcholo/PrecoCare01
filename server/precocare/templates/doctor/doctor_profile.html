@@ -15,6 +15,12 @@
     {% endfor %}
 </section>
 
+<section class="container">
+    <button class="border-0" onclick="history.back()" style="background-color: transparent;">
+        <i class="bi bi-arrow-left-circle-fill" style="font-size: 25px; color: darkblue;"></i>
+    </button>
+</section>
+
 
 <!--Doctor Profile Modal -->
 <div class="modal fade" id="doctorprofile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,6 +96,11 @@
                                 </div>
                             </div>
                         </li>
+                        <li class="list-group-item">
+                            <button type="submit" name="DeleteDoctorProfile" class="btn btn-danger my-3">
+                                Delete Profile
+                            </button>
+                        </li>
                         <input hidden="True" type="text" name="profile_status" value="Complete">
                     </ul>
                 </section>
@@ -123,7 +134,7 @@
             <div class="row">
                 <div class="col-12 col-lg-6 mt-2 text-secondary d-flex align-items-center">
                     Profile Picture  <span class="px-3"><!-- Button trigger modal -->
-                        <button type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#profilepicture{{data.id}}">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#profilepicture{{data.id}}" style="color: darkblue;">
                           Upload Image
                         </button>
                         <!-- Modal -->
@@ -136,9 +147,9 @@
                               </div>
                               <div class="modal-body">
                                 {% if data.profile_pic %}
-                                    <img src="{{data.profile_pic.url}}" class="img-thumbnail" alt="...">
+                                    <img src="{{data.profile_pic.url}}" class="img-thumbnail" alt="..." style="height: 200px; width: 200px; object-fit: cover;">
                                     {% else %}
-                                    <i class="bi bi-person-square"></i>
+                                    <i class="bi bi-person-square" style="font-size: 200px;"></i>
                                     {% endif %}
                                     <section class="mt-4">
                                         <form action="" method="POST" enctype="multipart/form-data">
@@ -161,9 +172,9 @@
                 </div>
                 <div class="col-12 col-lg-6 mt-2">
                     {% if data.profile_pic %}
-                        <img src="{{data.profile_pic.url}}" class="img-thumbnail" alt="...">
+                        <img src="{{data.profile_pic.url}}" class="img-thumbnail" alt="..."  style="height: 200px; width: 200px; object-fit: cover;">
                     {% else %}
-                        <i class="bi bi-person-square" style="font-size: 100px;"></i>
+                        <i class="bi bi-person-square" style="font-size: 200px;"></i>
                     {% endif %}
                 </div>
             </div>

@@ -6,7 +6,11 @@
             <div class="card p-4 bg-light mt-3">
             <div class="card-body">
                 <h5 class="card-title">{{data.clinic_name}}</h5>
+                {% if data.clinic_status == 'Active'%}
+                <p class="card-text">Clinic Status : <span class="text-success">{{data.clinic_status }}</span> </p>
+                {% else %}
                 <p class="card-text">Clinic Status : <span class="text-danger">{{data.clinic_status }}</span> </p>
+                {% endif %}
                 <a href="{% url 'doctor-dashboard' data.id %}" class="btn text-white" style="background-color: darkblue;">View Dashboard</a>
             </div>
             </div>
@@ -17,4 +21,6 @@
 
 <p>No Clinics created</p>
 {% endif %}
+
+
 
