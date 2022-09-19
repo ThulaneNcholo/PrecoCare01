@@ -92,8 +92,9 @@
               <input type="password"  name="password" class="form-control text-secondary" id="floatingInput" placeholder="Password">
               <label class="text-secondary" for="floatingInput">Password</label>
             </div>
-            <p class="d-flex justify-content-end" style="color: darkblue;">Forgot Password?</p>
-
+            <a href="{% url 'reset_password' %}" style="text-decoration: none;">
+              <p class="d-flex justify-content-end" style="color: darkblue;">Forgot Password?</p>
+            </a>
             <center class="mt-5">
               <input class="login-btn rounded py-3" type="submit" value="Login">
             </center>

@@ -1,8 +1,11 @@
 from email.mime import base
+from re import template
 from django.urls import path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 
@@ -14,6 +17,23 @@ urlpatterns = [
     path('admin-register/', views.AdminRegisterView,name="admin-register"),
     path('login/', views.LoginPage,name="login"),
     path('logout/', views.LogoutUser,name="logout"),
+
+    # password reset urls 
+    path('reset_password/', auth_views.PasswordResetView.as_view(
+        template_name="Authentication/password_reset.html"
+    ), name="reset_password"),
+
+    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(
+        template_name="Authentication/password_reset_sent.html"
+    ), name="password_reset_done"),
+
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name="Authentication/password_reset_form.html"
+    ),name="password_reset_confirm"),
+    
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(
+        template_name="Authentication/password_reset_done.html"
+    ), name="password_reset_complete"),
 
 
     # PrecoCare urls
