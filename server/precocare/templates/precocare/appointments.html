@@ -205,6 +205,11 @@
         <div class="col-sm-4 mt-3">
           <div class="card">
             <div class="card-body">
+            {% if data.reschedule_date == "Yes"%}
+            <div class="alert alert-primary" role="alert">
+                Appointment has been rescheduled
+            </div>
+            {% endif %}
             <i class="bi bi-arrow-repeat text-danger  appointment-icon-pending me-4"></i>
             <p class="card-text mb-1" style="color: darkblue;">{{data.patient_name}} {{data.patient_surname}}</p>
             <p class="card-text text-secondary mb-1">{{data.service.service_name}}</p>
@@ -699,8 +704,11 @@
             </div>
           </div>
         {% endif %}
+        {% empty %}
+        <div class="alert alert-primary container" role="alert">
+            No Appointments Booked
+        </div>
         {% endfor %}
-        
       </div>
 </section>
 

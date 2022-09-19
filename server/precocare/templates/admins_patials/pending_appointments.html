@@ -1,6 +1,6 @@
 
 {% for application in allPatient %}
-  <div class="row pb-2 m-0">
+  <div class="row  m-0 border rounded py-2">
     <div class="col-sm-12 col-lg-1 mt-1 d-flex align-items-center">
       {% if application.date_appointment == current_date %}
       <i class="bi bi-bell-fill text-danger" style="font-size: 20px;"></i>
@@ -28,7 +28,6 @@
     </div>
     
     </div>
-    <hr>
   {% empty %}
   <div class="alert alert-primary" role="alert">
     No Pending Appointments.

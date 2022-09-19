@@ -192,10 +192,22 @@ transform: translateX(-100%);
     </div>
 </section>
 
-
-
 <!-- clinic type section start  -->
 <div class="top-spacing" style="height: 50px;"></div>
+
+
+<!-- notifications start  -->
+{% if user.is_authenticated %}
+    {% if userAppointments %}
+        <section class="my-3 container">
+            <div class="alert alert-primary" role="alert">
+                Notifications <span class="badge bg-danger mx-4">{{userAppointments}}+</span>
+            </div>
+        </section>
+    {% endif %}
+{% endif %}
+<!-- notifications end  -->
+
 <section class="container mt-5">
     {% for message in messages %}
     <div class="alert alert-warning" role="alert">
@@ -227,24 +239,28 @@ transform: translateX(-100%);
                                     </div>
                                 </div>
                                 <div class="col-2 p-0">
-                                    <button hx-post="{% url 'clinic-search' %}" hx-target="#clinicResults" type="submit" class="search-icon rounded" style="width: 100%;">
+                                    <button onclick="hideclinics(event)" hx-post="{% url 'clinic-search' %}" hx-target="#clinicResults" type="submit" class="search-icon rounded" style="width: 100%;">
                                         <center>
                                             <i class="bi bi-search"></i>
-                                            </center>
+                                        </center>
                                     </button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
+                    <section class="my-5" id="blankResults" style="display: none;">
+                        <div class="alert alert-secondary" role="alert">
+                            If results are blank means there is no clinic with that name.Please try again
+                          </div>
+                    </section>
+
                     <!-- clinic search results start  -->
                     <section class="my-3" id="clinicResults">
                         {% include "partials/clinicresults.html"%}
                     </section>
                     <!-- clinic search results end  -->
-
-
-                    <section class="mt-5">
+                    <section class="mt-5" id="hide-component">
                         <div class="row">
                             {% for clinic in all_clinics %}
                             <div class="col-6">
@@ -256,13 +272,30 @@ transform: translateX(-100%);
                                         <div class="clinic-image bg-light rounded border img-sizes"></div>
                                         {% endif %}
                                         <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
-                                        {% for location in clinicLocation %}
-                                        {% if location.clinic_id.id == clinic.id %}
-                                        <p class="text-secondary mb-1 mt-2"><i class="bi bi-geo-alt-fill text-secondary" style="color: darkblue; padding-right: 10px;"></i>{{location.suburb}}</p>
-                                        {% endif %}
-                                        {% endfor %}
                                     </div>
                                 </a>
+                                <div class="accordion accordion-flush" id="accordionExample">
+                                    <div class="accordion-item ">
+                                      <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed px-0 rounded text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo{{clinic.id}}" aria-expanded="false" aria-controls="collapseTwo{{clinic.id}}">
+                                          Clinic Locations  
+                                        </button>
+                                      </h2>
+                                      <div id="collapseTwo{{clinic.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                                <ul class="list-group list-group-flush">
+                                                    {% for location in clinicLocation %}
+                                                    {% if location.clinic_id.id == clinic.id%}
+                                                    <li class="list-group-item"><i class="bi bi-geo-alt-fill" style="color: darkblue;"></i> {{location.suburb}}</li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -292,9 +325,30 @@ transform: translateX(-100%);
                                             <div class="clinic-image bg-light rounded border img-sizes"></div>
                                             {% endif %}
                                             <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
-                                            <P class="m-0 mt-1 text-secondary">Tsakane</P>
                                         </div>
                                     </a>
+                                    <div class="accordion accordion-flush" id="accordionExample">
+                                        <div class="accordion-item ">
+                                          <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed px-0 rounded text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo{{clinic.id}}" aria-expanded="false" aria-controls="collapseTwo{{clinic.id}}">
+                                              Clinic Locations  
+                                            </button>
+                                          </h2>
+                                          <div id="collapseTwo{{clinic.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for location in clinicLocation %}
+                                                        {% if location.clinic_id.id == clinic.id%}
+                                                        <li class="list-group-item"><i class="bi bi-geo-alt-fill" style="color: darkblue;"></i> {{location.suburb}}</li>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
@@ -324,9 +378,30 @@ transform: translateX(-100%);
                                             <div class="clinic-image bg-light rounded border img-sizes"></div>
                                             {% endif %}
                                             <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
-                                            <P class="m-0 mt-1 text-secondary">Tsakane</P>
                                         </div>
                                     </a>
+                                    <div class="accordion accordion-flush" id="accordionExample">
+                                        <div class="accordion-item ">
+                                          <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed px-0 rounded text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo{{clinic.id}}" aria-expanded="false" aria-controls="collapseTwo{{clinic.id}}">
+                                              Clinic Locations  
+                                            </button>
+                                          </h2>
+                                          <div id="collapseTwo{{clinic.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for location in clinicLocation %}
+                                                        {% if location.clinic_id.id == clinic.id%}
+                                                        <li class="list-group-item"><i class="bi bi-geo-alt-fill" style="color: darkblue;"></i> {{location.suburb}}</li>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
@@ -423,14 +498,19 @@ transform: translateX(-100%);
                                 <label class="text-secondary" for="lastName_search">Last Name</label>
                             </div>
                             <center>
-                                <button hx-post="{% url 'doctor-search' %}" hx-target="#doctorResults" type="submit" class="search-icon rounded my-4" style="width: 70%;">
+                                <button  onclick="hidedoctors(event)" hx-post="{% url 'doctor-search' %}" hx-target="#doctorResults" type="submit" class="search-icon rounded my-4" style="width: 70%;">
                                     <p>Search</p>
                                 </button>
-                                <p class="text-secondary mb-5">If search result is blank means doctor could not be found</p>
                             </center>
                             
                         </form>
                     </div>
+
+                    <section class="my-5" id="blankDoctorResults" style="display: none;">
+                        <div class="alert alert-secondary" role="alert">
+                            If results are blank means there is no doctors that meet your search.Please try again.
+                          </div>
+                    </section>
 
                     <!-- clinic search results start  -->
                     <section class="mt-5 " id="doctorResults">
@@ -439,6 +519,7 @@ transform: translateX(-100%);
                     <!-- clinic search results end  -->
 
                     {% for doctor in list_doctors %}
+                    <section id="hideDoctorCompoent">
                     <a class="mt-5" href="{% url 'doctor' doctor.id %}" style="text-decoration: none; color: darkblue;">
                         <div class="row border m-0 bg-light rounded px-2 py-3 mt-4">
                             <div class="col-3 d-flex align-items-center" style="padding-right: 100px;">
@@ -463,7 +544,6 @@ transform: translateX(-100%);
                         </div>
                     </a>
                     {% endfor %}
-                    
                   </section>
                 </div>
               </div>
@@ -499,7 +579,7 @@ transform: translateX(-100%);
 
 
 <!-- all clinics section start  -->
-<section class="mt-5">
+<section class="mt-5 mb-3">
     <div class="container overflow-hidden">
         <div class="row">
             <div class="col">
@@ -522,9 +602,30 @@ transform: translateX(-100%);
                         <div class="clinic-image bg-light rounded border"></div>
                         {% endif %}
                         <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
-                        <P class="m-0 mt-1 text-secondary">Tsakane</P>
                     </div>
                 </a>
+                <div class="accordion accordion-flush" id="accordionExample">
+                    <div class="accordion-item ">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed px-0 rounded text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo{{clinic.id}}" aria-expanded="false" aria-controls="collapseTwo{{clinic.id}}">
+                          Clinic Locations  
+                        </button>
+                      </h2>
+                      <div id="collapseTwo{{clinic.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                                <ul class="list-group list-group-flush">
+                                    {% for location in clinicLocation %}
+                                    {% if location.clinic_id.id == clinic.id%}
+                                    <li class="list-group-item"><i class="bi bi-geo-alt-fill" style="color: darkblue;"></i> {{location.suburb}}</li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </a>
+                        </div>
+                      </div>
+                    </div>
+                </div>
             </div>
             {% endfor  %}
         </div>
@@ -602,5 +703,20 @@ transform: translateX(-100%);
 
 
 <div class="bottom-spacing"></div>
+
+
+<script type="text/javascript">
+    function hideclinics(event){
+        event.preventDefault();   
+        document.getElementById('hide-component').style.display = "none";   
+        document.getElementById('blankResults').style.display = "block";
+    }
+
+    function hidedoctors(event){
+        event.preventDefault();   
+        document.getElementById('hideDoctorCompoent').style.display = "none";   
+        document.getElementById('blankDoctorResults').style.display = "block";
+    }
+</script>
 
 {% endblock %}

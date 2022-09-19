@@ -41,3 +41,4 @@ def admin_only(view_func):
             return view_func(request, *args, **kwargs)
 
     return wrapper_function
+

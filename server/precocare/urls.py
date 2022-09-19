@@ -29,7 +29,7 @@ urlpatterns = [
     path('locations/<int:location_id>', views.LocationsPage,name="locations"),
     path('clinic/<int:clinic_id>', views.ClinicPage,name="clinic"),
     path('appointments/', views.AppointmentsPage,name="appointments"),
-    path('reschedule/<int:reschedule_id>', views.RescheduleAppointment,name="reschedule"),
+    path('reschedule/<int:reschedule_id>/', views.RescheduleAppointment,name="reschedule"),
 
     path('bottomnav/', views.Bottomnav,name="bottomnav"),
     path('settings/', views.SettingsPage,name="settings"),

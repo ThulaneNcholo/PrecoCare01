@@ -127,6 +127,10 @@ class ClinicModel(models.Model):
     sub_image1 = models.ImageField(null=True, blank=True,upload_to='files/clinics')
     sub_image2 = models.ImageField(null=True, blank=True,upload_to='files/clinics')
     sub_image3 = models.ImageField(null=True, blank=True,upload_to='files/clinics')
+    walk_in = models.CharField(max_length=50,null=True, default='No' ,blank=True)
+    online_appointments = models.CharField(max_length=50,null=True, default='No' ,blank=True)
+    telephone_appointments = models.CharField(max_length=50,null=True, default='No' ,blank=True)
+    website = models.CharField(max_length=1000,null=True,blank=True)
 
     
 
@@ -157,6 +161,8 @@ class ClinicLocationsModel(models.Model):
     suburb = models.CharField(max_length=1000,null=True)
     street = models.CharField(max_length=1000,null=True)
     zipcode = models.CharField(max_length=1000,null=True)
+    contact1 = models.CharField(max_length=50,null=True)
+    contact2 = models.CharField(max_length=50,null=True)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
@@ -215,6 +221,7 @@ class ApplicationForm(models.Model):
     clinic_location = models.ForeignKey(ClinicLocationsModel, on_delete=models.CASCADE , blank=True, related_name="location_chosen", default=None,null=True)
     cancel_appointment = models.CharField(max_length=100,null=True,blank=True,default="Ongoing")
     patient_file_number = models.CharField(max_length=1000,null=True,blank=True)
+    admin_booked = models.CharField(max_length=100,null=True,blank=True,default="No")
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

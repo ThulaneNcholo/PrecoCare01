@@ -128,7 +128,12 @@ def IndexPage (request):
 
 
 def Bottomnav(request):
-    return render(request, "partials/bottomnav.html")
+    userAppointments = ApplicationForm.objects.all()
+
+    context = {
+        "userAppointments" : userAppointments
+    }
+    return render(request, "partials/bottomnav.html",context)
 
 
 
@@ -158,7 +163,7 @@ def Homepage(request):
         "main_locations": main_locations,
         "limited_clinics" : limited_clinics,
         "doctorService" : doctorService,
-        "clinicLocation" : clinicLocation
+        "clinicLocation" : clinicLocation,
     }
     return render(request, "precocare/homepage.html", context)
 
@@ -272,15 +277,11 @@ def ClinicPage(request,clinic_id):
         save_application.clinic_location = ClinicLocationsModel.objects.get(id = location)
         save_application.save()
 
-        
-
-
         messages.success(request, 'Appointment Booked Please wait for confirmation.Thank you')
         return redirect('appointments')
 
 
     if request.method == 'POST' and 'returning_submit' in request.POST:
-
         current_user = request.user
         # save timeslot as booked function start 
         save_timeslot = BookedTimeslotModel()
@@ -403,6 +404,7 @@ def InsurancePage(request):
         selected_insurance = request.POST.get('selected_insurance') 
         insurance_name = InsuranceModel.objects.get(id = selected_insurance)
         selected_suburb = request.POST.get('selected_suburb')
+        
 
         filter_clinic = ClinicModel.objects.filter(insurance_cover = selected_insurance)
         clinic_location_list = ClinicLocationsModel.objects.filter( Q(clinic_id__in= filter_clinic) & Q(suburb = selected_suburb))
@@ -419,8 +421,7 @@ def InsurancePage(request):
             "selected_suburb" : selected_suburb,
             "insurance_name": insurance_name,
             "clinic_list" : location_clinics,
-            "clinic_location_list"  : clinic_location_list 
-            
+            "clinic_location_list"  : clinic_location_list,
         }
 
         return render(request, "precocare/insurance.html",context)
@@ -441,6 +442,7 @@ def DoctorDetails(request,doctor_id):
     doctorReview = DoctorReview.objects.filter(doctor = doctor)
     doctorUpvotes = DoctorUpvote.objects.filter(doctor = doctor_id).count()
     reviewsCount = DoctorReview.objects.filter(doctor = doctor).count()
+    locations = ClinicLocationsModel.objects.all()
 
 
     if request.method == 'POST' and 'add-review' in request.POST:
@@ -467,33 +469,16 @@ def DoctorDetails(request,doctor_id):
         "doctor_clinics" : doctor_clinics,
         "doctorReview" : doctorReview,
         "doctorUpvotes" : doctorUpvotes,
-        "reviewsCount" : reviewsCount
+        "reviewsCount" : reviewsCount,
+        "locations" : locations
     }
     return render(request, "precocare/doctor_details.html",context)
 
 def AppointmentsPage(request):
     current_user = request.user   
-    application = ApplicationForm.objects.filter( Q(User=current_user) & Q (cancel_appointment="Ongoing") )
+    allApplication = ApplicationForm.objects.filter( Q(User=current_user) & Q (cancel_appointment="Ongoing") )
+    userAppointments = allApplication.exclude(admin_booked = "Yes")
 
-    # if request.method == 'POST' and 'reschedule' in request.POST:
-    #     reschule_id = request.POST.get('application_id')
-    #     reschule_save = ApplicationForm.objects.get(id = reschule_id)
-    #     reschule_save.date_appointment = request.POST.get('reschedule_appointment')
-    #     get_old_time = request.POST.get('reschedule_old')
-    #     booked_timeslot = BookedTimeslotModel.objects.get(clinic_timeslot_id= get_old_time)
-    #     print(booked_timeslot)
-    #     print(booked_timeslot.date)
-    #     print(booked_timeslot.clinic_timeslot_id.timeslot)
-    #     # reschule_save.save()
-    #     messages.success(request, 'Your Appointment has been Rescheduled, Please wait for confirmation.Thank you')
-
-    # if request.method == 'POST' and 'cancel_submit' in request.POST:
-    #     reschule_id = request.POST.get('application_id')
-    #     service_name = request.POST.get('service_name')
-    #     reschule_save = ApplicationForm.objects.get(id = reschule_id)
-    #     reschule_save.cancel_appointment = request.POST.get('cancel_appointment')
-    #     reschule_save.save()
-    #     messages.success(request, service_name + ' ' 'appointment has been canceled')
 
 
     if request.method == 'POST' and 'cancel_appointment' in request.POST:
@@ -511,7 +496,7 @@ def AppointmentsPage(request):
 
 
     context = {
-        "application" : application
+        "application" : userAppointments,
     }
     return render(request, "precocare/appointments.html",context)
 
@@ -524,6 +509,8 @@ def RescheduleAppointment(request,reschedule_id):
         # delete this one 
         booked_timeslot = BookedTimeslotModel.objects.get(id = timeslot_id.id)
         booked_timeslot.delete()
+
+        appointment.application_status = ""
 
 
         # getting new timeslot bookedtimeslots
@@ -550,13 +537,29 @@ def RescheduleAppointment(request,reschedule_id):
         # updating patient appointment form
         appointment.time_slot_id = addBookedtimeslot
         appointment.date_appointment = appointment_date
+
+        # Confirmation email start
+        patientEmail = request.POST.get('patientEmail')  
+        patientName = request.POST.get('patientName') 
+        patientService = request.POST.get('patientService') 
+        patientClinic = request.POST.get('patientClinic') 
+        patientDate = appointment_date
+        patientTimeslot = get_new_timeslot.timeslot 
+
+        subject  = 'Doctors Appointment Rescheduled'   
+        msg = 'Hello' + ' ' + patientName + ' '  + ' ' + 'your' + ' ' + patientService + ' ' + 'appointment with' + ' ' + patientClinic + ' ' + 'has been rescheduled to' + ' ' + patientDate + ' ' + 'and a time-slot of' + ' ' + patientTimeslot + ' ' + '.PrecoCare.'
+        to_email = patientEmail
+        send_mail(
+            subject,
+            msg,
+            'precocare@gmail.com',
+            [to_email]
+        )
+        # Confirmation email end 
+        appointment.application_status = "Pending"
+        appointment.reschedule_date = "Yes"
         appointment.save()
         messages.success(request, 'appointment has been rescheduled')
-        return redirect('appointments') 
-
-
-        
-        print(patient_service)
 
 
     context = {
@@ -574,8 +577,6 @@ def SettingsPage(request):
 
 
 # Admin Dashboard start 
-
-
 @allowed_user(allowed_roles=['admin'])
 def AdminProfileView(request):
     current_user = request.user
@@ -668,7 +669,7 @@ def AdminDoctors(request,clinic_id):
 @allowed_user(allowed_roles=['admin','doctors'])
 def AllApplicatoinsView(request,clinic_id):
 
-    appointments_list = ApplicationForm.objects.filter(clinic_id = clinic_id)
+    appointments_list = ApplicationForm.objects.filter(clinic_id = clinic_id).order_by("-date_created")
     clinicId = ClinicModel.objects.get(id= clinic_id)
     services = ServiceModel.objects.filter(clinic_id = clinic_id)
 
@@ -747,6 +748,15 @@ def ClinicSettingsView(request,clinic_id):
     clinic_services = ServiceModel.objects.filter(clinic_id= clinic_id)
     clinic_locations = ClinicLocationsModel.objects.filter(clinic_id= clinic_id)
 
+    if request.method == 'POST' and 'AppointmentType' in request.POST:
+        appointmentType = ClinicModel.objects.get(id = clinic_id)
+        appointmentType.walk_in = request.POST.get('walkin')
+        appointmentType.online_appointments = request.POST.get('online')
+        appointmentType.telephone_appointments = request.POST.get('telephone')
+        appointmentType.save()
+        messages.success(request, 'Booking type Updated')
+
+
 
     # deleting the clinic start 
     if request.method == 'POST' and 'deleteClinic' in request.POST:
@@ -799,8 +809,9 @@ def ClinicSettingsView(request,clinic_id):
         save_details.mon_fri_hours = request.POST.get('mon-fri')
         save_details.saturday = request.POST.get('saturday')
         save_details.sunday = request.POST.get('sunday')
-        save_details.holidays = request.POST.get('holidays')
+        save_details.holidays = request.POST.get('holidays')  
         save_details.clinic_type = request.POST.get('clinictype')
+        save_details.website = request.POST.get('website')
         save_details.save()
         messages.success(request, 'Clinic Details has been successfully updated!')
 
@@ -814,6 +825,8 @@ def ClinicSettingsView(request,clinic_id):
         save_location.province = request.POST.get('province_selected')
         save_location.suburb = request.POST.get('suburb')
         save_location.zipcode = request.POST.get('zipcode')
+        save_location.contact1 = request.POST.get('locationContact1')
+        save_location.contact2 = request.POST.get('locationContact2')
         save_location.save()
         messages.success(request, 'Clinic Locations has been successfully updated!')
 
@@ -950,11 +963,123 @@ def DashboardPage(request,clinic_id):
     current_date = datetime.date.today()
     ClinicServices = ServiceModel.objects.filter(clinic_id=clinic_id)
     clinicTimeslots = ClinicTimeSlotModel.objects.filter(clinic_id= clinic_id)
-    # new_date = current_date.isoformat
-
-    # Checking if user profile is complete start 
+    confirmedAppointments = ApplicationForm.objects.filter(Q(clinic_id=clinic_id) & Q (application_status="Confirmed") ).count()
+    pendingAppointments = ApplicationForm.objects.filter(Q(clinic_id=clinic_id) & Q (application_status="Pending") ).count()
+    clinicLocation = ClinicLocationsModel.objects.filter(clinic_id = clinic_id)
     all_appointments = ApplicationForm.objects.filter(clinic_id = clinic_id).order_by('date_created')
-    # Checking if user profile is complete End
+    todays_appointments = ApplicationForm.objects.filter(Q(clinic_id=clinic_id) & Q (application_status="Confirmed") & Q (date_appointment=current_date) ).order_by('date_created')
+
+    # admin book a patient form start 
+    if request.method == 'POST' and 'submit-application' in request.POST:
+        current_user = request.user
+        # save timeslot as booked function start 
+        save_timeslot = BookedTimeslotModel()
+        save_timeslot.user = current_user
+        timeslot_picked = request.POST.get('input_time_javascript')
+        save_timeslot.clinic_timeslot_id = ClinicTimeSlotModel.objects.get(id=timeslot_picked)
+        save_timeslot.date = request.POST.get('picked_date')
+        save_timeslot.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        service_pk = request.POST.get('service_javascript')
+        save_timeslot.service = ServiceModel.objects.get(id=service_pk)
+        save_timeslot.save()
+        # save timeslot as book function end
+        save_application = ApplicationForm()
+        save_application.User = current_user
+        save_application.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        save_application.visit_status = request.POST.get('visit_status')
+        save_application.patient_name = request.POST.get('patient_name')
+        save_application.patient_surname = request.POST.get('patient_surname')
+        save_application.gender = request.POST.get('gender')
+        save_application.date_of_birth = request.POST.get('Date_of_Birth')
+        save_application.identification = request.POST.get('identification')
+        save_application.contact = request.POST.get('contact1')
+        save_application.email = request.POST.get('email_address')
+        save_application.street = request.POST.get('street')
+        save_application.town = request.POST.get('town')
+        save_application.postal_code = request.POST.get('postal_code')
+        save_application.allergies = request.POST.get('allergies')
+        save_application.reason_visit = request.POST.get('reason')
+        insurance = request.POST.get('insurance')
+        save_application.admin_booked = "Yes"
+        save_application.time_slot_id = save_timeslot
+        doctor_id = request.POST.get('select_doctor')
+        save_application.doctor = DoctorModel.objects.get(id = doctor_id)
+        save_application.paid_status = request.POST.get('payment')
+        save_application.application_status = "Confirmed"
+
+        # Javascript components start 
+        save_application.date_appointment = request.POST.get('picked_date')
+        patient_service = request.POST.get('service_javascript')
+        save_application.service = ServiceModel.objects.get(id = patient_service)
+        timeslot_id = request.POST.get('input_time_javascript')
+        time_model = ClinicTimeSlotModel.objects.get(id=timeslot_id)
+        save_application.time_slot = time_model.timeslot
+        # Javascript components end 
+
+        if insurance == 'Select Medical Aid':
+            save_application.medical_aid 
+        else :
+            save_application.medical_aid = InsuranceModel.objects.get(id = insurance) 
+        
+        location  = request.POST.get('location')
+        save_application.clinic_location = ClinicLocationsModel.objects.get(id = location)
+        save_application.save()
+        
+        messages.success(request, 'Patient consultation booked')
+
+
+    if request.method == 'POST' and 'returning_submit' in request.POST:
+        current_user = request.user
+        # save timeslot as booked function start 
+        save_timeslot = BookedTimeslotModel()
+        save_timeslot.user = current_user
+        timeslot_picked = request.POST.get('input_time_javascript')
+        save_timeslot.clinic_timeslot_id = ClinicTimeSlotModel.objects.get(id=timeslot_picked)
+        save_timeslot.date = request.POST.get('picked_date')
+        save_timeslot.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        service_pk = request.POST.get('service_javascript')
+        save_timeslot.service = ServiceModel.objects.get(id=service_pk)
+        save_timeslot.save()
+
+        save_returning = ApplicationForm()
+        save_returning.User = current_user
+        save_returning.clinic_id = ClinicModel.objects.get(id = clinic_id)
+        save_returning.visit_status = request.POST.get('visit_status')
+        save_returning.date_appointment = request.POST.get('appointment-date')
+        save_returning.patient_name = request.POST.get('patient_name')
+        save_returning.patient_surname = request.POST.get('patient_surname')
+        save_returning.patient_file_number = request.POST.get('file_number')
+        save_returning.email = request.POST.get('email_address')
+        save_returning.admin_booked = "Yes"
+        save_returning.time_slot_id = save_timeslot
+        doctor_id = request.POST.get('select_doctor')
+        save_returning.doctor = DoctorModel.objects.get(id = doctor_id)
+        save_returning.paid_status = request.POST.get('payment')
+        save_returning.application_status = "Confirmed"
+        
+
+        # Javascript components start 
+        save_returning.date_appointment = request.POST.get('picked_date')
+        patient_service = request.POST.get('service_javascript')
+        save_returning.service = ServiceModel.objects.get(id = patient_service)
+        timeslot_id = request.POST.get('input_time_javascript')
+        time_model = ClinicTimeSlotModel.objects.get(id=timeslot_id)
+        save_returning.time_slot = time_model.timeslot
+        # Javascript components end 
+
+        insurance = request.POST.get('medical_aid')
+        if insurance == 'Select Medical Aid':
+            save_returning.medical_aid 
+        else :
+            save_returning.medical_aid = InsuranceModel.objects.get(id = insurance) 
+
+        
+        location  = request.POST.get('location')
+        save_returning.clinic_location = ClinicLocationsModel.objects.get(id = location)
+        save_returning.save()
+        messages.success(request, 'Patient consultation booked')
+    # admin book a patient form end 
+
 
     if request.method == 'POST' and 'complete_appointment' in request.POST:
         complete_appointment_id = request.POST.get('complete_appointmentId')
@@ -969,7 +1094,11 @@ def DashboardPage(request,clinic_id):
         "all_appointments" : all_appointments,
         "current_date" : current_date,
         "ClinicServices" : ClinicServices,
-        "clinicTimeslots" : clinicTimeslots
+        "clinicTimeslots" : clinicTimeslots,
+        "confirmedAppointments" : confirmedAppointments,
+        "pendingAppointments" : pendingAppointments,
+        "clinicLocation" : clinicLocation,
+        "todays_appointments" : todays_appointments
     }
     return render(request, "Admin/dashboard.html", context)
 
@@ -1063,6 +1192,28 @@ def PendingApplications(request,appointment_id):
         confirmAppointment.doctor = DoctorModel.objects.get(id = doctor_id)
         confirmAppointment.paid_status = request.POST.get('payment')
         confirmAppointment.application_status = request.POST.get('status')
+        confirmAppointment.reschedule_date = "No"
+
+
+        # Confirmation email start
+        patientEmail = request.POST.get('patientemail')  
+        patientName = request.POST.get('patientName') 
+        patientService = request.POST.get('patientService') 
+        patientClinic = request.POST.get('patientClinic') 
+        patientDate = request.POST.get('patientDate') 
+        patientTimeslot = request.POST.get('patientTimeslot') 
+        subject  = 'Doctors Appointment Confirmed'   
+        msg = 'Hello' + ' ' + patientName + ' '  + ' ' + 'your' + ' ' + patientService + ' ' + 'appointment with' + ' ' + patientClinic + ' ' + 'for' + ' ' + patientDate + ' ' + 'and a time-slot of' + ' ' + patientTimeslot + ' ' + 'has been Confirmed.Thank you for choosing PrecoCare.'
+        to_email = patientEmail
+        send_mail(
+            subject,
+            msg,
+            'precocare@gmail.com',
+            [to_email]
+        )
+        # Confirmation email end 
+
+
         confirmAppointment.save()
         messages.success(request, 'Appointment Confirmed')
         # return redirect('appointments') 

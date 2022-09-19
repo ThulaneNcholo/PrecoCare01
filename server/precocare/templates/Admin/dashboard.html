@@ -50,6 +50,16 @@
     appearance: none;
     }
 
+    .dropdown_style{
+        padding: 1rem 0.01rem;
+        background-color: #F8FAFC;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+        width: 100%;
+    }
+
   @media (min-width: 767.98px) {
 
       .hide-components{
@@ -120,7 +130,7 @@
 <section class="mt-2 container">
   <div class="row align-items-md-stretch">
       <div class="col-6 col-md-6 col-lg-3 mt-4">
-        <a data-bs-toggle="modal" href="#exampleModal" role="button"  style="text-decoration: none;">
+        <a data-bs-toggle="modal" href="#bookpatient" role="button"  style="text-decoration: none;">
           <div class="h-100 py-3 px-3 text-white border rounded-3" style="background-color: darkblue;">
             <center>
               <i class="bi bi-plus-circle-fill" style="font-size: 25px;"></i>
@@ -129,19 +139,311 @@
           </div>
         </a>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="bookpatient" tabindex="-1" aria-labelledby="bookpatientLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="bookpatientLabel">Book Patient</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                ...
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <section class="timeslot-section">
+                  <section class="my-3">
+                    <p class="py-2">Search for available time-slots.</p>
+                    <form>
+                        {% csrf_token %}
+                        <select required class="dropdown_style rounded mb-3" name="service_selected">
+                            <option value="">Select Service</option>
+                            {% for service in ClinicServices %}
+                            <option value="{{service.id}}">{{service.service_name}}</option>
+                            {% endfor %}
+                          </select>
+                          <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="application_date" placeholder="Appointment Date" name="selected_user_date" required>
+                            <label for="floatingInput">Appointment Date</label>
+                            <div id="appointmentdatehelp" class="form-text">Please Press the calendar <strong>Icon</strong> if you having trouble.</div>
+                          </div>
+                          <input type="text" name="clinic_id" value="{{admin_dashboard.id}}" hidden="True">
+                          <center>
+                            <button onclick="patientdate(event)"  name="post_timeslot" hx-post="{% url 'show-timeslot' %}" hx-target="#timeslots" type="submit" class="my-4 btn btn-success py-3" style="width: 100%;">Search Time-Slot</button>
+                          </center>
+                    </form>
+                  </section>
+                  <section class="my-5" id="timeslots" style="display: none;">
+                      <div class="row">
+                          {% include 'partials/timeslot_id.html' %}
+                      </div>
+                  </section>
+                </section>
+
+
+                <section class="application-form" id="showapplication" style="display: none;">
+                  <p class="text-secondary mt-5" style="font-size: 17px; font-weight: 500;">First time visit to this clinic ?</p>
+                  <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <!-- Yes Application start -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingOneYes">
+                          <button class="accordion-button collapsed bg-light px-1 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOneYes" aria-expanded="false" aria-controls="flush-collapseOneYes">
+                            Yes
+                          </button>
+                        </h2>
+                        <div id="flush-collapseOneYes" class="accordion-collapse collapse" aria-labelledby="flush-headingOneYes" data-bs-parent="#accordionFlushExample">
+                          <div class="accordion-body px-0">
+                              <form autocomplete="false" method="POST" >
+                                {% csrf_token %}
+                                <div>
+                                  <input type="text" id="selected_user_date" value="" name="picked_date" hidden="True">
+                                  <input type="text" id="input_time_javascript" value="" name="input_time_javascript" hidden="True">
+                                  <input type="text" id="clinic_javascript" value="" name="clinic_javascript" hidden="True">
+                                  <input type="text" id="service_javascript" value="" name="service_javascript" hidden="True">
+                                </div>
+                                  <section class="hidden-inputs">
+                                      <input type="text" value="First-Time" name="visit_status" hidden="True">
+                                  </section>
+                                  <section class="application-info">
+                                      <p style="color: darkblue; font-weight: 500; font-size: 20px;">Application</p>
+                                      <p class="text-secondary">Assign a Doctor</p>
+                                      <div class="alert alert-primary my-3" role="alert">
+                                        <div class="row ">
+                                          {% for doctor in admin_dashboard.clinic_doctors.all %}
+                                            <div class="col">
+                                              <div class="form-check">
+                                                <input value="{{doctor.id}}" class="form-check-input" type="radio" name="select_doctor" id="select_doctor1" required>
+                                                <label class="form-check-label" for="select_doctor1">
+                                                  Dr {{doctor.first_name}} {{doctor.last_name}}
+                                                </label>
+                                              </div>
+                                            </div>
+                                          {% endfor %}
+                                        </div>
+                                      </div>
+                                      <p class="text-secondary mt-4">Payment Status</p>
+                                      <div class="alert alert-primary my-4" role="alert">
+                                        <div class="row ">
+                                            <div class="col">
+                                              <div class="form-check">
+                                                <input value="Outstanding" class="form-check-input" type="radio" name="payment" id="select_payment1" required>
+                                                <label class="form-check-label" for="select_payment1">
+                                                  Outstanding
+                                                </label>
+                                              </div>
+                                            </div>
+                                            <div class="col">
+                                              <div class="form-check">
+                                                <input value="Paid" class="form-check-input" type="radio" name="payment" id="select_payment1" required>
+                                                <label class="form-check-label" for="select_payment1">
+                                                  Paid
+                                                </label>
+                                              </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                        <select required class="dropdown_style rounded mb-3" name="location" id="service">
+                                            <option value="">Select location</option>
+                                            {% for location in clinicLocation %}
+                                            <option value="{{location.id}}">{{location.street}} , {{location.suburb}}</option>
+                                            {% endfor %}
+                                          </select>
+                                        <select class="dropdown_style rounded mb-3" name="insurance" id="service">
+                                            <option>Select Medical Aid</option>
+                                            {% for insurance in admin_dashboard.insurance_cover.all %}
+                                            <option value="{{insurance.id}}">{{insurance.name}}</option>
+                                            {% endfor %}
+                                          </select>
+                                         </section>
+  
+  
+                                  <section class="Person-info mt-5">
+                                      <p style="color: darkblue; font-weight: 500;">Patient information</p>
+                                      <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Patient Name" name="patient_name" required>
+                                              <label for="floatingInput">Patient Name</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Patient Surname" name="patient_surname" required>
+                                              <label for="floatingInput">Patient Surname</label>
+                                          </div>
+                                          <select required class="dropdown_style rounded mb-3" name="gender" id="Application_for">
+                                            <option value="">Select Gender</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Other">Other</option>
+                                          </select>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="date" class="form-control" id="floatingInput" placeholder="Patient Surname" name="Date_of_Birth" required>
+                                              <label for="floatingInput">Date of Birth</label>
+                                              <div id="emailHelp" class="form-text">Press the calendar <strong>Icon</strong> if you having trouble.</div>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Identification" name="identification" required>
+                                              <label for="floatingInput">Identification</label>
+                                          </div>
+          
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control" id="floatingInput" placeholder="Contact Number 1" name="contact1" required>
+                                              <label for="floatingInput">Contact 1</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                              <input type="email" class="form-control" id="floatingInput" placeholder="Email Address" name="email_address" required>
+                                              <label for="floatingInput">Email Address</label>
+                                              <div id="emailHelp" class="form-text">We use emails to send Appointment confirmations</div>
+                                          </div>
+                                  </section>
+  
+  
+                                  <section class="patient-address mt-5">
+                                      <p style="color: darkblue; font-weight: 500;">Address</p>
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Street Adress" name="street" required>
+                                          <label for="floatingInput">Street Address</label>
+                                      </div>
+  
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Town" name="town" required>
+                                          <label for="floatingInput">Town</label>
+                                      </div>
+  
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Postal Code" name="postal_code" required>
+                                          <label for="floatingInput">Postal Code</label>
+                                      </div>
+                                  </section>
+  
+  
+                                  <section class="extra-info mt-5">
+                                      <p class="mb-1" style="color: darkblue; font-weight: 500;">Extra information</p>
+                                      <p class="text-secondary mb-1">Allergies ( Optional )</p>
+                                      <div class="form-floating  mb-3">
+                                        <textarea name="allergies" class="form-control" placeholder="Write allergies here" id="floatingTextarea2" style="height: 200px"></textarea>
+                                        <label for="floatingTextarea2">Allergies</label>
+                                    </div>
+                                      <p class="text-secondary">Reason for visit</p>
+                                      <div class="form-floating  mb-3">
+                                          <textarea name="reason" class="form-control" placeholder="leave reason for visit here!!" id="floatingTextarea2" style="height: 200px"></textarea>
+                                          <label for="floatingTextarea2">Reason for visit</label>
+                                      </div>
+                                  </section>
+                                    
+  
+                                  <center>
+                                    <button class="btn text-white py-3 mt-3 mb-5" type="submit" name="submit-application" style="background-color: darkblue; width: 100%;">Submit</button>
+                                  </center>
+                              </form>
+  
+                              <div class="accordion-bottom-spacing"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Yes Application end -->
+  
+                      <!-- No Application start -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingTwoNo">
+                          <button class="accordion-button collapsed bg-light px-1 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwoNo" aria-expanded="false" aria-controls="flush-collapseTwoNo">
+                            No
+                          </button>
+                        </h2>
+                        <div id="flush-collapseTwoNo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwoNo" data-bs-parent="#accordionFlushExample">
+                          <div class="accordion-body px-0">
+                              <form autocomplete="false" method="POST">
+                                {% csrf_token %}
+                                <div>
+                                  <input type="text" id="return_date" value="" name="picked_date" hidden="True">
+                                  <input type="text" id="return_timeslot" value="" name="input_time_javascript" hidden="True">
+                                  <input type="text" id="return_clinic" value="" name="clinic_javascript" hidden="True">
+                                  <input type="text" id="return_service" value="" name="service_javascript" hidden="True">
+                                </div>
+                                  <section class="hidden-inputs">
+                                      <input type="text" name="visit_status" value="Returning" hidden="True">
+                                  </section>
+                                  <section class="application-info">
+                                      <p style="color: darkblue; font-weight: 500; font-size: 20px;">Application</p>
+                                      <p class="text-secondary">Assign a Doctor</p>
+                                      <div class="alert alert-primary my-3" role="alert">
+                                        <div class="row ">
+                                          {% for doctor in admin_dashboard.clinic_doctors.all %}
+                                            <div class="col">
+                                              <div class="form-check">
+                                                <input value="{{doctor.id}}" class="form-check-input" type="radio" name="select_doctor" id="select_doctor1" required>
+                                                <label class="form-check-label" for="select_doctor1">
+                                                  Dr {{doctor.first_name}} {{doctor.last_name}}
+                                                </label>
+                                              </div>
+                                            </div>
+                                          {% endfor %}
+                                        </div>
+                                      </div>
+                                      <p class="text-secondary mt-4">Payment Status</p>
+                                      <div class="alert alert-primary my-4" role="alert">
+                                        <div class="row ">
+                                            <div class="col">
+                                              <div class="form-check">
+                                                <input value="Outstanding" class="form-check-input" type="radio" name="payment" id="select_payment1" required>
+                                                <label class="form-check-label" for="select_payment1">
+                                                  Outstanding
+                                                </label>
+                                              </div>
+                                            </div>
+                                            <div class="col">
+                                              <div class="form-check">
+                                                <input value="Paid" class="form-check-input" type="radio" name="payment" id="select_payment1" required>
+                                                <label class="form-check-label" for="select_payment1">
+                                                  Paid
+                                                </label>
+                                              </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                        <select required class="dropdown_style rounded mb-3" name="location" id="service">
+                                            <option value="">Select location</option>
+                                            {% for location in clinicLocation %}
+                                            <option value="{{location.id}}">{{location.street}} , {{location.suburb}}</option>
+                                            {% endfor %}
+                                          </select>
+                                        <select class="dropdown_style rounded mb-3" name="medical_aid" id="service" required>
+                                            <option>Select Medical Aid</option>
+                                            {% for insurance in admin_dashboard.insurance_cover.all %}
+                                            <option value="{{insurance.id}}">{{insurance.name}}</option>
+                                            {% endfor %}
+                                          </select>
+                                  </section>
+  
+                                  <section class="patient-info mt-5">
+                                      <p style="color: darkblue; font-weight: 500;">Patient information</p>
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Patient Name" name="patient_name" required>
+                                          <label for="floatingInput">Patient Name</label>
+                                      </div>
+  
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Patient Surname" name="patient_surname" required>
+                                          <label for="floatingInput">Patient Surname</label>
+                                      </div>
+                                      <div class="form-floating mb-3">
+                                          <input type="text" class="form-control" id="floatingInput" placeholder="Patient File Number" name="file_number" required>
+                                          <label for="floatingInput">Patient File Number</label>
+                                      </div>
+                                      <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" id="floatingInput" placeholder="Email Address" name="email_address" required>
+                                        <label for="floatingInput">Email Address</label>
+                                        <div id="emailHelp" class="form-text">We use emails to send Appointment confirmations</div>
+                                    </div>
+                                  </section>
+                                  <center>
+                                    <button name="returning_submit" type="submit" class="btn text-white py-3 my-3" style="background-color: darkblue; width: 100%;">Submit</button>
+                                  </center>
+                              </form>
+                              <div class="accordion-bottom-spacing"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- No Application end -->
+                  </div>
+                  </section>
+                  <div style="height: 100px; width: 100%;"></div>
               </div>
             </div>
           </div>
@@ -190,7 +492,7 @@
                 </div>
                 <div class="col col-md-12 col-lg-9 col-xs-12 col-sm-12">
                     <p class="mb-1" style="font-size: 18px;">Pending</p>
-                    <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">12</span> Appointments</p>
+                    <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">{{pendingAppointments}}</span> Appointments</p>
                 </div>
             </div>
           </div>
@@ -203,7 +505,7 @@
                   </div>
                   <div class="col-9 col-md-12 col-lg-9 col-xs-12 col-sm-12">
                       <p class="mb-2" style="font-size: 18px;">Confirmed</p>
-                      <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">12</span> Appointments</p>
+                      <p class="text-secondary"><span class="badge bg-danger" style="margin-right: 10px;">{{confirmedAppointments}}</span> Appointments</p>
                   </div>
               </div>
             </div>
@@ -266,359 +568,360 @@
       </h2>
       <div id="service{{service.id}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
         <div class="accordion-body py-5">
-          <div class="row">
-            {% for application in all_appointments %}
-              {% if application.service.id == service.id %}
-                {% if application.date_appointment == current_date %}    
-                  {% if application.application_status == 'Confirmed'%} 
-                  <a type="button" href="#confirmedtodayAppointment{{application.id}}"  data-bs-toggle="modal" style="text-decoration: none;">
-                    <div class="col-sm-4 mt-3">
-                      <div class="card" style="background-color: darkblue;">
-                        <div class="card-body">
-                          <h6 class="card-title text-white">{{application.time_slot_id.clinic_timeslot_id.timeslot}}</h6>
-                          <p class="card-text text-white">{{application.patient_name}} {{application.patient_surname}}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-
-                  <section class="Modal">
-                    <!-- Modal -->
-                      <div class="modal fade" id="confirmedtodayAppointment{{application.id}}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="completeAppointmentModalLabel">{{application.patient_name}} {{application.patient_surname}}</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <!-- list all todays appointments start  -->
+          <section>
+            <div>
+              <div class="row gx-2 gy-4">
+                {% for data in todays_appointments %}
+                  {% if data.service.id == service.id %}
+                    <div class="col-lg-6" >
+                        <a type="button" href="#adminConfirm{{data.id}}"  data-bs-toggle="modal" style="text-decoration: none; width: 100%;">
+                            <div class="p-3 rounded" style="background-color: darkblue;">
+                              <h6 class="card-title text-white">{{data.time_slot_id.clinic_timeslot_id.timeslot}}</h6>
+                              <p class="card-text text-white">{{data.patient_name}} {{data.patient_surname}}</p>
                             </div>
-                            <div class="modal-body">
-                              <ul class="list-group list-group-flush">
-                                <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Todays Appointment</li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Patient
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.patient_name}} {{application.patient_surname}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Service
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.service.service_name}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Time Slot
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.time_slot_id.clinic_timeslot_id.timeslot}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item py-3">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Patient Doctor
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.doctor.first_name}} {{application.doctor.last_name}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Date
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.date_appointment|date:"l,d M"}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item py-3">
-                                  <form action="" method="POST">
-                                  {% csrf_token %}
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-12 text-secondary mt-3">
-                                      Mark as Complete
-                                    </div>
-                                    <div class="col-sm-12 col-lg-12 mt-3">
-                                      <div class="row">
-                                        <div class="col">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Complete" required>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                              Complete
-                                            </label>
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="No-Show" required>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                              No Show
-                                            </label>
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Confirmed" required>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                              Confirmed
-                                            </label>
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Pending" required>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                              Pending
-                                            </label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <!-- <select class="form-select mt-3" aria-label="Default select example" name="complete_status" style="background-color: #CFE2FF; color: darkblue;">
-                                        <option selected style="color: grey !important;">Select Application Status</option>
-                                        <option value="Complete">Complete</option>
-                                        <option value="No-Show">No-Show</option>
-                                        <option value="Confirmed">Confirmed</option>
-                                        <option value="Pending">Pending</option>
+                        </a>
+                    </div>
 
-                                      </select> -->
+                    <!-- Appointment Modal start  -->
+                    <section class="Modal">
+                      <!-- Modal -->
+                        <div class="modal fade" id="adminConfirm{{data.id}}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="completeAppointmentModalLabel">{{data.patient_name}} {{data.patient_surname}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Todays Appointment</li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Patient
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.patient_name}} {{data.patient_surname}}
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item py-3">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-12 mt-3 text-secondary">
-                                      Payment Status
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Service
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.service.service_name}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-12 mt-3">
-                                      <div class="row">
-                                        <div class="col col-lg-3">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Paid" required>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                              Paid
-                                            </label>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Time Slot
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.time_slot_id.clinic_timeslot_id.timeslot}}
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item py-3">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Patient Doctor
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.doctor.first_name}} {{data.doctor.last_name}}
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Date
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.date_appointment|date:"l,d M"}}
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item py-3">
+                                    <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-12 text-secondary mt-3">
+                                        Mark as Complete
+                                      </div>
+                                      <div class="col-sm-12 col-lg-12 mt-3">
+                                        <div class="row">
+                                          <div class="col">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Complete" required>
+                                              <label class="form-check-label" for="flexRadioDefault1">
+                                                Complete
+                                              </label>
+                                            </div>
+                                          </div>
+                                          <div class="col">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="No-Show" required>
+                                              <label class="form-check-label" for="flexRadioDefault1">
+                                                No Show
+                                              </label>
+                                            </div>
+                                          </div>
+                                          <div class="col">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Confirmed" required>
+                                              <label class="form-check-label" for="flexRadioDefault1">
+                                                Confirmed
+                                              </label>
+                                            </div>
+                                          </div>
+                                          <div class="col">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Pending" required>
+                                              <label class="form-check-label" for="flexRadioDefault1">
+                                                Pending
+                                              </label>
+                                            </div>
                                           </div>
                                         </div>
-                                        <div class="col col-lg-3">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Outstanding" required>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                              Outstanding
-                                            </label>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item py-3">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-12 mt-3 text-secondary">
+                                        Payment Status
+                                      </div>
+                                      <div class="col-sm-12 col-lg-12 mt-3">
+                                        <div class="row">
+                                          <div class="col col-lg-3">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Paid" required>
+                                              <label class="form-check-label" for="flexRadioDefault1">
+                                                Paid
+                                              </label>
+                                            </div>
+                                          </div>
+                                          <div class="col col-lg-3">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Outstanding" required>
+                                              <label class="form-check-label" for="flexRadioDefault1">
+                                                Outstanding
+                                              </label>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
-                                      <!-- <select class="form-select mt-3" aria-label="Default select example" name="complete_payment" style="background-color: #CFE2FF; color: darkblue;">
-                                        <option selected  style="color: grey !important;">Select Payment Status</option>
-                                        <option value="Outstanding">Outstanding</option>
-                                        <option value="Paid">Paid</option>
-                                      </select> -->
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item py-5">
-                                  <center>
-                                    <div class="row my-4">
-                                      <div class="col">
-                                        <input type="text" value="{{application.id}}" name="complete_appointmentId" hidden="True">
-                                        <button type="submit" name="complete_appointment" class="btn py-3 text-white" style="width: 100%; background-color: darkblue;">Submit</button>
+                                  </li>
+                                  <li class="list-group-item py-5">
+                                    <center>
+                                      <div class="row my-4">
+                                        <div class="col">
+                                          <input type="text" value="{{data.id}}" name="complete_appointmentId" hidden="True">
+                                          <button type="submit" name="complete_appointment" class="btn py-3 text-white" style="width: 100%; background-color: darkblue;">Submit</button>
+                                        </div>
+                                          </form>
+                                        <div class="col">
+                                          <a href="{% url 'reschedule' data.id %}" style="text-decoration: none;">
+                                          <button class="btn text-secondary py-3 bg-light border" style="width: 100%;">Reschedule</button>
+                                          </a>
+                                        </div>
                                       </div>
-                                        </form>
-                                      <div class="col">
-                                        <a href="{% url 'reschedule' application.id %}" style="text-decoration: none;">
-                                        <button class="btn text-secondary py-3 bg-light border" style="width: 100%;">Reschedule</button>
-                                        </a>
+                                    </center>
+                                  </li>
+                                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Visit Status
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.visit_status}} Patient
                                       </div>
                                     </div>
-                                  </center>
-                                </li>
-                                <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Visit Status
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Service Fee
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        R {{data.service.service_fee}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.visit_status}} Patient
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Balance
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                          {{data.paid_status}}
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Service Fee
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Appointment Status
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-success">
+                                        {{data.application_status}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      R {{application.service.service_fee}}
+                                  </li>
+                                  <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Patient Information</li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Patient File Number
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.patient_file_number}}
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Balance
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Full Name
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.patient_name}} {{data.patient_surname}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                        {{application.paid_status}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Appointment Status
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-success">
-                                        {{application.application_status}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Patient Information</li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Patient File Number
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.patient_file_number}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Full Name
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.patient_name}} {{application.patient_surname}}
-                                    </div>
-                                  </div>
-                                </li>
+                                  </li>
 
-                                {% if application.visit_status == "First-Time" %}
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Gender
+                                  {% if data.visit_status == "First-Time" %}
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Gender
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.gender}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.gender}}
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        DOB
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.date_of_birth}}
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      DOB
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Identification
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.identification}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.date_of_birth}}
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Contact
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.contact}}
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Identification
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Email
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.email}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.identification}}
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Address
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        <p class="mb-1">
+                                          {{data.street}}
+                                        </p>
+                                        <p class="mb-1">
+                                          {{data.town}}
+                                        </p>
+                                        <p class="mb-1">
+                                          {{data.postal_code}}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Contact
+                                  </li>
+                                  {% endif %}
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Reason For Visit
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.reason_visit}}
+                                      </div>
                                     </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.contact}}
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
+                                        Allergies
+                                      </div>
+                                      <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
+                                        {{data.allergies}}
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Email
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.email}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Address
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      <p class="mb-1">
-                                        {{application.street}}
-                                      </p>
-                                      <p class="mb-1">
-                                        {{application.town}}
-                                      </p>
-                                      <p class="mb-1">
-                                        {{application.postal_code}}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </li>
-                                {% endif %}
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Reason For Visit
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.reason_visit}}
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="list-group-item">
-                                  <div class="row">
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6 text-secondary">
-                                      Allergies
-                                    </div>
-                                    <div class="col-sm-12 col-lg-6 mt-1 col-md-6">
-                                      {{application.allergies}}
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                              <div style="height: 100px; width: 100%;"></div>
+                                  </li>
+                                </ul>
+                                <div style="height: 100px; width: 100%;"></div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <!-- second modal start -->
-                  </section>
+                        <!-- second modal start -->
+                    </section>
+                    <!-- Appointment Modal end  -->
                   {% endif %}
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          </div>
+                {% endfor %}
+              </div>
+            </div>
+          </section>
+          <!-- list all todays appointments end  -->
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </section>
-
-
 </section>
+
+
+<script type="text/javascript">
+
+  function patientdate(event){
+    event.preventDefault();
+    document.getElementById('timeslots').style.display = "block";  
+    datepicked = document.querySelector('input[id="application_date"]').value;
+    console.log(datepicked)
+    document.getElementById("selected_user_date").value = datepicked;  
+    document.getElementById("return_date").value = datepicked;
+  }
+
+</script>
 
 {% endblock %}

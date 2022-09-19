@@ -167,9 +167,28 @@
                         <div class="clinic-image bg-light rounded border"></div>
                         {% endif %}
                         <p class="mt-1 m-0" style="font-weight: 500; color: darkblue;">{{clinic.clinic_name}}</p>
-                        <P class="m-0 mt-1 text-secondary">Tsakane</P>
                     </div>
                 </a>
+                <div class="accordion accordion-flush" id="accordionExample">
+                    <div class="accordion-item ">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed px-0 rounded text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          Clinic Locations  
+                        </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <ul class="list-group list-group-flush">
+                                {% for location in locations %}
+                                {% if location.clinic_id.id == clinic.id%}
+                                <li class="list-group-item"><i class="bi bi-geo-alt-fill" style="color: darkblue;"></i> {{location.suburb}}</li>
+                                {% endif %}
+                                {% endfor %}
+                              </ul>
+                        </div>
+                      </div>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>

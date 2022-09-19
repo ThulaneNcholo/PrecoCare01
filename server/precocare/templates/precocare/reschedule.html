@@ -9,6 +9,14 @@
     </button>
 </section>
 
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-warning py-3" role="alert">
+        <p style="font-size: 18px;">{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
 
 <section class="mt-5 container">
     <section class="my-3">
@@ -48,6 +56,13 @@
                 <label for="reschedule_date" class="form-label">New Appointment Date</label>
                 <input type="text" class="form-control" id="reschedule_date" aria-describedby="rescheduleHelp" name="reschedule_date">
             </div>
+            
+            <!-- Patient Information start  -->
+            <input type="text" value="{{appointment.email}}" name="patientEmail"  hidden="True">
+            <input type="text" value="{{appointment.patient_name}}" name="patientName"  hidden="True">
+            <input type="text" value="{{appointment.service.service_name}}" name="patientService"  hidden="True">
+            <input type="text" value="{{appointment.clinic_id.clinic_name}}" name="patientClinic"  hidden="True">
+            <!-- patient Information end  -->
             <center>
                 <button name="reschedule_application" class="btn btn-warning my-3" type="submit">Comfirm Reschedule</button>
             </center>

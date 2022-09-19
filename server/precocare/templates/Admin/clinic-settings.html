@@ -210,6 +210,18 @@
             <div class="modal-body">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item py-3">
+                        <a type="button" data-bs-target="#bookingtype{{practice.id}}" data-bs-toggle="modal" style="width: 100%;">
+                            <div class="row">
+                                <div class="col">
+                                    Booking type
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="list-group-item py-3">
                         <a type="button" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" style="width: 100%;">
                             <div class="row">
                                 <div class="col">
@@ -292,6 +304,119 @@
           </div>
         </div>
       </div>
+      <div class="modal fade" id="bookingtype{{practice.id}}" aria-hidden="true" aria-labelledby="bookingtype" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingtype">Appointments type</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Clinic Accepts</p>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6   text-secondary">
+                        <p> <i class="bi bi-chevron-right"></i> walk_in</p>
+                    </div>
+                    <div class="col-sm-12 col-md-6 ">
+                        {% if practice.walk_in == 'Yes'%}
+                        <p>{{practice.walk_in}}</p>
+                        {% else %}
+                        <p>No</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6   text-secondary">
+                        <p> <i class="bi bi-chevron-right"></i> Online Appointments</p>
+                    </div>
+                    <div class="col-sm-12 col-md-6 ">
+                        {% if practice.online_appointments == 'Yes'%}
+                        <p>{{practice.online_appointments}}</p>
+                        {% else %}
+                        <p>No</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6   text-secondary">
+                        <p> <i class="bi bi-chevron-right"></i> Telephone Appointments</p>
+                    </div>
+                    <div class="col-sm-12 col-md-6 ">
+                        {% if practice.telephone_appointments == 'Yes'%}
+                        <p>{{practice.telephone_appointments}}</p>
+                        {% else %}
+                        <p>No</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <section class="mt-5">
+                    <p>Appointments type form</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row mt-4 bg-light border rounded py-3">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                {% if practice.walk_in == 'Yes'%}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Yes" id="flexCheckDefault" checked name="walkin">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Walk In
+                                    </label>
+                                </div>
+                                {% else %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Yes" id="flexCheckDefault"  name="walkin">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Walk In
+                                    </label>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                {% if practice.online_appointments == 'Yes'%}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Yes" id="flexCheckDefault" checked name="online" >
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Online Appointments
+                                    </label>
+                                </div>
+                                {% else %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Yes" id="flexCheckDefault" name="online">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Online Appointments
+                                    </label>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                {% if practice.telephone_appointments == 'Yes'%}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Yes" id="flexCheckDefault" checked name="telephone">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Telephone Appointments
+                                    </label>
+                                </div>
+                                {% else %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Yes" id="flexCheckDefault" name="telephone">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Telephone Appointments
+                                    </label>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <button name="AppointmentType" type="submit" class="btn text-white my-5 py-3 fw-bold" style="background-color: darkblue; width: 100%;">Submit</button>
+                    </form>
+                </section>
+                <div style="height: 50px; width: 100%;"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn text-white" style="background-color: darkblue;" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to Main Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -328,6 +453,12 @@
                         <div class="mb-4">
                             <label for="exampleFormControlTextarea1" class="form-label">About Clinic</label>
                             <textarea class="form-control py-3 bg-light" id="exampleFormControlTextarea1" rows="12" placeholder="small description about clinic ?" name="about-clinic">{{practice.about_clinic}}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="clinicwebsite" class="form-label">Clinic Website</label>
+                            <input type="text" class="form-control py-3 bg-light" id="clinicwebsite" aria-describedby="websitehelp" name="website" value="{{practice.website}}">
+                            <div id="websitehelp" class="form-text">Paste your official website URL.</div>
+                            <div id="websitehelp" class="form-text">eg. https://www.precocare.co.za/</div>
                         </div>
 
                         <section class="mt-5">
@@ -450,10 +581,26 @@
                             <div class="col-12 col-md-12 col-lg-2 mt-3">
                                 <div class="">
                                     <label for="clinicnameinput" class="form-label">Zip Code</label>
-                                    <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="zipcodeHelp" name="zipcode">
+                                    <input type="text" class="form-control py-3 bg-light" id="clinicnameinput" aria-describedby="zipcodeHelp" name="zipcode" required>
                                 </div>
                             </div>
                         </div>
+                        <label for="clinicaddress" class="form-label mt-4">Clinic location Contacts</label>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="contact1" class="form-label ">Contact 1</label>
+                                    <input type="number" min="0" step="1" class="form-control py-3 bg-light" id="contact1" aria-describedby="contact1help" name="locationContact1" required>
+                                  </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="contact2" class="form-label ">Contact 2</label>
+                                    <input type="number" min="0" step="1" class="form-control py-3 bg-light" id="exampleInputEmail1" aria-describedby="contact2help" name="locationContact2">
+                                  </div>
+                            </div>
+                        </div>
+                        <div id="contactdetails" class="form-text">Please add atleast one contact details for each location.</div>
                         <center>
                             <button name="clinic_locatoins" type="submit" class="btn btn-warning mt-5 py-3" style="width: 50%;">Submit</button>
                         </center>
@@ -530,8 +677,7 @@
                         <p class="my-2">Whatsapp - 094 477 4744</p>
                         <p class="mb-1">Email - admin@precocare.co.za</p>
                       </div>
-
-                      <form action="" method="POST">
+                      <form action="" method="POST" autocomplete="off">
                         {% csrf_token %}
                         <label for="clinicnameinput" class="form-label mt-4">Services</label>
                         <select class="form-select py-3 bg-light" aria-label="Default select example" name="clinic_service">
@@ -545,10 +691,9 @@
                             <label for="clinicnameinput" class="form-label">Service Fee</label>
                             <div class="input-group">
                                 <span class="input-group-text">R</span>
-                                <input type="text" class="form-control py-3" id="username" placeholder="500" name="service_fee">
+                                <input type="number" min="0" step="1" class="form-control py-3" id="username" placeholder="500" name="service_fee">
                               </div>
                         </div>
-
                         <center>
                             <button name="add_service" type="submit" class="btn btn-warning px-5 py-2 mt-3">Submit Service</button>
                         </center>
@@ -676,6 +821,11 @@
                                               <label for="exampleFormControlTextarea1" class="form-label">About Clinic</label>
                                               <textarea class="form-control py-3 bg-light" id="exampleFormControlTextarea1" rows="3" placeholder="small description about clinic ?" name="about-clinic">{{practice.about_clinic}}</textarea>
                                           </div>
+                                          <div class="mb-4">
+                                            <label for="clinicwebsite" class="form-label">Clinic Website</label>
+                                            <input type="text" class="form-control py-3 bg-light" id="clinicwebsite" aria-describedby="websitehelp" name="website" value="{{practice.website}}">
+                                        </div>
+                                          
   
                                           <section class="mt-5">
                                               <p style="color: darkblue;">Clinic Working hours</p>
@@ -977,7 +1127,6 @@
 
   <section class="mt-5 container">
     <p class="clinic-headings">Locations</p>
-
     {% if  clinic_locations %}
         {% for data in clinic_locations %}
         <section class="mt-4">
@@ -985,6 +1134,8 @@
             <p class="mb-1">{{data.suburb}}</p>
             <p class="mb-1">{{data.province}}</p>
             <p class="mb-1">{{data.zipcode}}</p>
+            <p class="mb-1"><i class="bi bi-telephone-fill" style="color: darkblue; padding-right: 10px;"></i>{{data.contact1}}</p>
+            <p class="mb-1"><i class="bi bi-telephone-fill" style="color: darkblue;  padding-right: 10px;"></i>{{data.contact2}}</p>
             <section>
                 <form action="" method="POST">
                     {% csrf_token %}
@@ -1007,6 +1158,8 @@
     {% else %}
         <p class="text-danger">No about clinic</p>
     {% endif %}
+    <p class="clinic-headings mt-5">Clinic Website</p>
+    <p>{{practice.website}}</p>
   </section>
 
   <section class="mt-5 container">

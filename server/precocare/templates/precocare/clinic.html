@@ -81,7 +81,9 @@
                         </button>
                     </div>
                     <div class="col">
+                        {% if clinic.online_appointments == 'Yes'%}
                         <button style="color: darkblue; width: 100%;" class="btn btn-light" data-bs-toggle="offcanvas" data-bs-target="#applicationform" aria-controls="applicationform">Book Appointment</button>
+                        {% endif %}
                     </div>
                 </div>
                 <p class="clinic-name">{{clinic.clinic_name}}</p>
@@ -127,27 +129,64 @@
             <div class="container">
                 <div class="row gx-4">
                   <div class="col">
-                   <div class="p-2  py-3 border bg-light rounded">
-                    <center>
-                        <i class="bi bi-telephone-fill clinic-icons"></i>
-                    </center>
-                   </div>
+                    <a href="#contactdetails" style="text-decoration: none;">
+                        <div class="p-2  py-3 border bg-light rounded">
+                            <center>
+                                <i class="bi bi-telephone-fill clinic-icons"></i>
+                            </center>
+                        </div>
+                    </a>
                   </div>
                   <div class="col">
+                    {% if clinic.emial %}
+                    <a href="mailto:{{clinic.emial}}" style="text-decoration: none;">
+                        <div class="p-2  py-3 border bg-light rounded">
+                            <center>
+                            <i class="bi bi-envelope-fill clinic-icons"></i>
+                            </center>
+                        </div>
+                    </a>
+                    {% else %}
                     <div class="p-2  py-3 border bg-light rounded">
                         <center>
                         <i class="bi bi-envelope-fill clinic-icons"></i>
                         </center>
                     </div>
+                    {% endif %}
                   </div>
                   <div class="col">
+                    {% if clinic.website %}
+                    <a href="{{clinic.website}}" target="_blank">
+                        <div class="p-2  py-3 border bg-light rounded">
+                            <center>
+                            <i class="bi bi-globe clinic-icons"></i>
+                            </center>
+                        </div>
+                    </a>
+                    {% else %}
                     <div class="p-2  py-3 border bg-light rounded">
                         <center>
                         <i class="bi bi-globe clinic-icons"></i>
                         </center>
                     </div>
+                    {% endif %}
                   </div>
                 </div>
+            </div>
+        </section>
+        
+        <section class="mt-5 container">
+            <div class="alert border bg-light" role="alert">
+                <p class="main-headings" style="color: darkblue;">Clinic Only Accepts</p>
+                {% if clinic.walk_in == 'Yes'%}
+                <p><i class="bi bi-check-circle-fill" style="color: darkblue; padding-right: 10px;"></i>Walk In</p>
+                {% endif %}
+                {% if clinic.online_appointments == 'Yes'%}
+                <p><i class="bi bi-check-circle-fill" style="color: darkblue; padding-right: 10px;"></i>Online Appointments</p>
+                {% endif %}
+                {% if clinic.telephone_appointments == 'Yes'%}
+                <p class="mb-2"><i class="bi bi-check-circle-fill" style="color: darkblue; padding-right: 10px;"></i>Telephone Appointments</p>  
+                {% endif %}
             </div>
         </section>
 
@@ -162,7 +201,9 @@
         <section class="about-clinic mt-5 container">
             <p class="main-headings m-0">About Us</p>
             <p class="text-secondary">{{clinic.about_clinic}}</p>
-            <p class="text-secondary">website :  <span><a href="#" style="color: darkblue;">www.tshepanghealthcareclinic.co.za</a></span></p>
+            {% if clinic.website %}
+            <p class="text-secondary">website :  <span><a  href="{{clinic.website}}" target="_blank" style="color: darkblue;">{{clinic.website}}</a></span></p>
+            {% endif %}
         </section>
 
 
@@ -185,14 +226,22 @@
             {% endfor %}
         </section>
 
-        <section class="clinic-location mt-5 container">
+        <section class="clinic-location mt-5 container" id="contactdetails">
             <p class="main-headings m-0">Locations</p>
             {% for location in locations_list %}
             <p class="m-0" style="color: darkblue;">{{location.street}}</p>
             <p class="m-0" style="color: darkblue;">{{location.suburb}}</p>
             <p class="m-0" style="color: darkblue;">{{location.zipcode}}</p>
             <p style="color: darkblue;">{{location.province}}</p>
-            <!-- <p class="text-secondary">Contact Details</p> -->
+            <p class="text-secondary">Contact Details</p>
+            <a href="tel:{{location.contact1}}" style="text-decoration: none;">
+                <p class="m-0" style="color: darkblue;"><i class="bi bi-telephone-fill" style="color: darkblue; padding-right: 10px;"></i>{{location.contact1}}</p>
+            </a>
+            {% if location.contact2 %}
+            <a href="tel:{{location.contact2}}" style="text-decoration: none;">
+                <p class="m-0" style="color: darkblue;"><i class="bi bi-telephone-fill" style="color: darkblue; padding-right: 10px;"></i>{{location.contact2}}</p>
+            </a>
+            {% endif %}
             <hr>
             {% endfor %}
         </section>
@@ -214,7 +263,9 @@
 
         <section class="mt-5">
             <center>
+                {% if clinic.online_appointments == 'Yes'%}
                 <button class="btn bg-light border py-3" style="width: 70%; color: darkblue; font-size: 18px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#applicationform" aria-controls="applicationform">Book Appointment</button>
+                {% endif %}
             </center>
         </section>
 
@@ -224,8 +275,6 @@
               <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-               
-
                   {% if user.is_authenticated %}
 
                   <section class="timeslot-section">
@@ -251,10 +300,10 @@
                       </form>
                     </section>
                     <section class="my-5" id="timeslots" style="display: none;">
-                      <div class="row">
-                          {% include 'partials/timeslot_id.html' %}
-                      </div>
-                  </section>
+                        <div class="row">
+                            {% include 'partials/timeslot_id.html' %}
+                        </div>
+                    </section>
                   </section>
 
                   <section class="application-form" id="showapplication" style="display: none;">

@@ -12,16 +12,18 @@
           <a href="{% url 'appointments' %}">
             <button class="position-relative m-0 p-0" style="border: none; background-color: transparent;">
             <i class="bi bi-alarm navbar-icons" ></i>
+            {% if userAppointments %}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded bg-danger" style="margin-left: 16px;" >
-                2+
+                {{userAppointments}}+
               </span>
+            {% endif %}
             </button>
           </a>
           {% endif %}
 
           {% if user.groups.all.0.name == "admin" %}
           <a href="{% url 'admin-clinics' %}">
-            <i class="bi bi-microsoft navbar-icons"></i>
+            <i class="bi bi-hospital navbar-icons"></i>
           </a>
           {% endif %}
          

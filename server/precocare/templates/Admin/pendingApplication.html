@@ -253,36 +253,58 @@
                 </div>
               </div>
             </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-12 col-md-6 mt-3 text-secondary">
+                  Email
+                </div>
+                <div class="col-sm-12 col-md-6 mt-3">
+                  {{application.email}}
+                </div>
+              </div>
+            </li>
 
               <li class="list-group-item py-3">
                <form action="" method="POST">
                 {% csrf_token %}
-                <div class="row">
-                  <div class="col-sm-12 col-md-6 mt-3 text-secondary">
-                    Assign a Doctor
-                  </div>
-                  <div class="col-sm-12 col-md-6 mt-3">
-                    <select class="form-select" aria-label="Default select example" name="select_doctor" style="background-color: #CFE2FF; color: darkblue;">
-                      <option selected style="color: grey !important;"> Select A Doctor</option>
-                      {% for doctor in applicationClinic.clinic_doctors.all %}
-                      <option value="{{doctor.id}}">Dr {{doctor.first_name}} {{doctor.last_name}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
+                <div class="mt-3 text-secondary">
+                  Assign a Doctor
+                </div>
+                <div class="row mt-3">
+                  {% for doctor in applicationClinic.clinic_doctors.all %}
+                    <div class="col">
+                      <div class="form-check">
+                        <input value="{{doctor.id}}" class="form-check-input" type="radio" name="select_doctor" id="select_doctor1" required>
+                        <label class="form-check-label" for="select_doctor1">
+                          Dr {{doctor.first_name}} {{doctor.last_name}}
+                        </label>
+                      </div>
+                    </div>
+                  {% endfor %}
                 </div>
               </li>
               <li class="list-group-item py-3">
-                <div class="row">
-                  <div class="col-sm-12 col-md-6 mt-3 text-secondary">
-                    Payment Status
-                  </div>
-                  <div class="col-sm-12 col-md-6 mt-3">
-                    <select class="form-select" aria-label="Default select example" name="payment" style="background-color: #CFE2FF; color: darkblue;">
-                      <option selected  style="color: grey !important;">Select Payment Status</option>
-                      <option value="Outstanding">Outstanding</option>
-                      <option value="Paid">Paid</option>
-                    </select>
-                  </div>
+
+                <div class="mt-3 text-secondary">
+                  Payment Status
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                      <div class="form-check">
+                        <input value="Outstanding" class="form-check-input" type="radio" name="payment" id="select_payment1" required>
+                        <label class="form-check-label" for="select_payment1">
+                          Outstanding
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-check">
+                        <input value="Paid" class="form-check-input" type="radio" name="payment" id="select_payment1" required>
+                        <label class="form-check-label" for="select_payment1">
+                          Paid
+                        </label>
+                      </div>
+                    </div>
                 </div>
               </li>
               <li class="list-group-item py-5">
@@ -290,30 +312,26 @@
                   <div class="col">
                     <input type="text" value="{{application.id}}" name="appointment_id" hidden="True">
                     <input type="text" value="Confirmed" name="status" hidden="True">
+                    <input type="text" value="{{application.email}}" name="patientemail" hidden="True">
+                    <input type="text" value="{{application.patient_name}}" name="patientName" hidden="True">
+                    <input type="text" value="{{application.service.service_name}}" name="patientService" hidden="True">
+                    <input type="text" value="{{application.clinic_id.clinic_name}}" name="patientClinic" hidden="True">
+                    <input type="text" value="{{application.date_appointment}}" name="patientDate" hidden="True">
+                    <input type="text" value="{{application.time_slot_id.clinic_timeslot_id.timeslot}}" name="patientTimeslot" hidden="True">
                     <button type="submit" name="confirm_appointment" class="btn text-white py-3" style="background-color: darkblue; width: 100%;">
                       Confirm
                     </button>
                   </div>
+                </form>
                   <div class="col">
-                    <button class="btn btn-light border text-dark border py-3" style="width: 100%;">
-                      Reschedule
-                    </button>
+                    <a href="{% url 'reschedule' application.id %}" style="text-decoration: none;">
+                      <button class="btn btn-light border text-dark border py-3" style="width: 100%;">
+                        Reschedule
+                      </button>
+                    </a>
                   </div>
                 </div>
               </li>
-              <!-- <li class="list-group-item py-4">
-                <center>
-                  <input type="text" value="{{application.id}}" name="appointment_id" hidden="True">
-                  <button type="submit" name="confirm_appointment" class="btn btn-success">Submit Appointment</button>
-                </center>
-              </form>
-              </li>
-
-            <li class="list-group-item py-4">
-              <center>
-                <button class="btn btn-warning">Reschedule Appointment</button>
-              </center>
-            </li> -->
           </ul>
         </div>
         <div class="modal-footer">
