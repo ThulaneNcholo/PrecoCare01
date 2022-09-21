@@ -109,7 +109,19 @@
                 <i class="bi bi-chevron-right settings-icons"></i>
             </div>
         </div>
-
+        <a href="#">
+            <div class="row bg-light border m-0 p-3 rounded mt-3">
+                <div class="col-2">
+                    <i class="bi bi-app-indicator settings-icons"></i>
+                </div>
+                <div class="col d-flex align-items-center text-secondary">
+                    PrecoCare Careers
+                </div>
+                <div class="col-2">
+                    <i class="bi bi-chevron-right settings-icons"></i>
+                </div>
+            </div>
+        </a>
 
         {% if user.groups.all.0.name == "admin" %}
         <a href="{% url 'admin-clinics'%}" style="text-decoration: none;">

@@ -65,6 +65,15 @@
         background-color: #F8FAFC !important;
     }
 
+    @media screen and (min-width: 819px) {
+        .appointment-btn{
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    }
+
+    
+
 </style>   
 
     <section>
@@ -82,7 +91,7 @@
                     </div>
                     <div class="col">
                         {% if clinic.online_appointments == 'Yes'%}
-                        <button style="color: darkblue; width: 100%;" class="btn btn-light" data-bs-toggle="offcanvas" data-bs-target="#applicationform" aria-controls="applicationform">Book Appointment</button>
+                        <button style="color: darkblue; width: 100%;" class="btn btn-light appointment-btn" data-bs-toggle="offcanvas" data-bs-target="#applicationform" aria-controls="applicationform">Book Appointment</button>
                         {% endif %}
                     </div>
                 </div>
