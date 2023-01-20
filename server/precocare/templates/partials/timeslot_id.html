@@ -1,36 +1,57 @@
-
 <div class="alert alert-secondary" role="alert">
   if search is blank,means there are no timeslots available.
 </div>
 
-<form onsubmit="myfunc(event)">
-  
-
+<form method="POST">
+  {% csrf_token %}
+  <!-- divider  -->
   {% for timeslot_item in available_timeslot%}
   <div class="rounded bg-light border p-2 my-2">
-    <input type="radio" id="timeslot_availability_id" name="time_slots" value="{{timeslot_item.id}}">
-    <label for="time_slots">{{timeslot_item.timeslot}}</label><br>
+    <input
+      type="radio"
+      id="timeslot_availability_id"
+      name="time_slots"
+      value="{{timeslot_item.id}}"
+    />
+    <label for="time_slots">{{timeslot_item.timeslot}}</label><br />
   </div>
-  
+
   <!-- <input type="text" value="{{timeslot_item.timeslot}}" id="timeslot_display" hidden="True"> -->
-  <input type="text" value="{{timeslot_item.clinic_id.id}}" id="clinic_id" hidden="True">
-  <input type="text" value="{{timeslot_item.service.id}}" id="service_id" hidden="True" >
+  <input
+    type="text"
+    value="{{timeslot_item.clinic_id.id}}"
+    id="clinic_id"
+    hidden="True"
+  />
+  <input
+    type="text"
+    value="{{timeslot_item.service.id}}"
+    id="service_id"
+    hidden="True"
+  />
   {% endfor %}
- 
+
   <center>
-    <button type="submit" class="btn text-white my-3 py-3" style="background-color: darkblue; width: 100%;" id="submit_time">Submit Time-Slot</button>
-    <div id="timeslotHelp" class="form-text">Time-Slot successfully submitted .Please continue with your application.</div>
+    <button
+      class="btn text-white my-3 py-3"
+      style="background-color: darkblue; width: 100%"
+      id="submit_time"
+      name="submit-timelsot"
+      onclick="myfunc(event)"
+    >
+      Submit Time-Slot
+    </button>
   </center>
 </form>
 
 <script type="text/javascript">
-  function myfunc(event){
+  function myfunc(event) {
     event.preventDefault();
 
     pageurl = sessionStorage.getItem("reschedule_url");
 
     if (window.location.href != pageurl) {
-      showtime=document.querySelector('input[name=time_slots]:checked').value;
+      showtime = document.querySelector("input[name=time_slots]:checked").value;
       document.getElementById("input_time_javascript").value = showtime;
       document.getElementById("return_timeslot").value = showtime;
 
@@ -42,11 +63,18 @@
       document.getElementById("service_javascript").value = service;
       document.getElementById("return_service").value = service;
 
-      alert('Time-Slot successfully submitted .Please continue with your application below.')
+      // Set session storage data start
+      sessionStorage.setItem("user_timeslot", showtime);
+      sessionStorage.setItem("user_clinic", clinic);
+      sessionStorage.setItem("user_service", service);
 
-      document.getElementById('showapplication').style.display = "block";
+      // remove redict path from sessionStorage
+      sessionStorage.removeItem("redict_path");
+
+      // redict to clinic application form
+      window.location.href = "http://127.0.0.1:8000/appointment-Form/" + clinic;
     } else {
-      showtime=document.querySelector('input[name=time_slots]:checked').value;
+      showtime = document.querySelector("input[name=time_slots]:checked").value;
       document.getElementById("timeslot_value").value = showtime;
 
       clinic = document.getElementById("clinic_id").value;
@@ -55,19 +83,20 @@
       service = document.getElementById("service_id").value;
       document.getElementById("service_value").value = service;
 
+      // Set session storage data start
+      sessionStorage.setItem("user_timeslot", showtime);
+      sessionStorage.setItem("user_clinic", clinic);
+      sessionStorage.setItem("user_service", service);
+
+      // remove redict path from sessionStorage
+      sessionStorage.removeItem("redict_path");
+
+      // redicted to clinic application form
+      window.location.href = "http://127.0.0.1:8000/appointment-Form/" + clinic;
+
       // display_time = document.getElementById("timeslot_display").value;
       // document.getElementById("displayTimeslot").value = display_time;
-
-
-
-      alert('Please Click the Reschedule button to confirm your appointment')
-
-      document.getElementById('reschedulediv').style.display = "block";
-
     }
-
-    
-
 
     // var timeslot = document.getElementById("session_time").value;
     // var clinic_java = document.getElementById("clinic_id").value;
@@ -79,11 +108,8 @@
     // sessionStorage.setItem('ls_timeslot', timeslot);
     // sessionStorage.setItem('ls_clinic_java', clinic_java);
     // sessionStorage.setItem('ls_service_java', service_java);
-    
+
     // var x = sessionStorage.getItem("ls_timeslot");
     // document.getElementById("input_time").value = x;
-
-
   }
-
 </script>

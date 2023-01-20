@@ -1,0 +1,18 @@
+{% extends 'precocare/base.html' %}
+
+
+{% block content %}
+
+<section class="container">
+    <center>
+        <section class="border mt-5 p-5">
+            <h4>Timeslot unavaible</h4>
+            <p>Oops looks like timeslot became unavaible during your application submition please pick another time-slot.</p>
+            <a href="{% url 'clinic' clinic.id%}" style="text-decoration: none;">
+                <button class="btn text-white" style="background-color: darkblue;">Try again</button>
+            </a>
+        </section>
+        
+    </center>
+</section>
+{% endblock %}

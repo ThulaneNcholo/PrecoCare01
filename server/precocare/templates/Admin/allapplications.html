@@ -178,7 +178,11 @@
             {{appointment.service.service_name}}
         </div>
         <div class="col hide-components-ipad">
+            {% if appointment.doctor.first_name == None %}
+            Not Assigned
+            {% else %}
             Dr {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}
+            {% endif %}
         </div>
         <div class="col hide-components-ipad">
             {{appointment.date_appointment |date:"l,d M"}}
@@ -388,7 +392,11 @@
                                         Time Slot
                                     </div>
                                     <div class="col-12 col-lg-6 mt-2 ">
-                                        {{appointment.time_slot_id.clinic_timeslot_id.timeslot}}
+                                        {% if appointment.application_status == 'Canceled' %}
+                                            {{appointment.time_slot}}
+                                        {% else %}
+                                            {{appointment.time_slot_id.clinic_timeslot_id.timeslot}}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </li>

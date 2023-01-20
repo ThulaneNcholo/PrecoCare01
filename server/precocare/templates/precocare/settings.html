@@ -109,7 +109,7 @@
                 <i class="bi bi-chevron-right settings-icons"></i>
             </div>
         </div>
-        <a href="#">
+        <a href="#" style="text-decoration: none;">
             <div class="row bg-light border m-0 p-3 rounded mt-3">
                 <div class="col-2">
                     <i class="bi bi-app-indicator settings-icons"></i>
@@ -140,7 +140,7 @@
         {% endif %}
 
         {% if user.is_authenticated %}
-        <a href="{% url 'logout'%}" style="text-decoration: none;">
+        <a href="{% url 'logout'%}" style="text-decoration: none;" onclick="removeSessionPath(event)">
             <div class="row border m-0 p-3 rounded mt-3" style="background-color: darkblue;">
                 <div class="col-2">
                     <i class="bi bi-box-arrow-left settings-icons text-white"></i>
@@ -172,5 +172,12 @@
     </section>
     
 </section>
+
+<script>
+    function removeSessionPath(event){
+        // remove redict path from sessionStorage
+        sessionStorage.removeItem("redict_path");
+    }
+</script>
 
 {% endblock %}

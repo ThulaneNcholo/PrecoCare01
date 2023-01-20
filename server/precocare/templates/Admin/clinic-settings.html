@@ -168,6 +168,7 @@
                                 <center>
                                     <div class="row">
                                         <form method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
                                             <div class="col-sm-12 col-lg-12 mt-3">
                                                 <input type="file" name="subImage3">
                                             </div>

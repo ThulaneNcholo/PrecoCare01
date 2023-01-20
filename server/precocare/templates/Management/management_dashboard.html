@@ -1,0 +1,118 @@
+{% extends 'Management/management_base.html' %}
+
+
+{% block content %}
+
+<style>
+    .view-icon{
+        font-size: 17px;
+        color: darkblue;
+    }
+</style>
+
+<!-- Message Container start  -->
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-primary py-3" role="alert">
+        <p>{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+<section class="container ">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 mt-5">
+            <h6>Active Clinics</h6>
+            <ul class="list-group mt-3">
+                {% for clinic in active_clinics %}
+                <li class="list-group-item py-3">
+                    <a href="{% url 'clinic-details' clinic.id %}" style="text-decoration: none;">
+                        <div class="row">
+                            <div class="col text-black">
+                                {{clinic.clinic_name}}
+                            </div>
+                            <div class="col-2">
+                                <i class="bi bi-arrow-right-square-fill view-icon"></i>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+              </ul>
+        </div>
+        <div class="col-sm-12 col-md-6 mt-5">
+            <h6>Disable Clinics</h6>
+            <ul class="list-group mt-3">
+                {% for clinic in  disable_clinics %}
+                <li class="list-group-item py-3">
+                    <a href="{% url 'clinic-details' clinic.id %}" style="text-decoration: none;">
+                        <div class="row">
+                            <div class="col text-black">
+                                {{clinic.clinic_name}}
+                            </div>
+                            <div class="col-2">
+                                <i class="bi bi-arrow-right-square-fill view-icon"></i>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                {% empty %}
+                <div class="alert alert-primary" role="alert">
+                    No disabled clinics
+                </div>
+                {% endfor %}
+              </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- Not Verified Doctors  -->
+<section class="container mt-5">
+    <h6>Pending Doctors Verification</h6>
+    <ul class="list-group mt-3">
+        {% for doctor in pending_doctors %}
+        <li class="list-group-item py-3">
+            <div class="row">
+                <div class="col-1 d-flex align-items-center">
+                    <span class="fw-bold px-3 rounded text-white" style="background-color: darkblue;">{{ forloop.counter }}</span>
+                </div>
+                <div class="col d-flex align-items-center">
+                    {{doctor.first_name}} {{doctor.last_name}}
+                </div>
+                <div class="col col-md-4">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn text-white py-3" style="background-color: #1A91E4; width: 100%;" >verification</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Verify Doctor</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body py-5">
+                                <center>
+                                    <i class="bi bi-patch-check-fill mb-5" style="font-size: 70px; color: #1A91E4;"></i>
+                                    <p class="text-secondary">click button bellow to verify doctor</p>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="text" value="{{doctor.id}}" name="doctorId" hidden="True">
+                                        <button name="verifyDoctor" type="submit" class="btn text-white py-3 my-4" style="background-color: #1A91E4; width: 70%;">Verify Doctor</button>
+                                    </form>
+                                </center>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <div class="alert alert-primary" role="alert">
+            No Pending Verifications
+        </div>
+        {% endfor %}
+      </ul>
+</section>
+
+{% endblock %}

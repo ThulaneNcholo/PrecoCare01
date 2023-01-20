@@ -72,11 +72,20 @@
         }
     }
 
-    
+    .page_vh{
+        height: 100vh;
+    }    
+
+    .card-shadow {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+
 
 </style>   
 
-    <section>
+    <section class="page_vh">
         {% if clinic.hero_image %}
         <div class="clinic-hero" style=" background-size: cover;background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url({{clinic.hero_image.url}});">
         {% else %}
@@ -302,7 +311,7 @@
                               <label for="floatingInput">Appointment Date</label>
                               <div id="appointmentdatehelp" class="form-text">Please Press the calendar <strong>Icon</strong> if you having trouble.</div>
                             </div>
-                            <input type="text" name="clinic_id" value="{{clinic.id}}" hidden="True">
+                            <input id="clinic_id" type="text" name="clinic_id" value="{{clinic.id}}" hidden="True">
                             <center>
                               <button onclick="userdate(event)"  name="post_timeslot" hx-post="{% url 'show-timeslot' %}" hx-target="#timeslots" type="submit" class="my-4 btn btn-success py-3" style="width: 100%;">Search Time-Slot</button>
                             </center>
@@ -315,6 +324,7 @@
                     </section>
                   </section>
 
+                  <!-- ======= Delete Code start ======= -->
                   <section class="application-form" id="showapplication" style="display: none;">
                   <p class="text-secondary mt-5" style="font-size: 17px; font-weight: 500;">First time visit to this clinic ?</p>
                   <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -334,7 +344,7 @@
                                   <input type="text" id="selected_user_date" value="" name="picked_date" hidden="True">
                                   <input type="text" id="input_time_javascript" value="" name="input_time_javascript" hidden="True">
                                   <input type="text" id="clinic_javascript" value="" name="clinic_javascript" hidden="True">
-                                  <input type="text" id="service_javascript" value="" name="service_javascript" hidden="True">
+                                  <input type="text" id="service_javascript" value="" name="service_javascript">
                                 </div>
                                   <section class="hidden-inputs">
                                       <input type="text" value="First-Time" name="visit_status" hidden="True">
@@ -521,10 +531,23 @@
                       <!-- No Application end -->
                   </div>
                   </section>
+                  <!-- ======= Delete Code End ======= -->
+
                   {% else %}
-                  <a href="{% url 'login'%}" style="text-decoration: none;">
-                    <button class="btn text-white" style="background-color: darkblue;">Login To Book Appointment</button>
-                  </a>
+                  <section>
+                    <center>
+                        <i class="bi bi-cloud-arrow-down-fill" style="font-size: 80px; color: darkblue;"></i>
+                        <h1 class="mb-5">Login In</h1>
+                        <p class="text-secondary mb-4">Please kindly login or register to book an appointment.</p>
+                        <input type="text" value="{{request.path}}" id="RedictPath" hidden="True">
+                        <a href="{% url 'login'%}" style="text-decoration: none;" onclick="addPreviousPath(event)">
+                            <button class="btn text-white py-3 mb-4 card-shadow" style="background-color: darkblue; width: 100%;">Login</button>
+                        </a>
+                        <a href="{% url 'register'%}" style="text-decoration: none;" onclick="addPreviousPath(event)">
+                            <button class="btn border border-2 py-3 mb-4 card-shadow" style="color: darkblue; width: 100%;">Register</button>
+                        </a>
+                    </center>
+                  </section>
                   {% endif %}
                   <div style="height: 70px; width: 100%;"></div>
            </div>
@@ -539,9 +562,17 @@
     event.preventDefault();
     document.getElementById('timeslots').style.display = "block";  
     datepicked = document.querySelector('input[id="application_date"]').value;
-    console.log(datepicked)
     document.getElementById("selected_user_date").value = datepicked;  
     document.getElementById("return_date").value = datepicked;
+    sessionStorage.setItem("user_date", datepicked);
+
+    // remove redict path from sessionStorage
+    sessionStorage.removeItem("redict_path");
+  }
+
+  function addPreviousPath(event){
+    userpath = document.getElementById("RedictPath").value
+    sessionStorage.setItem("redict_path", userpath)
   }
 
 </script>

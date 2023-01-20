@@ -48,6 +48,8 @@ urlpatterns = [
     path('doctor-details/<int:doctor_id>', views.DoctorDetails,name="doctor"),
     path('locations/<int:location_id>', views.LocationsPage,name="locations"),
     path('clinic/<int:clinic_id>', views.ClinicPage,name="clinic"),
+    path('appointment-Form/<int:clinic_id>', views.AppointmentForm,name="appointment-Form"),
+    path('alert/<int:clinic_id>', views.BookedAlert,name="alert"),
     path('appointments/', views.AppointmentsPage,name="appointments"),
     path('reschedule/<int:reschedule_id>/', views.RescheduleAppointment,name="reschedule"),
 
@@ -83,6 +85,9 @@ urlpatterns = [
     path('doctors-profile/',views.DoctorProfileView, name="doctor-profile"),
 
 
+    # Management dashboard urls start 
+    path('management/', views.ManagementView, name="management"),
+    path('clinic-details/<int:clinic_id>', views.ClinicDetailsView, name="clinic-details"),
 ]
 
 

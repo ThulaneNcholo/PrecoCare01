@@ -153,7 +153,7 @@ transform: translateX(-100%);
         <div class="container hero-padding">
             <p class="m-0 hero-p-tags">Welcome to</p>
             <h1 class="hero-heading">PrecoCare.</h1>
-            <p class="hero-p-tags mt-4">Find the best doctors and clinics.</p>
+            <p class="hero-p-tags mt-4">Find verified doctors and clinics.</p>
 
             <section class="main-search-layout rounded border">
 
@@ -161,7 +161,7 @@ transform: translateX(-100%);
                     {% csrf_token %}
                     <div class="row m-0 p-0">
                         <div class="col-5 p-0">
-                                <select required class="dropdown_style rounded" name="location" style="width: 95%;">
+                                <select required class="dropdown_style rounded px-3" name="location" style="width: 95%;">
                                   <option>Location</option>
                                   {% for location in locations_list %}
                                   <option value="{{location.name}}">{{location.name}}</option>
@@ -169,7 +169,7 @@ transform: translateX(-100%);
                                 </select>
                         </div>
                         <div class="col-5 p-0">
-                                <select required class="dropdown_style rounded" name="service" style="width: 95%;">
+                                <select required class="dropdown_style rounded px-3" name="service" style="width: 95%;">
                                   <option>Service</option>
                                   {% for service in services_list %}
                                   <option value="{{service.name}}">{{service.name}}</option>

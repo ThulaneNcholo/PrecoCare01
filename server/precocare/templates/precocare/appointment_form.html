@@ -1,0 +1,531 @@
+{% extends 'precocare/base.html' %}
+<!-- divider  -->
+{% block content %}
+
+<style>
+  :root {
+    --main-color: darkblue;
+  }
+  .main-headings {
+    color: grey;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 15px !important;
+  }
+
+  .accordion-bottom-spacing {
+    width: 100%;
+    height: 40px;
+  }
+
+  .dropdown_style {
+    padding: 1rem 0.01rem;
+    background-color: #f8fafc;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    width: 100%;
+  }
+
+  .form-control {
+    background-color: #f8fafc !important;
+  }
+
+  .accordion-button {
+    font-weight: 600;
+  }
+
+  .submit-btn {
+    width: 50% !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .hero-title {
+    color: var(--main-color);
+  }
+</style>
+
+<!-- to schedule appointment please kindly complete application form below -->
+<section class="container mt-5">
+  <h3 class="hero-title">
+    To schedule appointment please kindly complete application form below
+  </h3>
+</section>
+
+<section class="application-form container" id="showapplication">
+  <p class="text-secondary mt-5" style="font-size: 17px; font-weight: 500">
+    First time visit to this clinic ?
+  </p>
+  <div class="accordion accordion-flush" id="accordionFlushExample">
+    <!-- Yes Application start -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingOneYes">
+        <button
+          class="accordion-button collapsed bg-light px-5 rounded border"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseOneYes"
+          aria-expanded="false"
+          aria-controls="flush-collapseOneYes"
+        >
+          Yes
+        </button>
+      </h2>
+      <div
+        id="flush-collapseOneYes"
+        class="accordion-collapse collapse"
+        aria-labelledby="flush-headingOneYes"
+        data-bs-parent="#accordionFlushExample"
+      >
+        <div class="accordion-body px-0">
+          <form autocomplete="false" method="POST">
+            {% csrf_token %}
+            <div>
+              <input
+                type="text"
+                id="selected_user_date"
+                value=""
+                name="picked_date"
+                hidden="True"
+              />
+              <input
+                type="text"
+                id="sessionTimeslot"
+                value=""
+                name="input_time_javascript"
+                hidden="True"
+              />
+              <input
+                type="text"
+                id="sessionClinic"
+                value=""
+                name="clinic_javascript"
+                hidden="True"
+              />
+              <input
+                type="text"
+                id="sessionService"
+                value=""
+                name="service_javascript"
+                hidden="True"
+              />
+            </div>
+            <section class="hidden-inputs">
+              <input
+                type="text"
+                value="First-Time"
+                name="visit_status"
+                hidden="True"
+              />
+            </section>
+            <section class="application-info">
+              <p style="color: darkblue; font-weight: 500">Application</p>
+              <select
+                required
+                class="dropdown_style rounded mb-3"
+                name="application_for"
+                id="Application_for"
+              >
+                <option value="">Application For ?</option>
+                <option value="Myself">Myself</option>
+                <option value="Someone Else">Someone Else</option>
+              </select>
+              <select
+                required
+                class="dropdown_style rounded mb-3"
+                name="location"
+                id="service"
+              >
+                <option value="">Select location</option>
+                {% for location in locations_list %}
+                <option value="{{location.id}}">
+                  {{location.street}} , {{location.suburb}}
+                </option>
+                {% endfor %}
+              </select>
+              <select
+                class="dropdown_style rounded mb-3"
+                name="insurance"
+                id="service"
+              >
+                <option>Select Medical Aid</option>
+                {% for insurance in insurance_list %}
+                <option value="{{insurance.id}}">{{insurance.name}}</option>
+                {% endfor %}
+              </select>
+            </section>
+
+            <section class="Person-info mt-5">
+              <p style="color: darkblue; font-weight: 500">
+                Patient information
+              </p>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Patient Name"
+                  name="patient_name"
+                  required
+                />
+                <label for="floatingInput">Patient Name</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Patient Surname"
+                  name="patient_surname"
+                  required
+                />
+                <label for="floatingInput">Patient Surname</label>
+              </div>
+              <select
+                required
+                class="dropdown_style rounded mb-3"
+                name="gender"
+                id="Application_for"
+              >
+                <option value="">Select Gender</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="date"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Patient Surname"
+                  name="Date_of_Birth"
+                  required
+                />
+                <label for="floatingInput">Date of Birth</label>
+                <div id="emailHelp" class="form-text">
+                  Press the calendar <strong>Icon</strong> if you having
+                  trouble.
+                </div>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Identification"
+                  name="identification"
+                  required
+                />
+                <label for="floatingInput">Identification</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Contact Number 1"
+                  name="contact1"
+                  required
+                />
+                <label for="floatingInput">Contact 1</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Email Address"
+                  name="email_address"
+                  required
+                />
+                <label for="floatingInput">Email Address</label>
+                <div id="emailHelp" class="form-text">
+                  We use emails to send Appointment confirmations
+                </div>
+              </div>
+            </section>
+
+            <section class="patient-address mt-5">
+              <p style="color: darkblue; font-weight: 500">Address</p>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Street Adress"
+                  name="street"
+                  required
+                />
+                <label for="floatingInput">Street Address</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Town"
+                  name="town"
+                  required
+                />
+                <label for="floatingInput">Town</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Postal Code"
+                  name="postal_code"
+                  required
+                />
+                <label for="floatingInput">Postal Code</label>
+              </div>
+            </section>
+
+            <section class="extra-info mt-5">
+              <p class="mb-1" style="color: darkblue; font-weight: 500">
+                Extra information
+              </p>
+              <p class="text-secondary mb-1">Allergies ( Optional )</p>
+              <div class="form-floating mb-3">
+                <textarea
+                  name="allergies"
+                  class="form-control"
+                  placeholder="Write allergies here"
+                  id="floatingTextarea2"
+                  style="height: 200px"
+                ></textarea>
+                <label for="floatingTextarea2">Allergies</label>
+              </div>
+              <p class="text-secondary">Reason for visit</p>
+              <div class="form-floating mb-3">
+                <textarea
+                  name="reason"
+                  class="form-control"
+                  placeholder="leave reason for visit here!!"
+                  id="floatingTextarea2"
+                  style="height: 200px"
+                ></textarea>
+                <label for="floatingTextarea2">Reason for visit</label>
+              </div>
+            </section>
+
+            <center>
+              <button
+                class="btn text-white px-5 submit-btn"
+                type="submit"
+                name="submit-application"
+                style="background-color: darkblue"
+              >
+                Submit
+              </button>
+            </center>
+          </form>
+
+          <div class="accordion-bottom-spacing"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Yes Application end -->
+
+    <!-- No Application start -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingTwoNo">
+        <button
+          class="accordion-button collapsed bg-light px-5 border rounded"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseTwoNo"
+          aria-expanded="false"
+          aria-controls="flush-collapseTwoNo"
+        >
+          No
+        </button>
+      </h2>
+      <div
+        id="flush-collapseTwoNo"
+        class="accordion-collapse collapse"
+        aria-labelledby="flush-headingTwoNo"
+        data-bs-parent="#accordionFlushExample"
+      >
+        <div class="accordion-body px-0">
+          <form autocomplete="false" method="POST">
+            {% csrf_token %}
+            <div>
+              <input
+                type="text"
+                id="return_date"
+                value=""
+                name="picked_date"
+                hidden="True"
+              />
+              <input
+                type="text"
+                id="sessionTimeslotReturn"
+                value=""
+                name="input_time_javascript"
+                hidden="True"
+              />
+              <input
+                type="text"
+                id="sessionClinicReturn"
+                value=""
+                name="clinic_javascript"
+                hidden="True"
+              />
+              <input
+                type="text"
+                id="sessionServiceReturn"
+                value=""
+                name="service_javascript"
+                hidden="True"
+              />
+            </div>
+            <section class="hidden-inputs">
+              <input
+                type="text"
+                name="visit_status"
+                value="Returning"
+                hidden="True"
+              />
+            </section>
+            <section class="application-info">
+              <p style="color: darkblue; font-weight: 500">Application</p>
+              <select
+                class="dropdown_style rounded mb-3"
+                name="Application_for"
+                id="Application_for"
+                required
+              >
+                <option value="">Application For ?</option>
+                <option value="Myself">Myself</option>
+                <option value="Someone Else">Someone Else</option>
+              </select>
+
+              <select
+                required
+                class="dropdown_style rounded mb-3"
+                name="location"
+                id="service"
+              >
+                <option value="">Select location</option>
+                {% for location in locations_list %}
+                <option value="{{location.id}}">
+                  {{location.street}} , {{location.suburb}}
+                </option>
+                {% endfor %}
+              </select>
+              <select
+                class="dropdown_style rounded mb-3"
+                name="medical_aid"
+                id="service"
+                required
+              >
+                <option>Select Medical Aid</option>
+                {% for insurance in insurance_list %}
+                <option value="{{insurance.id}}">{{insurance.name}}</option>
+                {% endfor %}
+              </select>
+            </section>
+
+            <section class="patient-info mt-5">
+              <p style="color: darkblue; font-weight: 500">
+                Patient information
+              </p>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Patient Name"
+                  name="patient_name"
+                  required
+                />
+                <label for="floatingInput">Patient Name</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Patient Surname"
+                  name="patient_surname"
+                  required
+                />
+                <label for="floatingInput">Patient Surname</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Patient File Number"
+                  name="file_number"
+                  required
+                />
+                <label for="floatingInput">Patient File Number</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Email Address"
+                  name="email_address"
+                  required
+                />
+                <label for="floatingInput">Email Address</label>
+                <div id="emailHelp" class="form-text">
+                  We use emails to send Appointment confirmations
+                </div>
+              </div>
+            </section>
+            <center>
+              <button
+                name="returning_submit"
+                type="submit"
+                class="btn text-white submit-btn"
+                style="background-color: darkblue; width: 100%"
+              >
+                Submit
+              </button>
+            </center>
+          </form>
+          <div class="accordion-bottom-spacing"></div>
+        </div>
+      </div>
+    </div>
+    <!-- No Application end -->
+  </div>
+</section>
+
+<script>
+  // date picked
+  userdate = sessionStorage.getItem("user_date");
+  document.getElementById("selected_user_date").value = userdate;
+  document.getElementById("return_date").value = userdate;
+
+  userTimeslot = sessionStorage.getItem("user_timeslot");
+  userClinic = sessionStorage.getItem("user_clinic");
+  userService = sessionStorage.getItem("user_service");
+
+  //   Timeslot
+  document.getElementById("sessionTimeslot").value = userTimeslot;
+  document.getElementById("sessionTimeslotReturn").value = userTimeslot;
+  //   User clinic
+  document.getElementById("sessionClinic").value = userClinic;
+  document.getElementById("sessionClinicReturn").value = userClinic;
+  //   User Service
+  document.getElementById("sessionService").value = userService;
+  document.getElementById("sessionServiceReturn").value = userService;
+</script>
+{% endblock %}

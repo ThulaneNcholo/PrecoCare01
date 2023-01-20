@@ -646,13 +646,145 @@
                                       </div>
                                     </div>
                                   </li>
-                                  <li class="list-group-item py-3">
+
+                                  <!-- Complete application form start  -->
+                                  
+                                    <li class="list-group-item py-3">
+                                      <form method="POST">
+                                        {% csrf_token %}
+                                      <p class="text-secondary mb-0">Complete Application</p>
+                                      <div class="row">
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 bg-light border rounded">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Complete" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Complete
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 bg-light border rounded">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="No-Show" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              No Show
+                                            </label>
+                                          </div>
+                                        </div>
+
+                                        <!-- Confirmed status start  -->
+                                        {% if data.application_status == 'Confirmed'%}
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 border rounded" style="background-color: #CFE2FF;">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Confirmed" required checked>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Confirmed
+                                            </label>
+                                          </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 bg-light border rounded">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Confirmed" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Confirmed
+                                            </label>
+                                          </div>
+                                        </div>
+                                        {% endif %}
+
+
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 bg-light border rounded">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_status" id="flexRadioDefault1" value="Pending" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Pending
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </li>
+                                    <li class="list-group-item py-3">
+                                      <p class="text-secondary mb-0">Payment Status</p>
+                                      <div class="row">
+
+                                        <!-- Paid balance start  -->
+                                        {% if data.paid_status == 'Paid' %}
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 border rounded" style="background-color: #CFE2FF;">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Paid" required checked>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Paid
+                                            </label>
+                                          </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 bg-light border rounded">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Paid" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Paid
+                                            </label>
+                                          </div>
+                                        </div>
+                                        {% endif %}
+
+                                        <!-- Outing standing balance start  -->
+                                        {% if data.paid_status == 'Outstanding' %}
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 border rounded" style="background-color: #CFE2FF;">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Outstanding" required checked>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Outstanding
+                                            </label>
+                                          </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="col-sm-12 col-md-6 mt-3 p-3 bg-light border rounded">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="complete_payment" id="flexRadioDefault1" value="Outstanding" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                              Outstanding
+                                            </label>
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                      </div>
+                                    </li>
+                                    <li class="list-group-item py-5">
+                                      <center>
+                                        <div class="row my-4">
+                                          <div class="col">
+                                            <input type="text" value="{{data.id}}" name="complete_appointmentId" hidden="True">
+                                            <button type="submit" name="complete_appointment" class="btn py-3 text-white" style="width: 100%; background-color: darkblue;">Submit</button>
+                                          </div>
+                                            </form>
+                                          <div class="col">
+                                            <a href="{% url 'reschedule' data.id %}" style="text-decoration: none;">
+                                            <button class="btn text-secondary py-3 bg-light border" style="width: 100%;">Reschedule</button>
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </center>
+                                    </li>
+                                  <!-- Complete Application end  -->
+
+
+
+                                  <!-- <li class="list-group-item py-3">
+                                    <section>
+                                      <form method="POST">
+                                        {% csrf_token %}
+                                        
+                                      </form>
+                                    </section>
+
                                     <form action="" method="POST">
                                     {% csrf_token %}
                                     <div class="row">
                                       <div class="col-sm-12 col-lg-12 text-secondary mt-3">
                                         Mark as Complete
                                       </div>
+                                      
                                       <div class="col-sm-12 col-lg-12 mt-3">
                                         <div class="row">
                                           <div class="col">
@@ -690,8 +822,9 @@
                                         </div>
                                       </div>
                                     </div>
-                                  </li>
-                                  <li class="list-group-item py-3">
+                                  </li> -->
+
+                                  <!-- <li class="list-group-item py-3">
                                     <div class="row">
                                       <div class="col-sm-12 col-lg-12 mt-3 text-secondary">
                                         Payment Status
@@ -733,7 +866,9 @@
                                         </div>
                                       </div>
                                     </center>
-                                  </li>
+                                  </li> -->
+
+
                                   <li class="list-group-item text-white py-3 rounded" style="background-color: darkblue;">Appointment Information</li>
                                   <li class="list-group-item">
                                     <div class="row">

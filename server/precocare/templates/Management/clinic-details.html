@@ -1,0 +1,191 @@
+{% extends 'Management/management_base.html' %}
+
+
+{% block content %}
+
+<!-- Back button start  -->
+<section class="mt-5 container">
+    <a href="{% url 'management' %}">
+        <i class="bi bi-arrow-left-circle-fill" style="font-size: 30px; color: darkblue;"></i>
+    </a>
+</section>
+
+<!-- Message Container start  -->
+<section class="my-5 container">
+    {% for message in messages %}
+    <div class="alert alert-primary py-3" role="alert">
+        <p>{{message}}</p>
+      </div>
+    {% endfor %}
+</section>
+
+
+{% for clinic in clinicDeatails %}
+
+<section class="container mt-5">
+    <h1>{{clinic.clinic_name}}</h1>
+</section>
+
+<section class="container mt-5">
+    <h4>Clinic Activation</h4>
+    <div class="row mx-0 py-3 rounded bg-light border">
+        <div class="col d-flex align-items-center">
+            <span>
+                Activation status
+            </span> 
+        </div>
+
+        {% if clinic.clinic_status == 'Disabled' %}
+        <!-- Activate Clinic Modal start  -->
+        <div class="col col-md-4">
+            <!-- Button trigger modal -->
+            <button type="button" data-bs-toggle="modal" data-bs-target="#activateClinic" class="btn text-white py-3" style="background-color: darkblue; width: 100%;">activate clinic</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="activateClinic" tabindex="-1" aria-labelledby="activateClinicLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="activateClinicLabel">Clinic Activation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <center>
+                        <i class="bi bi-check-circle-fill mb-5" style="font-size: 70px; color: darkblue;"></i>
+                        <p class="text-secondary">click button bellow to activate clinic</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="clinicActivation" class="btn text-white py-3 my-4" style="width: 70%; background-color: darkblue;">Activate clinic</button>
+                        </form>
+                    </center>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Deactivate Clinic Modal start  -->
+        <div class="col col-md-4">
+            <!-- Button trigger modal -->
+            <button type="button" data-bs-toggle="modal" data-bs-target="#deactivateclinicmodal" class="btn btn-secondary border py-3" style="width: 100%;">deactivate  clinic</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deactivateclinicmodal" tabindex="-1" aria-labelledby="deactivateclinicmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="deactivateclinicmodalLabel">De-activate clinic</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <center>
+                        <i class="bi bi-exclamation-circle-fill mb-5 text-secondary" style="font-size: 70px;"></i>
+                        <p class="text-secondary">click button bellow to de-activate clinic</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="clinicDeactivation" class="btn btn-light py-3 my-4 border" style="width: 70%;">deactivate  clinic</button>
+                        </form>
+                    </center>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="container mt-5" >
+    <h4>Appointments Activity</h4>
+    <ul class="list-group mt-3">
+        <li class="list-group-item py-3 bg-light">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col">
+                    First Name
+                </div>
+                <div class="col">
+                    Last Name
+                </div>
+                <div class="col">
+                    Appointment Status
+                </div>
+                <div class="col">
+                    Appointment Date
+                </div>
+                <div class="col-1">
+                    <a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="bi bi-app-indicator" style="font-size: 17px; color: darkblue;"></i>
+                    </a>
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Filter Applications</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body py-5">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <select class="form-select py-3" aria-label="Default select example" name="status">
+                                                <option>Application Status</option>
+                                                <option value="Complete">Complete</option>
+                                                <option value="No-Show">No-Show</option>
+                                                <option value="Confirmed">Confirmed</option>
+                                                <option value="Pending">Pending</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <div class="col">
+                                                <input class="py-3 border rounded" type="month" id="Month" name="Month" style="width: 100%;">
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <center>
+                                        <button name="filter" type="submit" class="btn text-white mt-5 mb-4 py-3" style="background-color: darkblue; width: 70%;">Submit</button>
+                                      </center>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>    
+                </div>
+            </div>
+        </li>
+        {% for data in appointmentsList %}
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-1">
+                    {{ forloop.counter }}
+                </div>
+                <div class="col">
+                    {{data.patient_name}}
+                </div>
+                <div class="col">
+                    {{data.patient_surname}}
+                </div>
+                <div class="col">
+                    {{data.application_status}}
+                </div>
+                <div class="col">
+                    {{data.date_appointment}}
+                </div>
+                <div class="col-1">
+                    <i class="bi bi-chevron-right" style="color: darkblue;"></i>
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <div class="alert alert-primary mt-4" role="alert">
+            No data
+        </div>
+        {% endfor %}
+      </ul>
+</section>
+
+
+{% endfor %}
+{% endblock %}

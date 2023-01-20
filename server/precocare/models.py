@@ -197,7 +197,7 @@ class ApplicationForm(models.Model):
     service = models.ForeignKey(ServiceModel, on_delete=models.CASCADE , blank=True, related_name="application_service", default=None)
     fee = models.CharField(max_length=1000,null=True,blank=True)
     time_slot = models.CharField(max_length=1000,null=True,blank=True)
-    time_slot_id = models.ForeignKey(BookedTimeslotModel, on_delete=models.CASCADE , blank=True, related_name="time_slot_pk", default=None)
+    time_slot_id = models.ForeignKey(BookedTimeslotModel, on_delete=models.SET_NULL , blank=True, related_name="time_slot_pk", default=None,null=True)
     date_appointment = models.DateField(auto_now_add=False,null=True,blank=True)
     reschedule_date = models.CharField(max_length=500,null=True,blank=True)
     patient_name = models.CharField(max_length=500,null=True,blank=True)
