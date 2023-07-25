@@ -72,7 +72,9 @@
       sessionStorage.removeItem("redict_path");
 
       // redict to clinic application form
-      window.location.href = "http://127.0.0.1:8000/appointment-Form/" + clinic;
+      //precocareapp.pythonanywhere.com/appointment-Form/
+      https: window.location.href =
+        "http://127.0.0.1:8000/appointment-Form/" + clinic;
     } else {
       showtime = document.querySelector("input[name=time_slots]:checked").value;
       document.getElementById("timeslot_value").value = showtime;
